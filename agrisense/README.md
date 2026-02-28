@@ -51,8 +51,8 @@ lib/
 ## 🚀 Getting Started
 
 1. Clone Repository  
-git clone https://github.com/your-username/agrisense.git  
-cd agrisense  
+git clone https://github.com/dulanga1000/AgriSense.git 
+cd AgriSense  
 
 2. Install Dependencies  
 flutter pub get  

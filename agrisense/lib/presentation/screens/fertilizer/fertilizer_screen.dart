@@ -8,3 +8,9 @@ class FertilizerScreen extends StatelessWidget {
     return const Placeholder();
   }
 }
+
+@override
+void initState() {
+  super.initState();
+  _fetchFertilizers();
+}

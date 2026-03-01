@@ -51,7 +51,7 @@ lib/
 ## 🚀 Getting Started
 
 1. Clone Repository  
-git clone https://github.com/dulanga1000/AgriSense.git 
+git clone https://github.com/dulanga1000/AgriSense.git  
 cd AgriSense  
 
 2. Install Dependencies  

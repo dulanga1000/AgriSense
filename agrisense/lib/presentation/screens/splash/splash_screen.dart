@@ -56,9 +56,9 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo_color_bg.png', width: 100),
+            Image.asset('assets/images/logo_color_bg.png', width: 300),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             const Text(
               'AgriSense',
@@ -69,7 +69,18 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+
+            const Text(
+              'Smart Farming Assistant',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+
+            const SizedBox(height: 50),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

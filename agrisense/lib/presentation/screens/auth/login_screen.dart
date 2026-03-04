@@ -22,7 +22,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.home);
+                Navigator.pushNamed(context, AppRoutes.main);
               },
               child: const Text("Login", style: TextStyle(color: Colors.white)),
             ),

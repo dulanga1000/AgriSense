@@ -197,7 +197,9 @@ class _HomeHeaderState extends State<HomeHeader> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/fertilizer_screen');
+                  },
 
                   child: const Text("View More"),
                 ),

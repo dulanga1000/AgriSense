@@ -201,7 +201,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                     Navigator.pushNamed(context, '/fertilizer_screen');
                   },
 
-                  child: const Text("View More"),
+                  child: const Text("View Details"),
                 ),
               ],
             ),

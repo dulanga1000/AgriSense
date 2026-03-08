@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 class FertilizerForm extends StatelessWidget {
-
   final VoidCallback onSubmit;
 
   const FertilizerForm({super.key, required this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
-
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -18,7 +16,6 @@ class FertilizerForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-
             Row(
               children: [
                 Image.asset("assets/images/leaf.png", height: 20),
@@ -26,7 +23,7 @@ class FertilizerForm extends StatelessWidget {
                 const Text(
                   "Enter Crop Details",
                   style: TextStyle(fontWeight: FontWeight.bold),
-                )
+                ),
               ],
             ),
 
@@ -43,9 +40,7 @@ class FertilizerForm extends StatelessWidget {
                 DropdownMenuItem(value: "Wheat", child: Text("Wheat")),
               ],
               onChanged: (value) {},
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
 
             const SizedBox(height: 16),
@@ -67,15 +62,13 @@ class FertilizerForm extends StatelessWidget {
               width: double.infinity,
 
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
 
                 onPressed: onSubmit,
 
                 child: const Text("Get Recommendation"),
               ),
-            )
+            ),
           ],
         ),
       ),

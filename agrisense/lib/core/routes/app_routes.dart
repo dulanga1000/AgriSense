@@ -7,6 +7,7 @@ import '../../presentation/screens/disease/disease_scan_screen.dart';
 import '../../presentation/screens/weather/weather_screen.dart';
 import '../../presentation/screens/profile/profile_screen.dart';
 import '../../presentation/screens/fertilizer/fertilizer_screen.dart';
+import '../../presentation/screens/crop/screens/crop_advisory_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -17,6 +18,7 @@ class AppRoutes {
   static const String weather = '/weather_screen';
   static const String profile = '/profile_screen';
   static const String fertilizer = '/fertilizer_screen';
+  static const String cropAdvisory = '/crop_advisory_screen';
 
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => const SplashScreen(),
@@ -27,5 +29,6 @@ class AppRoutes {
     weather: (context) => const WeatherScreen(),
     profile: (context) => const ProfileScreen(),
     fertilizer: (context) => const FertilizerScreen(),
+    cropAdvisory: (context) => const CropAdvisoryScreen(),
   };
 }

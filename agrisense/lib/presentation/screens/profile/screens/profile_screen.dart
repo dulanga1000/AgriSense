@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'widgets/profile_header.dart';
-import '../../../data/models/user_model.dart';
+import '../widgets/profile_header.dart';
+import 'package:agrisense/data/models/user_model.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -23,10 +23,10 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             ProfileHeader(user: user),
-            
+
             // This spacer prevents content from hiding behind the overlapping card
-            const SizedBox(height: 150), 
-            
+            const SizedBox(height: 150),
+
             // Further profile items (Settings, Log Out, etc.) will go here
           ],
         ),

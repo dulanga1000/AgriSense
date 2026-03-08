@@ -1,13 +1,80 @@
 import 'package:flutter/material.dart';
+import '../../widgets/fertilizer_form.dart';
+import '../../widgets/fertilizer_result_card.dart';
+import '../../widgets/usage_instruction_card.dart';
+import '../../widgets/application_timing_card.dart';
+import '../../widgets/cost_card.dart';
+import '../../widgets/important_notes_card.dart';
 
-class FertilizerScreen extends StatelessWidget {
-  const FertilizerScreen({super.key});
+class FertilizerScreen extends StatefulWidget {
+  const FertilizerScreen({Key? key}) : super(key: key);
+
+  @override
+  State<FertilizerScreen> createState() => _FertilizerScreenState();
+}
+
+class _FertilizerScreenState extends State<FertilizerScreen> {
+
+  bool showResult = false;
+
+  void showRecommendation() {
+    setState(() {
+      showResult = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Fertilizer Recommendations')),
-      body: const Center(child: Text('Fertilizer Screen')),
+      backgroundColor: Colors.grey[100],
+
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text("Fertilizer Guide"),
+            Text(
+              "Smart recommendations",
+              style: TextStyle(fontSize: 12),
+            )
+          ],
+        ),
+      ),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+
+        child: Column(
+          children: [
+
+            /// FORM
+            FertilizerForm(
+              onSubmit: showRecommendation,
+            ),
+
+            const SizedBox(height: 16),
+
+            /// SHOW RESULTS ONLY AFTER BUTTON CLICK
+            if (showResult) ...[
+              const FertilizerResultCard(),
+              const SizedBox(height: 16),
+
+              const UsageInstructionCard(),
+              const SizedBox(height: 16),
+
+              const ApplicationTimingCard(),
+              const SizedBox(height: 16),
+
+              const CostCard(),
+              const SizedBox(height: 16),
+
+              const ImportantNotesCard(),
+            ]
+          ],
+        ),
+      ),
     );
   }
 }

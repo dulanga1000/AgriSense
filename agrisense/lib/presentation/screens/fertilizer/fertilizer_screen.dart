@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../widgets/fertilizer_form.dart';
-import '../../widgets/fertilizer_result_card.dart';
-import '../../widgets/usage_instruction_card.dart';
-import '../../widgets/application_timing_card.dart';
-import '../../widgets/cost_card.dart';
-import '../../widgets/important_notes_card.dart';
+import 'package:agrisense/presentation/screens/fertilizer/widgets/application_timing_card.dart';
+import 'package:agrisense/presentation/screens/fertilizer/widgets/cost_card.dart';
+import 'package:agrisense/presentation/screens/fertilizer/widgets/fertilizer_form.dart';
+import 'package:agrisense/presentation/screens/fertilizer/widgets/fertilizer_result_card.dart';
+import 'package:agrisense/presentation/screens/fertilizer/widgets/important_notes_card.dart';
+import 'package:agrisense/presentation/screens/fertilizer/widgets/usage_instruction_card.dart';
 
 class FertilizerScreen extends StatefulWidget {
   const FertilizerScreen({Key? key}) : super(key: key);

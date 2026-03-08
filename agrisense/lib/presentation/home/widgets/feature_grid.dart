@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/screens/crop/screens/crop_advisory_screen.dart';
-import 'package:agrisense/presentation/screens/fertilizer/screens/fertilizer_screen.dart';
+import 'package:agrisense/presentation/crop/screens/crop_advisory_screen.dart';
+import 'package:agrisense/presentation/fertilizer/screens/fertilizer_screen.dart';
 
 class FeatureGrid extends StatelessWidget {
   const FeatureGrid({super.key});

@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/screens/home/widgets/home_header.dart';
-import 'package:agrisense/presentation/screens/home/widgets/plant_disease_scanner_card.dart';
-import 'package:agrisense/presentation/screens/home/widgets/feature_grid.dart';
+import 'package:agrisense/presentation/home/widgets/home_header.dart';
+import 'package:agrisense/presentation/home/widgets/plant_disease_scanner_card.dart';
+import 'package:agrisense/presentation/home/widgets/feature_grid.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

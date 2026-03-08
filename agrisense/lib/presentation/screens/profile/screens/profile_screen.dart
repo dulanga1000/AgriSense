@@ -23,11 +23,7 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             ProfileHeader(user: user),
-
-            // This spacer prevents content from hiding behind the overlapping card
             const SizedBox(height: 150),
-
-            // Further profile items (Settings, Log Out, etc.) will go here
           ],
         ),
       ),

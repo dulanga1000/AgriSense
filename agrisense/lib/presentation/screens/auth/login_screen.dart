@@ -1,3 +1,4 @@
+import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -6,8 +7,27 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Login")),
       body: Center(
-        child: Text('Login Screen'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Login Screen", style: TextStyle(fontSize: 20)),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 15,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.main);
+              },
+              child: const Text("Login", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
       ),
     );
   }

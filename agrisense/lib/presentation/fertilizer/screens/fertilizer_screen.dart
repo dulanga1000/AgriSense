@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/screens/fertilizer/widgets/application_timing_card.dart';
-import 'package:agrisense/presentation/screens/fertilizer/widgets/cost_card.dart';
-import 'package:agrisense/presentation/screens/fertilizer/widgets/fertilizer_form.dart';
-import 'package:agrisense/presentation/screens/fertilizer/widgets/fertilizer_result_card.dart';
-import 'package:agrisense/presentation/screens/fertilizer/widgets/important_notes_card.dart';
-import 'package:agrisense/presentation/screens/fertilizer/widgets/usage_instruction_card.dart';
+import 'package:agrisense/presentation/fertilizer/widgets/application_timing_card.dart';
+import 'package:agrisense/presentation/fertilizer/widgets/cost_card.dart';
+import 'package:agrisense/presentation/fertilizer/widgets/fertilizer_form.dart';
+import 'package:agrisense/presentation/fertilizer/widgets/fertilizer_result_card.dart';
+import 'package:agrisense/presentation/fertilizer/widgets/important_notes_card.dart';
+import 'package:agrisense/presentation/fertilizer/widgets/usage_instruction_card.dart';
 
 class FertilizerScreen extends StatefulWidget {
   const FertilizerScreen({Key? key}) : super(key: key);
@@ -14,7 +14,6 @@ class FertilizerScreen extends StatefulWidget {
 }
 
 class _FertilizerScreenState extends State<FertilizerScreen> {
-
   bool showResult = false;
 
   void showRecommendation() {
@@ -25,7 +24,6 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.grey[100],
 
@@ -35,10 +33,7 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             Text("Fertilizer Guide"),
-            Text(
-              "Smart recommendations",
-              style: TextStyle(fontSize: 12),
-            )
+            Text("Smart recommendations", style: TextStyle(fontSize: 12)),
           ],
         ),
       ),
@@ -48,11 +43,8 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
 
         child: Column(
           children: [
-
             /// FORM
-            FertilizerForm(
-              onSubmit: showRecommendation,
-            ),
+            FertilizerForm(onSubmit: showRecommendation),
 
             const SizedBox(height: 16),
 
@@ -71,7 +63,7 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
               const SizedBox(height: 16),
 
               const ImportantNotesCard(),
-            ]
+            ],
           ],
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:agrisense/data/models/user_model.dart';
 import 'package:agrisense/data/models/weather_model.dart';
+import '../../../../core/routes/app_routes.dart';
 
 class HomeHeader extends StatefulWidget {
   const HomeHeader({super.key});
@@ -40,7 +41,6 @@ class _HomeHeaderState extends State<HomeHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.40,
       padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
 
       decoration: const BoxDecoration(
@@ -57,6 +57,7 @@ class _HomeHeaderState extends State<HomeHeader> {
       ),
 
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -198,10 +199,10 @@ class _HomeHeaderState extends State<HomeHeader> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/fertilizer_screen');
+                    Navigator.pushNamed(context, AppRoutes.fertilizer);
                   },
 
-                  child: const Text("View Details"),
+                  child: const Text("View More"),
                 ),
               ],
             ),

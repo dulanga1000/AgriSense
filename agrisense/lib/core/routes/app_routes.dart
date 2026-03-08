@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../presentation/screens/splash/splash_screen.dart';
-import '../presentation/screens/auth/login_screen.dart';
-import '../presentation/screens/main/main_screen.dart';
-import '../presentation/screens/home/home_screen.dart';
-import '../presentation/screens/disease/disease_scan_screen.dart';
-import '../presentation/screens/weather/weather_screen.dart';
-import '../presentation/screens/profile/profile_screen.dart';
-import '../presentation/screens/fertilizer/fertilizer_screen.dart';
+import '../../presentation/screens/splash/splash_screen.dart';
+import '../../presentation/screens/auth/login_screen.dart';
+import '../../presentation/screens/main/main_screen.dart';
+import '../../presentation/screens/home/home_screen.dart';
+import '../../presentation/screens/disease/disease_scan_screen.dart';
+import '../../presentation/screens/weather/weather_screen.dart';
+import '../../presentation/screens/profile/profile_screen.dart';
+import '../../presentation/screens/fertilizer/fertilizer_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';

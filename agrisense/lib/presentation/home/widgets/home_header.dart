@@ -207,7 +207,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.fertilizer);
+                    Navigator.pushNamed(context, AppRoutes.weather);
                   },
 
                   child: const Text("View More"),

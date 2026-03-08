@@ -14,20 +14,17 @@ class AgriculturalCalendarCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           const Row(
             children: [
-              Text(
-                "📅",
-                style: TextStyle(fontSize: 20),
+              Image(
+                image: AssetImage('assets/images/calendar.png'),
+                width: 24,
+                height: 24,
               ),
               SizedBox(width: 8),
               Text(
                 "Agricultural Calendar",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -86,12 +83,7 @@ class AgriculturalCalendarCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-
-          Image.asset(
-            image,
-            width: 32,
-            height: 32,
-          ),
+          Image.asset(image, width: 32, height: 32),
 
           const SizedBox(width: 12),
 
@@ -109,20 +101,14 @@ class AgriculturalCalendarCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   crops,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ),
           ),
 
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 5,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
               color: const Color(0xffe7f0ff),
               borderRadius: BorderRadius.circular(20),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/screens/home/widgets/home_header.dart';
 import 'package:agrisense/presentation/screens/home/widgets/plant_disease_scanner_card.dart';
@@ -9,17 +10,15 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: const [
-              HomeHeader(),
-              SizedBox(height: 16),
-              PlantDiseaseScannerCard(),
-              SizedBox(height: 16),
-              FeatureGrid(),
-            ],
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: const [
+            HomeHeader(),
+            SizedBox(height: 16),
+            PlantDiseaseScannerCard(),
+            SizedBox(height: 16),
+            FeatureGrid(),
+          ],
         ),
       ),
     );

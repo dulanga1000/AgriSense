@@ -14,17 +14,13 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-
             const SizedBox(height: 20),
 
             // Logo
             Center(
-              child: Image.asset(
-                "assets/icons/app_icon.png",
-                height: 100,
-              ),
+              child: Image.asset("assets/icons/app_icon.png", height: 100),
             ),
-              
+
             //title
             const Text(
               "AgriSense",
@@ -39,10 +35,7 @@ class LoginScreen extends StatelessWidget {
 
             const Text(
               "Smart Farming Assistant",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.blueGrey,
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.blueGrey),
             ),
 
             const SizedBox(height: 30),
@@ -80,10 +73,7 @@ class LoginScreen extends StatelessWidget {
                   //email field
                   const Text(
                     "Email",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 8),
                   TextField(
@@ -96,7 +86,10 @@ class LoginScreen extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ),
 
@@ -105,10 +98,7 @@ class LoginScreen extends StatelessWidget {
                   //password field
                   const Text(
                     "Password",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 8),
                   TextField(
@@ -122,7 +112,10 @@ class LoginScreen extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ),
 
@@ -150,10 +143,7 @@ class LoginScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          AppRoutes.home,
-                        );
+                        Navigator.pushReplacementNamed(context, AppRoutes.main);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0E8F3E),
@@ -164,19 +154,16 @@ class LoginScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         "Login",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),
 
                   const SizedBox(height: 25),
-                ]
-              )
-            )  
-          ]
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

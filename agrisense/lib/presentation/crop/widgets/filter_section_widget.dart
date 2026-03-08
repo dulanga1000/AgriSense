@@ -38,11 +38,12 @@ class FilterSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-          Expanded(child: SizedBox()),
+          filterBox("Season", "Yala Season"),
+          filterBox("Location", "Western Province"),
         ],
       ),
     );

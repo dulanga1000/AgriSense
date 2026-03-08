@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FertilizerScreen extends StatelessWidget {
-  const FertilizerScreen({Key? key}) : super(key: key);
+  const FertilizerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

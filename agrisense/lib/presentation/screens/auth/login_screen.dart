@@ -1,4 +1,4 @@
-import 'package:agrisense/routes/app_routes.dart';
+import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {

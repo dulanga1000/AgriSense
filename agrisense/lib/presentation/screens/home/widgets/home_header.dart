@@ -12,7 +12,15 @@ class HomeHeader extends StatefulWidget {
 }
 
 class _HomeHeaderState extends State<HomeHeader> {
-  UserModel user = UserModel(id: '1', name: 'Guest');
+  UserModel user = UserModel(
+    id: '1',
+    name: 'Guest',
+    role: '',
+    location: '',
+    phone: '',
+    email: '',
+    memberSince: '',
+  );
 
   WeatherModel weather = WeatherModel(
     city: 'Kandy, Sri Lanka',

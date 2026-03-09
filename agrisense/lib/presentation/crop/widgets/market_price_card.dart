@@ -11,10 +11,7 @@ class MarketPriceCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [
-              Color(0xFFFF7A00),
-              Color(0xFFFF5A00),
-            ],
+            colors: [Color(0xFFFF7A00), Color(0xFFFF5A00)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -24,7 +21,7 @@ class MarketPriceCard extends StatelessWidget {
               color: Colors.black12,
               blurRadius: 10,
               offset: Offset(0, 6),
-            )
+            ),
           ],
         ),
         child: Column(
@@ -50,10 +47,7 @@ class MarketPriceCard extends StatelessWidget {
 
             const Text(
               "Recent prices at local markets",
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 13,
-              ),
+              style: TextStyle(color: Colors.white70, fontSize: 13),
             ),
 
             const SizedBox(height: 20),
@@ -90,7 +84,7 @@ class MarketPriceCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: const Row(
@@ -100,10 +94,7 @@ class MarketPriceCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       "Prices vary by region and season. Check local markets for accurate rates.",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
                 ],
@@ -124,7 +115,7 @@ class MarketPriceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
+        color: Colors.white.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
@@ -144,19 +135,13 @@ class MarketPriceCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   price,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 6,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: demandColor,
               borderRadius: BorderRadius.circular(20),
@@ -169,7 +154,7 @@ class MarketPriceCard extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-          )
+          ),
         ],
       ),
     );

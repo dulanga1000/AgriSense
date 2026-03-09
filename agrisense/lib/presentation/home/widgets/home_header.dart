@@ -97,7 +97,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.25),
+                      color: Colors.white.withValues(alpha: 0.25),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(CupertinoIcons.bell, color: Colors.white),
@@ -133,7 +133,7 @@ class _HomeHeaderState extends State<HomeHeader> {
             padding: const EdgeInsets.all(16),
 
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.20),
+              color: Colors.white.withValues(alpha: 0.20),
               borderRadius: BorderRadius.circular(16),
             ),
 
@@ -200,7 +200,7 @@ class _HomeHeaderState extends State<HomeHeader> {
 
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.25),
+                    backgroundColor: Colors.white.withValues(alpha: 0.25),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

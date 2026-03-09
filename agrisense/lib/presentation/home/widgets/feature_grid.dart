@@ -13,13 +13,13 @@ class FeatureGrid extends StatelessWidget {
       FeatureModel(
         name: 'Fertilizer',
         description: 'Get recommendations',
-        image: 'assets/images/fertilizer.png',
+        icon: Icons.agriculture,
       ),
 
       FeatureModel(
         name: 'Crop Advisory',
         description: 'Seasonal guidance',
-        image: 'assets/images/icons-crop.png',
+        icon: Icons.grass,
       ),
     ];
 

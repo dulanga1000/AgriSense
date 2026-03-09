@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/core/routes/app_routes.dart';
 
-import 'package:agrisense/presentation/auth/screens/widgets/auth_form_header.dart';
-import 'package:agrisense/presentation/auth/screens/widgets/email_textfield.dart';
-import 'package:agrisense/presentation/auth/screens/widgets/password_textfield.dart';
-import 'package:agrisense/presentation/auth/screens/widgets/auth_button.dart';
+import 'package:agrisense/presentation/auth/widgets/auth_form_header.dart';
+import 'package:agrisense/presentation/auth/widgets/email_textfield.dart';
+import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
+import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -20,7 +20,6 @@ class LoginScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-
               const SizedBox(height: 20),
 
               /// Header
@@ -47,7 +46,6 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     /// Welcome Text
                     const Center(
                       child: Text(
@@ -114,10 +112,7 @@ class LoginScreen extends StatelessWidget {
                     AuthButton(
                       text: "Login",
                       onPressed: () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          AppRoutes.home,
-                        );
+                        Navigator.pushReplacementNamed(context, AppRoutes.main);
                       },
                     ),
 
@@ -150,7 +145,12 @@ class LoginScreen extends StatelessWidget {
                     /// Register
                     Center(
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            AppRoutes.register,
+                          );
+                        },
                         child: const Text(
                           "Don't have an account? Register",
                           style: TextStyle(color: Colors.green),
@@ -165,10 +165,7 @@ class LoginScreen extends StatelessWidget {
                       text: "Continue as Guest",
                       outlined: true,
                       onPressed: () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          AppRoutes.home,
-                        );
+                        Navigator.pushReplacementNamed(context, AppRoutes.main);
                       },
                     ),
                   ],

@@ -12,10 +12,10 @@ class WeatherHeader extends StatefulWidget {
 
 class _WeatherHeaderState extends State<WeatherHeader> {
   WeatherModel weather = WeatherModel(
-    city: 'Western Province, Sri Lanka',
-    temperature: 28.0,
+    city: "Western Province, Sri Lanka",
+    temperature: 28,
     humidity: 65,
-    condition: 'Cloudy',
+    condition: "Cloudy",
   );
 
   @override
@@ -27,10 +27,7 @@ class _WeatherHeaderState extends State<WeatherHeader> {
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xff3B82F6), Color(0xff2563EB)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
         ),
-
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -40,10 +37,8 @@ class _WeatherHeaderState extends State<WeatherHeader> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Header Row
           Row(
             children: [
-              /// Back Button
               IconButton(
                 icon: const Icon(
                   Icons.arrow_back_ios_new,
@@ -58,8 +53,6 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                   );
                 },
               ),
-
-              const SizedBox(width: 6),
 
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +77,6 @@ class _WeatherHeaderState extends State<WeatherHeader> {
 
           const SizedBox(height: 20),
 
-          /// Weather Card
           Container(
             padding: const EdgeInsets.all(18),
 
@@ -96,7 +88,6 @@ class _WeatherHeaderState extends State<WeatherHeader> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// Location
                 Row(
                   children: [
                     const Icon(
@@ -126,7 +117,6 @@ class _WeatherHeaderState extends State<WeatherHeader> {
 
                 const SizedBox(height: 10),
 
-                /// Temperature Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -147,20 +137,13 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                   ],
                 ),
 
-                const SizedBox(height: 10),
-
                 const Divider(color: Colors.white30),
 
-                const SizedBox(height: 10),
-
-                /// Weather Details
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _weatherInfo(Icons.water_drop, "Humidity", "65%"),
-
                     _weatherInfo(Icons.air, "Wind Speed", "12 km/h"),
-
                     _weatherInfo(Icons.remove_red_eye, "Visibility", "8 km"),
                   ],
                 ),
@@ -172,7 +155,6 @@ class _WeatherHeaderState extends State<WeatherHeader> {
     );
   }
 
-  /// Weather Info Widget
   Widget _weatherInfo(IconData icon, String title, String value) {
     return Column(
       children: [
@@ -185,14 +167,11 @@ class _WeatherHeaderState extends State<WeatherHeader> {
           style: const TextStyle(color: Colors.white70, fontSize: 11),
         ),
 
-        const SizedBox(height: 2),
-
         Text(
           value,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 12,
           ),
         ),
       ],

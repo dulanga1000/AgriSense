@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/data/models/user_model.dart';
+import 'package:agrisense/core/routes/app_routes.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final UserModel user;
+  ProfileHeader({super.key});
 
-  const ProfileHeader({
-    super.key,
-    required this.user,
-  });
+  final user = UserModel(
+    id: '1',
+    name: "Guest",
+    role: "Farmer",
+    location: "Western Province, Sri Lanka",
+    phone: "+91 98765 43210",
+    email: "guest@email.com",
+    memberSince: "Jan 2024",
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +39,12 @@ class ProfileHeader extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        '/home_screen',
-                      );
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                        return;
+                      }
+
+                      Navigator.pushReplacementNamed(context, AppRoutes.main);
                     },
                     child: const Icon(Icons.arrow_back, color: Colors.white),
                   ),
@@ -70,7 +78,7 @@ class ProfileHeader extends StatelessWidget {
                   color: Colors.black12,
                   blurRadius: 10,
                   offset: Offset(0, 4),
-                )
+                ),
               ],
             ),
             child: Row(
@@ -146,12 +154,7 @@ class ProfileHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: const Color(0xFF0C8F3E)),
         const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(fontSize: 13),
-          ),
-        ),
+        Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
       ],
     );
   }

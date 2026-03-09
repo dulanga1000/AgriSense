@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/data/models/weather_model.dart';
 import 'package:agrisense/presentation/home/screens/home_screen.dart';
 
@@ -47,10 +48,7 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                 ),
 
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
+                  Navigator.pushReplacementNamed(context, AppRoutes.main);
                 },
               ),
 
@@ -81,7 +79,7 @@ class _WeatherHeaderState extends State<WeatherHeader> {
             padding: const EdgeInsets.all(18),
 
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(18),
             ),
 
@@ -98,11 +96,15 @@ class _WeatherHeaderState extends State<WeatherHeader> {
 
                     const SizedBox(width: 5),
 
-                    Text(
-                      weather.city,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
+                    Expanded(
+                      child: Text(
+                        weather.city,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ],

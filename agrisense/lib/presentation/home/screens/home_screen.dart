@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/home/widgets/home_header.dart';
 import 'package:agrisense/presentation/home/widgets/plant_disease_scanner_card.dart';
 import 'package:agrisense/presentation/home/widgets/feature_grid.dart';
+import 'package:agrisense/presentation/home/widgets/farming_tips_section.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,12 +12,14 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-          children: const [
-            HomeHeader(),
-            SizedBox(height: 16),
-            PlantDiseaseScannerCard(),
-            SizedBox(height: 16),
-            FeatureGrid(),
+          children: [
+            const HomeHeader(),
+            const SizedBox(height: 16),
+            const PlantDiseaseScannerCard(),
+            const SizedBox(height: 16),
+            const FeatureGrid(),
+            const SizedBox(height: 16),
+            const FarmingTipsSection(),
           ],
         ),
       ),

@@ -44,7 +44,6 @@ class _LocationSelectorState extends State<LocationSelector> {
 
     return Column(
       children: [
-        /// Change Location Button
         GestureDetector(
           onTap: () {
             setState(() {
@@ -98,7 +97,6 @@ class _LocationSelectorState extends State<LocationSelector> {
 
         const SizedBox(height: 10),
 
-        /// Dropdown List
         if (showList)
           Container(
             height: 300,
@@ -114,7 +112,6 @@ class _LocationSelectorState extends State<LocationSelector> {
 
             child: Column(
               children: [
-                /// Search Field
                 TextField(
                   decoration: InputDecoration(
                     hintText: "Search location...",
@@ -133,10 +130,10 @@ class _LocationSelectorState extends State<LocationSelector> {
 
                 const SizedBox(height: 10),
 
-                /// Results
                 Expanded(
                   child: ListView.builder(
                     itemCount: filtered.length,
+
                     itemBuilder: (context, index) {
                       final item = filtered[index];
 

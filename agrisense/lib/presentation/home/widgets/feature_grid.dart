@@ -1,74 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/crop/screens/crop_advisory_screen.dart';
+import 'package:agrisense/data/models/feature_model.dart';
+import 'feature_card.dart';
 import 'package:agrisense/presentation/fertilizer/screens/fertilizer_screen.dart';
+import 'package:agrisense/presentation/crop/screens/crop_advisory_screen.dart';
 
 class FeatureGrid extends StatelessWidget {
   const FeatureGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 0.9, // prevents overflow
-      children: [
-        /// Fertilizer Card
-        _buildFeatureCard(
-          context,
-          title: "Fertilizer",
-          icon: Icons.grass,
-          color: Colors.green,
-          page: const FertilizerScreen(),
+    final List<FeatureModel> features = [
+      FeatureModel(
+        name: 'Fertilizer',
+        description: 'Get recommendations',
+        image: 'assets/images/fertilizer.png',
+      ),
+
+      FeatureModel(
+        name: 'Crop Advisory',
+        description: 'Seasonal guidance',
+        image: 'assets/images/icons-crop.png',
+      ),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: features.length,
+
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          childAspectRatio: 0.8,
         ),
 
-        /// Crop Advisory Card
-        _buildFeatureCard(
-          context,
-          title: "Crop Advisory",
-          icon: Icons.agriculture,
-          color: Colors.orange,
-          page: const CropAdvisoryScreen(),
-        ),
-      ],
-    );
-  }
+        itemBuilder: (context, index) {
+          return FeatureCard(
+            feature: features[index],
 
-  Widget _buildFeatureCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required Color color,
-    required Widget page,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => page));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 42, color: color),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
+            onTap: () {
+              if (index == 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FertilizerScreen(),
+                  ),
+                );
+              }
+
+              if (index == 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CropAdvisoryScreen(),
+                  ),
+                );
+              }
+            },
+          );
+        },
       ),
     );
   }

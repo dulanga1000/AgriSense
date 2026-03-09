@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/data/models/weather_model.dart';
 import 'package:agrisense/presentation/home/screens/home_screen.dart';
 
@@ -47,10 +48,7 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                 ),
 
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
+                  Navigator.pushReplacementNamed(context, AppRoutes.main);
                 },
               ),
 

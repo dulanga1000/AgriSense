@@ -7,20 +7,35 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(14),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+
+          const Text(
             "Recommended Crops for Yala Season",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
-          SizedBox(height: 16),
+
+          const SizedBox(height: 4),
+
+          const Text(
+            "Based on your location and current climate",
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+
+          const SizedBox(height: 16),
 
           CropItemCardWidget(
             cropName: "Rice (Paddy)",
@@ -29,6 +44,7 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
             profit: "High",
             tag: "Prime Time",
             image: "assets/images/rice.png",
+            suited: "Western, Central, North Central Province",
           ),
 
           CropItemCardWidget(
@@ -38,6 +54,7 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
             profit: "Very High",
             tag: "Prime Time",
             image: "assets/images/vegetables.png",
+            suited: "Uva, Central, Sabaragamuwa Province",
           ),
 
           CropItemCardWidget(
@@ -47,6 +64,7 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
             profit: "Medium",
             tag: "Good Time",
             image: "assets/images/maize.png",
+            suited: "North Central, Eastern, Northern Province",
           ),
 
           CropItemCardWidget(
@@ -56,6 +74,7 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
             profit: "Medium",
             tag: "Good Time",
             image: "assets/images/cowpea.png",
+            suited: "Dry Zone Areas",
           ),
         ],
       ),

@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/data/models/auth_button_model.dart';
 
 class AuthButton extends StatelessWidget {
-  final String text;
+  final AuthButtonModel button;
   final VoidCallback onPressed;
-  final IconData? icon;
-  final bool outlined;
 
   const AuthButton({
     super.key,
-    required this.text,
+    required this.button,
     required this.onPressed,
-    this.icon,
-    this.outlined = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (outlined) {
+
+    if (button.outlined) {
       return SizedBox(
         width: double.infinity,
         child: OutlinedButton.icon(
           onPressed: onPressed,
-          icon: Icon(icon),
-          label: Text(text),
+          icon: button.icon != null ? Icon(button.icon) : const SizedBox(),
+          label: Text(button.text),
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 14),
             shape: RoundedRectangleBorder(
@@ -37,9 +35,9 @@ class AuthButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: onPressed,
-        icon: icon != null ? Icon(icon) : const SizedBox(),
+        icon: button.icon != null ? Icon(button.icon) : const SizedBox(),
         label: Text(
-          text,
+          button.text,
           style: const TextStyle(color: Colors.white),
         ),
         style: ElevatedButton.styleFrom(

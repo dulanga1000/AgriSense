@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/profile_header.dart';
+import '../widgets/profile_farm.dart';
+import '../widgets/profile_setting.dart';
+import '../widgets/profile_logout.dart';
 import 'package:agrisense/data/models/user_model.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -23,7 +26,23 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             ProfileHeader(user: user),
+
             const SizedBox(height: 150),
+
+            /// FARM DETAILS CARD
+            const ProfileFarm(),
+
+            const SizedBox(height: 20),
+
+            /// SETTINGS CARD
+            const ProfileSetting(),
+
+            const SizedBox(height: 20),
+
+            /// LOGOUT BUTTON  (ADD THIS)
+            const ProfileLogout(),
+
+            const SizedBox(height: 30),
           ],
         ),
       ),

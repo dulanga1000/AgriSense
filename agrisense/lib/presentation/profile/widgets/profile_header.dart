@@ -30,10 +30,18 @@ class ProfileHeader extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Icon(Icons.arrow_back, color: Colors.white),
-                  SizedBox(width: 10),
-                  Text(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        '/home_screen',
+                      );
+                    },
+                    child: const Icon(Icons.arrow_back, color: Colors.white),
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
                     "Profile",
                     style: TextStyle(
                       color: Colors.white,
@@ -81,6 +89,7 @@ class ProfileHeader extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 const SizedBox(width: 14),
 
                 /// USER DETAILS
@@ -95,7 +104,9 @@ class ProfileHeader extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+
                       const SizedBox(height: 2),
+
                       Text(
                         user.role,
                         style: const TextStyle(
@@ -103,13 +114,18 @@ class ProfileHeader extends StatelessWidget {
                           color: Colors.grey,
                         ),
                       ),
+
                       const SizedBox(height: 12),
+
                       _infoRow(Icons.location_on, user.location),
                       const SizedBox(height: 8),
+
                       _infoRow(Icons.phone, user.phone),
                       const SizedBox(height: 8),
+
                       _infoRow(Icons.email, user.email),
                       const SizedBox(height: 8),
+
                       _infoRow(
                         Icons.calendar_today,
                         "Member since ${user.memberSince}",
@@ -135,7 +151,7 @@ class ProfileHeader extends StatelessWidget {
             text,
             style: const TextStyle(fontSize: 13),
           ),
-        )
+        ),
       ],
     );
   }

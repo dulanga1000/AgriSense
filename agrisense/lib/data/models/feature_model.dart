@@ -1,11 +1,9 @@
+import 'package:flutter/widgets.dart';
+
 class FeatureModel {
   final String name;
   final String description;
-  final String image;
+  final IconData? icon;
 
-  FeatureModel({
-    required this.name,
-    required this.description,
-    required this.image,
-  });
+  FeatureModel({required this.name, required this.description, this.icon});
 }

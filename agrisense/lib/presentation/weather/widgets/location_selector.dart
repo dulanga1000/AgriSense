@@ -50,18 +50,20 @@ class _LocationSelectorState extends State<LocationSelector> {
               showList = !showList;
             });
           },
-
           child: Container(
+            margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.all(16),
-
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: const [
-                BoxShadow(color: Colors.black12, blurRadius: 6),
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 6,
+                  offset: Offset(0, 3),
+                ),
               ],
             ),
-
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -70,62 +72,59 @@ class _LocationSelectorState extends State<LocationSelector> {
                   children: [
                     const Text(
                       "Change Location",
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(fontSize: 13, color: Colors.grey),
                     ),
-
-                    const SizedBox(height: 4),
-
+                    const SizedBox(height: 6),
                     Text(
                       selectedLocation,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                     ),
                   ],
                 ),
-
                 Icon(
                   showList
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
+                  size: 24,
                 ),
               ],
             ),
           ),
         ),
 
-        const SizedBox(height: 10),
-
         if (showList)
           Container(
-            height: 300,
-            padding: const EdgeInsets.all(10),
-
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            height: 250,
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: const [
                 BoxShadow(color: Colors.black12, blurRadius: 6),
               ],
             ),
-
             child: Column(
               children: [
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search location...",
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                SizedBox(
+                  height: 40,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search location...",
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchQuery = value;
+                      });
+                    },
                   ),
-
-                  onChanged: (value) {
-                    setState(() {
-                      searchQuery = value;
-                    });
-                  },
                 ),
 
                 const SizedBox(height: 10),
@@ -133,22 +132,17 @@ class _LocationSelectorState extends State<LocationSelector> {
                 Expanded(
                   child: ListView.builder(
                     itemCount: filtered.length,
-
                     itemBuilder: (context, index) {
                       final item = filtered[index];
 
                       return ListTile(
                         leading: const Icon(Icons.location_on_outlined),
-
                         title: Text(item["city"]!),
-
                         subtitle: Text(item["province"]!),
-
                         onTap: () {
                           setState(() {
                             selectedLocation =
                                 "${item["city"]}, ${item["province"]}";
-
                             showList = false;
                           });
                         },

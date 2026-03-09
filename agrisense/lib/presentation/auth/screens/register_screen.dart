@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/core/routes/app_routes.dart';
+
 import 'package:agrisense/presentation/auth/widgets/auth_form_header.dart';
 import 'package:agrisense/presentation/auth/widgets/email_textfield.dart';
 import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
 import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
+
+import 'package:agrisense/data/models/auth_button_model.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     final TextEditingController nameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final TextEditingController confirmPasswordController =
-        TextEditingController();
+
+    final registerButton = AuthButtonModel(
+      text: "Register",
+    );
+
+    final googleButton = AuthButtonModel(
+      text: "Sign in with Google",
+      icon: Icons.g_mobiledata,
+      outlined: true,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFFD9F5E1),
@@ -22,14 +34,15 @@ class RegisterScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+
               const SizedBox(height: 20),
 
-              /// Header
+              // Header
               const AuthFormHeader(),
 
               const SizedBox(height: 30),
 
-              /// Register Card
+              // Register Card
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 padding: const EdgeInsets.all(24),
@@ -48,7 +61,8 @@ class RegisterScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// Welcome Text
+
+                    // Title
                     const Center(
                       child: Text(
                         "Create Account",
@@ -61,9 +75,9 @@ class RegisterScreen extends StatelessWidget {
 
                     const SizedBox(height: 25),
 
-                    /// Name Label
+                    // Name Label
                     const Text(
-                      "Full Name",
+                      "Name",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -72,24 +86,23 @@ class RegisterScreen extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    /// Name Field
+                    // Name Field
                     TextField(
                       controller: nameController,
                       decoration: InputDecoration(
                         hintText: "Enter your name",
                         filled: true,
-                        fillColor: Colors.grey[100],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
+                        fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.person_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 20),
 
-                    /// Email Label
+                    // Email Label
                     const Text(
                       "Email",
                       style: TextStyle(
@@ -100,12 +113,12 @@ class RegisterScreen extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    /// Email Field
+                    // Email Field
                     EmailTextField(controller: emailController),
 
                     const SizedBox(height: 20),
 
-                    /// Password Label
+                    // Password Label
                     const Text(
                       "Password",
                       style: TextStyle(
@@ -116,38 +129,25 @@ class RegisterScreen extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    /// Password Field
+                    // Password Field
                     PasswordTextField(controller: passwordController),
-
-                    const SizedBox(height: 20),
-
-                    /// Confirm Password Label
-                    const Text(
-                      "Confirm Password",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    /// Confirm Password Field
-                    PasswordTextField(controller: confirmPasswordController),
 
                     const SizedBox(height: 25),
 
-                    /// Register Button
+                    // Register Button
                     AuthButton(
-                      text: "Register",
+                      button: registerButton,
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, AppRoutes.main);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.main,
+                        );
                       },
                     ),
 
                     const SizedBox(height: 25),
 
-                    /// Divider
+                    // Divider
                     const Row(
                       children: [
                         Expanded(child: Divider()),
@@ -161,17 +161,15 @@ class RegisterScreen extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    /// Google Sign In Button
+                    // Google Button
                     AuthButton(
-                      text: "Sign in with Google",
-                      icon: Icons.g_mobiledata,
-                      outlined: true,
+                      button: googleButton,
                       onPressed: () {},
                     ),
 
                     const SizedBox(height: 20),
 
-                    /// Login Link
+                    // Login Link
                     Center(
                       child: TextButton(
                         onPressed: () {

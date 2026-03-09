@@ -6,6 +6,8 @@ import 'package:agrisense/presentation/auth/widgets/email_textfield.dart';
 import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
 import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
 
+import 'package:agrisense/data/models/auth_button_model.dart';
+
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
@@ -14,20 +16,37 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final loginButton = AuthButtonModel(
+      text: "Login",
+    );
+
+    final googleButton = AuthButtonModel(
+      text: "Sign in with Google",
+      icon: Icons.g_mobiledata,
+      outlined: true,
+    );
+
+    final guestButton = AuthButtonModel(
+      text: "Continue as Guest",
+      outlined: true,
+    );
+
     return Scaffold(
       backgroundColor: const Color(0xFFD9F5E1),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
+
               const SizedBox(height: 20),
 
-              /// Header
+              // Header
               const AuthFormHeader(),
 
               const SizedBox(height: 30),
 
-              /// Login Card
+              // Login Card
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 padding: const EdgeInsets.all(24),
@@ -46,7 +65,8 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// Welcome Text
+
+                    // Welcome Text
                     const Center(
                       child: Text(
                         "Welcome Back",
@@ -59,7 +79,7 @@ class LoginScreen extends StatelessWidget {
 
                     const SizedBox(height: 25),
 
-                    /// Email Label
+                    // Email Label
                     const Text(
                       "Email",
                       style: TextStyle(
@@ -70,12 +90,12 @@ class LoginScreen extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    /// Email Field
+                    // Email Field
                     EmailTextField(controller: emailController),
 
                     const SizedBox(height: 20),
 
-                    /// Password Label
+                    // Password Label
                     const Text(
                       "Password",
                       style: TextStyle(
@@ -86,12 +106,12 @@ class LoginScreen extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    /// Password Field
+                    // Password Field
                     PasswordTextField(controller: passwordController),
 
                     const SizedBox(height: 10),
 
-                    /// Forgot Password
+                    // Forgot Password
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -108,17 +128,20 @@ class LoginScreen extends StatelessWidget {
 
                     const SizedBox(height: 10),
 
-                    /// Login Button (Reusable)
+                    // Login Button
                     AuthButton(
-                      text: "Login",
+                      button: loginButton,
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, AppRoutes.main);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.main,
+                        );
                       },
                     ),
 
                     const SizedBox(height: 25),
 
-                    /// Divider
+                    // Divider
                     Row(
                       children: const [
                         Expanded(child: Divider()),
@@ -132,17 +155,15 @@ class LoginScreen extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    /// Google Sign In Button (same widget)
+                    // Google Button
                     AuthButton(
-                      text: "Sign in with Google",
-                      icon: Icons.g_mobiledata,
-                      outlined: true,
+                      button: googleButton,
                       onPressed: () {},
                     ),
 
                     const SizedBox(height: 20),
 
-                    /// Register
+                    // Register
                     Center(
                       child: TextButton(
                         onPressed: () {
@@ -160,12 +181,14 @@ class LoginScreen extends StatelessWidget {
 
                     const SizedBox(height: 15),
 
-                    /// Guest Login
+                    // Guest Login
                     AuthButton(
-                      text: "Continue as Guest",
-                      outlined: true,
+                      button: guestButton,
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, AppRoutes.main);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.main,
+                        );
                       },
                     ),
                   ],

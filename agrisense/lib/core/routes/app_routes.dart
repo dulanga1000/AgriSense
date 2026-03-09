@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../presentation/splash/splash_screen.dart';
 import '../../presentation/auth/screens/login_screen.dart';
-import '../../presentation/main/main_screen.dart';
+import '../../presentation/main/screens/main_screen.dart';
 import '../../presentation/home/screens/home_screen.dart';
 import '../../presentation/disease/disease_scan_screen.dart';
 import '../../presentation/weather/screens/weather_screen.dart';

@@ -16,6 +16,8 @@ class BottomNavBarWidget extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onTap,
       type: BottomNavigationBarType.fixed,
+      selectedItemColor: Colors.green,
+      unselectedItemColor: Colors.grey[600],
       items: const [
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.house),

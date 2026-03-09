@@ -7,7 +7,7 @@ import 'package:agrisense/presentation/fertilizer/widgets/important_notes_card.d
 import 'package:agrisense/presentation/fertilizer/widgets/usage_instruction_card.dart';
 
 class FertilizerScreen extends StatefulWidget {
-  const FertilizerScreen({Key? key}) : super(key: key);
+  const FertilizerScreen({super.key});
 
   @override
   State<FertilizerScreen> createState() => _FertilizerScreenState();

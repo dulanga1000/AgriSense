@@ -18,14 +18,35 @@ class CropAdvisoryScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFF16A34A),
         elevation: 0,
-        leading: const Icon(Icons.arrow_back),
+
+        /// BACK BUTTON
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+
+        /// TITLE
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Crop Advisory"),
+            Text(
+              "Crop Advisory",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             Text(
               "Smart farming recommendations",
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+              ),
             ),
           ],
         ),

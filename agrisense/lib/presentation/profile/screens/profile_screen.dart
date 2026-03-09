@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_farm.dart';
+import '../widgets/profile_setting.dart';
 import 'package:agrisense/data/models/user_model.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -29,6 +30,11 @@ class ProfileScreen extends StatelessWidget {
 
             /// FARM DETAILS CARD
             const ProfileFarm(),
+
+            const SizedBox(height: 20),
+
+            /// SETTINGS CARD  ✅ (THIS WAS MISSING)
+            const ProfileSetting(),
 
             const SizedBox(height: 20),
           ],

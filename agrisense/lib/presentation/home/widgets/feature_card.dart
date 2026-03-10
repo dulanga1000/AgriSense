@@ -21,7 +21,7 @@ class FeatureCard extends StatelessWidget {
 
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.25),
+              color: Colors.grey.withValues(alpha: 0.25),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
@@ -31,11 +31,10 @@ class FeatureCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              feature.image,
-              width: 50,
-              height: 50,
-              fit: BoxFit.contain,
+            Icon(
+              feature.icon ?? Icons.agriculture,
+              size: 50,
+              color: Colors.green.shade700,
             ),
 
             const SizedBox(height: 10),

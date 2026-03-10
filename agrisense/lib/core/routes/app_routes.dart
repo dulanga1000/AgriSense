@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../presentation/splash/splash_screen.dart';
 import '../../presentation/auth/screens/login_screen.dart';
+import '../../presentation/auth/screens/register_screen.dart';
 import '../../presentation/main/screens/main_screen.dart';
 import '../../presentation/home/screens/home_screen.dart';
 import '../../presentation/disease/disease_scan_screen.dart';
@@ -12,6 +13,7 @@ import '../../presentation/crop/screens/crop_advisory_screen.dart';
 class AppRoutes {
   static const String splash = '/';
   static const String login = '/login';
+  static const String register = '/register';
   static const String main = '/main_screen';
   static const String home = '/home_screen';
   static const String diseaseScan = '/disease_scan_screen';
@@ -23,6 +25,7 @@ class AppRoutes {
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => const SplashScreen(),
     login: (context) => LoginScreen(),
+    register: (context) => RegisterScreen(),
     main: (context) => const MainScreen(),
     home: (context) => const HomeScreen(),
     diseaseScan: (context) => const DiseaseScanScreen(),

@@ -27,7 +27,6 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
   @override
   Widget build(BuildContext context) {
-
     final loginButton = AuthButtonModel(text: "Login");
 
     final googleButton = AuthButtonModel(
@@ -41,35 +40,28 @@ class _LoginFormCardState extends State<LoginFormCard> {
       outlined: true,
     );
 
-    return Form(
-      key: _formKey,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 5),
-            ),
-          ],
-        ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
 
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            const Center(
-              child: Text(
-                "Welcome Back",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Center(
+            child: Text(
+              "Welcome Back",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 25),
@@ -144,7 +136,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
               ],
             ),
 
-            const SizedBox(height: 20),
+          AuthButton(button: googleButton, onPressed: () {}),
 
             /// Google Login
             AuthButton(

@@ -13,7 +13,6 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFD9F5E1),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

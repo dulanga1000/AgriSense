@@ -60,13 +60,13 @@ class FertilizerForm extends StatelessWidget {
 
             SizedBox(
               width: double.infinity,
-
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-
                 onPressed: onSubmit,
-
-                child: const Text("Get Recommendation"),
+                child: const Text(
+                  "Get Recommendation",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ],

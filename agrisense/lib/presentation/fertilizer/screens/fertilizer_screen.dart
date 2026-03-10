@@ -29,11 +29,16 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
 
       appBar: AppBar(
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white, // makes back arrow white
+
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            Text("Fertilizer Guide"),
-            Text("Smart recommendations", style: TextStyle(fontSize: 12)),
+            Text("Fertilizer Guide", style: TextStyle(color: Colors.white)),
+            Text(
+              "Smart recommendations",
+              style: TextStyle(fontSize: 12, color: Colors.white),
+            ),
           ],
         ),
       ),

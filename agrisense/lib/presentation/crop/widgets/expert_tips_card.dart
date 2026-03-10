@@ -5,7 +5,7 @@ class ExpertTipsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Reduced width to 90% of screen width
+    
     final double cardWidth = MediaQuery.of(context).size.width * 0.9;
 
     return Center(
@@ -26,7 +26,7 @@ class ExpertTipsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row
+            
             Row(
               children: [
                 Image.asset("assets/images/bulb.png", width: 22, height: 22),
@@ -40,7 +40,7 @@ class ExpertTipsCard extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Tips
+            
             _tipItem(
               color: Colors.green.shade100,
               title: "Water Management",
@@ -71,7 +71,7 @@ class ExpertTipsCard extends StatelessWidget {
     );
   }
 
-  // Tip item widget
+  
   static Widget _tipItem({
     required Color color,
     required String title,

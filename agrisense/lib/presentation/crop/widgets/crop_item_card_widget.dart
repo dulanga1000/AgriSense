@@ -7,7 +7,7 @@ class CropItemCardWidget extends StatelessWidget {
   final String profit;
   final String tag;
   final String image;
-  final String suited; // ← must exist
+  final String suited; 
 
   const CropItemCardWidget({
     super.key,
@@ -17,7 +17,7 @@ class CropItemCardWidget extends StatelessWidget {
     required this.profit,
     required this.tag,
     required this.image,
-    required this.suited, // ← must exist
+    required this.suited, 
   });
 
   @override
@@ -34,7 +34,7 @@ class CropItemCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          /// TOP ROW
+          
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -86,7 +86,7 @@ class CropItemCardWidget extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          /// WATER + PROFIT
+          
           Row(
             children: [
               Expanded(

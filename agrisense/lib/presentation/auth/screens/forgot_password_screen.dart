@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/forgot_password_email_step.dart';
-import '../widgets/forgot_password_verify_step.dart';
-import '../widgets/forgot_password_reset_step.dart';
+import 'package:agrisense/presentation/auth/widgets/forgot_password_email_step.dart';
+import 'package:agrisense/presentation/auth/widgets/forgot_password_verify_step.dart';
+import 'package:agrisense/presentation/auth/widgets/forgot_password_reset_step.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});

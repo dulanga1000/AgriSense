@@ -15,22 +15,18 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             ProfileHeader(),
-
             const SizedBox(height: 150),
 
-            /// FARM DETAILS CARD
+            
             const ProfileFarm(),
-
             const SizedBox(height: 20),
 
-            /// SETTINGS CARD
+            
             const ProfileSetting(),
-
             const SizedBox(height: 20),
 
-            /// LOGOUT BUTTON  (ADD THIS)
+            
             const ProfileLogout(),
-
             const SizedBox(height: 30),
           ],
         ),

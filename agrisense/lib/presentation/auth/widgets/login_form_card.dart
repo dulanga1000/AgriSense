@@ -4,6 +4,7 @@ import 'package:agrisense/presentation/auth/widgets/email_textfield.dart';
 import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
 import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
 import 'package:agrisense/data/models/auth_button_model.dart';
+import 'package:agrisense/presentation/auth/screens/forgot_password_screen.dart';
 
 class LoginFormCard extends StatelessWidget {
   final TextEditingController emailController;
@@ -79,7 +80,14 @@ class LoginFormCard extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ForgotPasswordScreen(),
+                  ),
+                );
+              },
               child: const Text(
                 "Forgot Password?",
                 style: TextStyle(color: Colors.green),

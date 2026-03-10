@@ -20,7 +20,7 @@ class ProfileHeader extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        /// GREEN HEADER
+        
         Container(
           height: 160,
           decoration: const BoxDecoration(
@@ -63,7 +63,7 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
 
-        /// PROFILE CARD
+        
         Positioned(
           top: 95,
           left: 20,
@@ -84,7 +84,7 @@ class ProfileHeader extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// AVATAR
+                
                 CircleAvatar(
                   radius: 28,
                   backgroundColor: const Color(0xFF0C8F3E),
@@ -100,7 +100,7 @@ class ProfileHeader extends StatelessWidget {
 
                 const SizedBox(width: 14),
 
-                /// USER DETAILS
+                
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

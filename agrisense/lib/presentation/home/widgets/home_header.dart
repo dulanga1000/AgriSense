@@ -157,15 +157,13 @@ class _HomeHeaderState extends State<HomeHeader> {
                           size: 14,
                         ),
                         const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            weather.city,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                            ),
+                        Text(
+                          weather.city,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
                           ),
                         ),
                       ],

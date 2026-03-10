@@ -6,20 +6,28 @@ import '../../weather/screens/weather_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int initialIndex;
+
+  const MainScreen({super.key, this.initialIndex = 0});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
+  late int _currentIndex;
   final List<Widget> _screens = [
     const HomeScreen(),
     const DiseaseScanScreen(),
     const WeatherScreen(),
     const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
 
   @override
   Widget build(BuildContext context) {

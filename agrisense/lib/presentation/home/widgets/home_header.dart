@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:agrisense/presentation/main/screens/main_screen.dart';
 import 'package:agrisense/data/models/user_model.dart';
 import 'package:agrisense/data/models/weather_model.dart';
-import '../../../core/routes/app_routes.dart';
 
 class HomeHeader extends StatefulWidget {
   const HomeHeader({super.key});
@@ -209,7 +209,12 @@ class _HomeHeaderState extends State<HomeHeader> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.weather);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainScreen(initialIndex: 2),
+                      ),
+                    );
                   },
 
                   child: const Text("View More"),

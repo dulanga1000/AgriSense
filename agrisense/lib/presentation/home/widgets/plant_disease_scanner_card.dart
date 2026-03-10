@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/core/routes/app_routes.dart';
+import 'package:agrisense/presentation/main/screens/main_screen.dart';
 
 class PlantDiseaseScannerCard extends StatelessWidget {
   const PlantDiseaseScannerCard({super.key});
@@ -9,7 +9,12 @@ class PlantDiseaseScannerCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () {
-        Navigator.pushNamed(context, AppRoutes.diseaseScan);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(initialIndex: 1),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.all(16),

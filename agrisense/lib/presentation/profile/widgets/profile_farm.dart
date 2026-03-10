@@ -22,7 +22,7 @@ class ProfileFarm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// TITLE
+          
           Row(
             children: const [
               Icon(
@@ -44,7 +44,7 @@ class ProfileFarm extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          /// STATS
+          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

@@ -17,7 +17,6 @@ class LoginFormCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final loginButton = AuthButtonModel(text: "Login");
 
     final googleButton = AuthButtonModel(
@@ -49,14 +48,10 @@ class LoginFormCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           const Center(
             child: Text(
               "Welcome Back",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
 
@@ -111,10 +106,7 @@ class LoginFormCard extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          AuthButton(
-            button: googleButton,
-            onPressed: () {},
-          ),
+          AuthButton(button: googleButton, onPressed: () {}),
 
           const SizedBox(height: 20),
 

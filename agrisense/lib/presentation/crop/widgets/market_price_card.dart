@@ -7,7 +7,7 @@ class MarketPriceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9, // reduced width
+        width: MediaQuery.of(context).size.width * 0.9, 
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
@@ -27,7 +27,7 @@ class MarketPriceCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Title
+            
             const Row(
               children: [
                 Icon(Icons.trending_up, color: Colors.white),
@@ -52,7 +52,7 @@ class MarketPriceCard extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            /// Crop Items
+            
             _priceItem(
               crop: "Tomato",
               price: "Rs. 150-200/kg",
@@ -80,7 +80,7 @@ class MarketPriceCard extends StatelessWidget {
 
             const SizedBox(height: 18),
 
-            /// Info Box
+            
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(

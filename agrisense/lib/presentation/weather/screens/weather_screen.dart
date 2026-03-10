@@ -4,6 +4,9 @@ import 'package:agrisense/presentation/weather/widgets/location_selector.dart';
 import 'package:agrisense/presentation/weather/widgets/rain_prediction_card.dart';
 import 'package:agrisense/presentation/weather/widgets/forecast_card.dart';
 import 'package:agrisense/presentation/weather/widgets/weather_trends_card.dart';
+import 'package:agrisense/presentation/weather/widgets/weather_alerts_card.dart';
+import 'package:agrisense/presentation/weather/widgets/recommended_activities_card.dart';
+import 'package:agrisense/presentation/weather/widgets/irrigation_advice_card.dart';
 
 class WeatherScreen extends StatelessWidget {
   const WeatherScreen({super.key});
@@ -31,6 +34,18 @@ class WeatherScreen extends StatelessWidget {
             const ForecastCard(),
 
             const WeatherTrendsCard(),
+
+            const SizedBox(height: 16),
+
+            const WeatherAlertsCard(),
+
+            const SizedBox(height: 16),
+
+            const RecommendedActivitiesCard(),
+
+            const SizedBox(height: 16),
+
+            const IrrigationAdviceCard(),
           ],
         ),
       ),

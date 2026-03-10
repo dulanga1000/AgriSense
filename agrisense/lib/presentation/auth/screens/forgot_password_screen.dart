@@ -11,7 +11,21 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+
   int currentStep = 1;
+
+  /// Controllers
+  final emailController = TextEditingController();
+
+  final c1 = TextEditingController();
+  final c2 = TextEditingController();
+  final c3 = TextEditingController();
+  final c4 = TextEditingController();
+  final c5 = TextEditingController();
+  final c6 = TextEditingController();
+
+  final passwordController = TextEditingController();
+  final confirmController = TextEditingController();
 
   void goToVerify() {
     setState(() {
@@ -27,14 +41,38 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Widget getStepWidget() {
     switch (currentStep) {
+
       case 1:
-        return ForgotPasswordEmailStep(onNext: goToVerify);
+        return ForgotPasswordEmailStep(
+          emailController: emailController,
+          onNext: goToVerify,
+        );
+
       case 2:
-        return ForgotPasswordVerifyStep(onNext: goToReset);
+        return ForgotPasswordVerifyStep(
+          onNext: goToReset,
+          c1: c1,
+          c2: c2,
+          c3: c3,
+          c4: c4,
+          c5: c5,
+          c6: c6,
+        );
+
       case 3:
-        return const ForgotPasswordResetStep();
+        return ForgotPasswordResetStep(
+          passwordController: passwordController,
+          confirmController: confirmController,
+          onReset: () {
+            Navigator.pop(context);
+          },
+        );
+
       default:
-        return ForgotPasswordEmailStep(onNext: goToVerify);
+        return ForgotPasswordEmailStep(
+          emailController: emailController,
+          onNext: goToVerify,
+        );
     }
   }
 
@@ -71,15 +109,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
 
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
 
-              // Current Step UI
-              getStepWidget(),
-            ],
-          ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: getStepWidget(),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -27,6 +27,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
   @override
   Widget build(BuildContext context) {
+
     final loginButton = AuthButtonModel(text: "Login");
 
     final googleButton = AuthButtonModel(
@@ -55,13 +56,21 @@ class _LoginFormCardState extends State<LoginFormCard> {
         ],
       ),
 
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(
-            child: Text(
-              "Welcome Back",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            /// Title
+            const Center(
+              child: Text(
+                "Welcome Back",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
 
             const SizedBox(height: 25),
@@ -107,7 +116,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 10),
 
-            /// Login Button with Validation
+            /// Login Button
             AuthButton(
               button: loginButton,
               onPressed: () {
@@ -136,7 +145,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
               ],
             ),
 
-          AuthButton(button: googleButton, onPressed: () {}),
+            const SizedBox(height: 20),
 
             /// Google Login
             AuthButton(
@@ -174,6 +183,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
                 );
               },
             ),
+
           ],
         ),
       ),

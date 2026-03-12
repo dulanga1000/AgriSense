@@ -24,7 +24,9 @@ class ProfileHeader extends StatelessWidget {
         Container(
           height: 160,
           decoration: const BoxDecoration(
-            color: Color(0xFF0C8F3E),
+            gradient: LinearGradient(
+              colors: [Color(0xFF4CAF50), Color(0xFF0D520F)],
+            ),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(28),
               bottomRight: Radius.circular(28),
@@ -87,7 +89,7 @@ class ProfileHeader extends StatelessWidget {
                 
                 CircleAvatar(
                   radius: 28,
-                  backgroundColor: const Color(0xFF0C8F3E),
+                  backgroundColor: const Color(0xFF4CAF50),
                   child: Text(
                     user.avatarLetter,
                     style: const TextStyle(

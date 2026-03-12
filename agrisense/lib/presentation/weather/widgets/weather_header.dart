@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/data/models/weather_model.dart';
-import 'package:agrisense/presentation/home/screens/home_screen.dart';
 
 class WeatherHeader extends StatefulWidget {
   const WeatherHeader({super.key});
@@ -96,15 +95,13 @@ class _WeatherHeaderState extends State<WeatherHeader> {
 
                     const SizedBox(width: 5),
 
-                    Expanded(
-                      child: Text(
-                        weather.city,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                        ),
+                    Text(
+                      weather.city,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
                       ),
                     ),
                   ],

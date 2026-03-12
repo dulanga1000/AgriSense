@@ -52,7 +52,7 @@ class IrrigationAdviceCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
 
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.18),
+              color: Colors.white.withValues(alpha: 0.18),
               borderRadius: BorderRadius.circular(14),
             ),
 
@@ -65,7 +65,7 @@ class IrrigationAdviceCard extends StatelessWidget {
                       padding: const EdgeInsets.all(10),
 
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.25),
+                        color: Colors.white.withValues(alpha: 0.25),
                         borderRadius: BorderRadius.circular(10),
                       ),
 

@@ -22,7 +22,7 @@ class ProfileSetting extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// SETTINGS TITLE
+          
           Row(
             children: const [
               Icon(Icons.settings, size: 20, color: Colors.black87),
@@ -39,7 +39,7 @@ class ProfileSetting extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          /// EDIT PROFILE
+          
           _buildSettingTile(
             context,
             icon: Icons.person_outline,
@@ -49,7 +49,7 @@ class ProfileSetting extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          /// APP SETTINGS
+          
           _buildSettingTile(
             context,
             icon: Icons.settings_outlined,
@@ -59,7 +59,7 @@ class ProfileSetting extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          /// CHANGE LOCATION
+          
           _buildSettingTile(
             context,
             icon: Icons.location_on_outlined,

@@ -4,8 +4,8 @@ class ProfileLogout extends StatelessWidget {
   const ProfileLogout({super.key});
 
   void _handleLogout(BuildContext context) {
-    // Logout logic can be added here
-    // Example: Navigate to login screen
+    
+    
 
     Navigator.pushReplacementNamed(context, '/login');
   }

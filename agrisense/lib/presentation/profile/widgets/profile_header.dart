@@ -20,7 +20,8 @@ class ProfileHeader extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        
+
+        /// HEADER BACKGROUND
         Container(
           height: 160,
           decoration: const BoxDecoration(
@@ -45,12 +46,12 @@ class ProfileHeader extends StatelessWidget {
                         Navigator.pop(context);
                         return;
                       }
-
-                      Navigator.pushReplacementNamed(context, AppRoutes.main);
+                      Navigator.pushReplacementNamed(
+                          context, AppRoutes.main);
                     },
                     child: const Icon(Icons.arrow_back, color: Colors.white),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 40),
                   const Text(
                     "Profile",
                     style: TextStyle(
@@ -65,11 +66,11 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
 
-        
+        /// PROFILE CARD
         Positioned(
           top: 95,
-          left: 20,
-          right: 20,
+          left: 40,
+          right: 40,
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
@@ -83,65 +84,68 @@ class ProfileHeader extends StatelessWidget {
                 ),
               ],
             ),
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
-                CircleAvatar(
-                  radius: 28,
-                  backgroundColor: const Color(0xFF4CAF50),
-                  child: Text(
-                    user.avatarLetter,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
 
-                const SizedBox(width: 14),
-
-                
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.name,
+                /// AVATAR + NAME SECTION
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundColor: const Color(0xFF4CAF50),
+                      child: Text(
+                        user.avatarLetter,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 22,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
 
-                      const SizedBox(height: 2),
+                    const SizedBox(width: 14),
 
-                      Text(
-                        user.role,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(height: 12),
+                        const SizedBox(height: 2),
 
-                      _infoRow(Icons.location_on, user.location),
-                      const SizedBox(height: 8),
+                        Text(
+                          user.role,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
 
-                      _infoRow(Icons.phone, user.phone),
-                      const SizedBox(height: 8),
+                const SizedBox(height: 14),
 
-                      _infoRow(Icons.email, user.email),
-                      const SizedBox(height: 8),
+                /// USER DETAILS BELOW
+                _infoRow(Icons.location_on, user.location),
+                const SizedBox(height: 8),
 
-                      _infoRow(
-                        Icons.calendar_today,
-                        "Member since ${user.memberSince}",
-                      ),
-                    ],
-                  ),
+                _infoRow(Icons.phone, user.phone),
+                const SizedBox(height: 8),
+
+                _infoRow(Icons.email, user.email),
+                const SizedBox(height: 8),
+
+                _infoRow(
+                  Icons.calendar_today,
+                  "Member since ${user.memberSince}",
                 ),
               ],
             ),
@@ -156,7 +160,12 @@ class ProfileHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: const Color(0xFF0C8F3E)),
         const SizedBox(width: 8),
-        Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(fontSize: 13),
+          ),
+        ),
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'step_indicator.dart';
 
 class ForgotPasswordVerifyStep extends StatelessWidget {
   final VoidCallback onNext;
+  final String email;
 
   final TextEditingController c1;
   final TextEditingController c2;
@@ -15,6 +16,7 @@ class ForgotPasswordVerifyStep extends StatelessWidget {
   const ForgotPasswordVerifyStep({
     super.key,
     required this.onNext,
+    required this.email,
     required this.c1,
     required this.c2,
     required this.c3,
@@ -39,7 +41,6 @@ class ForgotPasswordVerifyStep extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.all(24),
-
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -83,11 +84,11 @@ class ForgotPasswordVerifyStep extends StatelessWidget {
 
                   const SizedBox(height: 10),
 
-                  /// Description
-                  const Text(
-                    "We sent a 6-digit code to guest@email.com",
+                  /// Description (Dynamic Email)
+                  Text(
+                    "We sent a 6-digit code to $email",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
                     ),

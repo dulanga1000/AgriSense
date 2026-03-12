@@ -15,41 +15,47 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   int currentStep = 1;
 
   /// Controllers
-  final emailController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-  final c1 = TextEditingController();
-  final c2 = TextEditingController();
-  final c3 = TextEditingController();
-  final c4 = TextEditingController();
-  final c5 = TextEditingController();
-  final c6 = TextEditingController();
+  final TextEditingController c1 = TextEditingController();
+  final TextEditingController c2 = TextEditingController();
+  final TextEditingController c3 = TextEditingController();
+  final TextEditingController c4 = TextEditingController();
+  final TextEditingController c5 = TextEditingController();
+  final TextEditingController c6 = TextEditingController();
 
-  final passwordController = TextEditingController();
-  final confirmController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmController = TextEditingController();
 
+  /// Go to Verify Step
   void goToVerify() {
     setState(() {
       currentStep = 2;
     });
   }
 
+  /// Go to Reset Step
   void goToReset() {
     setState(() {
       currentStep = 3;
     });
   }
 
+  /// Return correct step widget
   Widget getStepWidget() {
     switch (currentStep) {
 
+      /// STEP 1 — EMAIL
       case 1:
         return ForgotPasswordEmailStep(
           emailController: emailController,
           onNext: goToVerify,
         );
 
+      /// STEP 2 — VERIFY
       case 2:
         return ForgotPasswordVerifyStep(
+          email: emailController.text,   // ✅ pass entered email
           onNext: goToReset,
           c1: c1,
           c2: c2,
@@ -59,6 +65,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           c6: c6,
         );
 
+      /// STEP 3 — RESET
       case 3:
         return ForgotPasswordResetStep(
           passwordController: passwordController,

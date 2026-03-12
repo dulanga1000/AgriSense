@@ -102,7 +102,7 @@ class ForgotPasswordEmailStep extends StatelessWidget {
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      hintText: "your@email.com",
+                      hintText: "Enter your email",
                       prefixIcon: const Icon(Icons.email_outlined),
 
                       filled: true,

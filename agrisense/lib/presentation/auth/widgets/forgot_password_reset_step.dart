@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'step_indicator.dart';
+import 'auth_snackbar.dart';
 
 class ForgotPasswordResetStep extends StatelessWidget {
   final TextEditingController passwordController;
@@ -19,7 +20,7 @@ class ForgotPasswordResetStep extends StatelessWidget {
       child: Column(
         children: [
 
-          /// Step indicator
+          /// Step Indicator
           const StepIndicator(currentStep: 3),
 
           const SizedBox(height: 20),
@@ -45,7 +46,7 @@ class ForgotPasswordResetStep extends StatelessWidget {
               child: Column(
                 children: [
 
-                  /// Icon circle
+                  /// Icon Circle
                   Container(
                     width: 70,
                     height: 70,
@@ -74,7 +75,7 @@ class ForgotPasswordResetStep extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   const Text(
-                    "Your new password must be different from previous passwords",
+                    "Choose a strong password for your account",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -84,45 +85,132 @@ class ForgotPasswordResetStep extends StatelessWidget {
 
                   const SizedBox(height: 25),
 
-                  /// New password
+                  /// New Password Label
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "New Password",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  /// New Password Field
                   TextField(
                     controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: "New password",
+                      hintText: "Enter new password",
                       prefixIcon: const Icon(Icons.lock_outline),
+
                       filled: true,
                       fillColor: Colors.grey.shade100,
+
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                      ),
+
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF0E8F3E),
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  /// Confirm password
+                  /// Confirm Password Label
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Confirm Password",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  /// Confirm Password Field
                   TextField(
                     controller: confirmController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: "Confirm password",
+                      hintText: "Re-enter new password",
                       prefixIcon: const Icon(Icons.lock_outline),
+
                       filled: true,
                       fillColor: Colors.grey.shade100,
+
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                      ),
+
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF0E8F3E),
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
 
                   const SizedBox(height: 30),
 
-                  /// Reset button
+                  /// Reset Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: onReset,
+                      onPressed: () {
+
+                        final password = passwordController.text.trim();
+                        final confirm = confirmController.text.trim();
+
+                        if (password.isEmpty || confirm.isEmpty) {
+                          AuthSnackBar.showError(
+                            context,
+                            "Please fill all fields",
+                          );
+                          return;
+                        }
+
+                        if (password.length < 6) {
+                          AuthSnackBar.showError(
+                            context,
+                            "Password must be at least 6 characters",
+                          );
+                          return;
+                        }
+
+                        if (password != confirm) {
+                          AuthSnackBar.showError(
+                            context,
+                            "Passwords do not match",
+                          );
+                          return;
+                        }
+
+                        AuthSnackBar.showSuccess(
+                          context,
+                          "Password reset successfully!",
+                        );
+
+                        onReset();
+                      },
                       icon: const Icon(Icons.lock_reset),
                       label: const Text(
                         "Reset Password",

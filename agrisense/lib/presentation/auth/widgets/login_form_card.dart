@@ -4,8 +4,9 @@ import 'package:agrisense/presentation/auth/widgets/email_textfield.dart';
 import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
 import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
 import 'package:agrisense/data/models/auth_button_model.dart';
+import 'package:agrisense/presentation/auth/screens/forgot_password_screen.dart';
 
-class LoginFormCard extends StatelessWidget {
+class LoginFormCard extends StatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
 
@@ -16,7 +17,17 @@ class LoginFormCard extends StatelessWidget {
   });
 
   @override
+  State<LoginFormCard> createState() => _LoginFormCardState();
+}
+
+class _LoginFormCardState extends State<LoginFormCard> {
+
+  /// Form Key
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
   Widget build(BuildContext context) {
+
     final loginButton = AuthButtonModel(text: "Login");
 
     final googleButton = AuthButtonModel(
@@ -45,92 +56,136 @@ class LoginFormCard extends StatelessWidget {
         ],
       ),
 
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(
-            child: Text(
-              "Welcome Back",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-          const SizedBox(height: 25),
-
-          const Text("Email"),
-          const SizedBox(height: 8),
-
-          EmailTextField(controller: emailController),
-
-          const SizedBox(height: 20),
-
-          const Text("Password"),
-          const SizedBox(height: 8),
-
-          PasswordTextField(controller: passwordController),
-
-          const SizedBox(height: 10),
-
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {},
-              child: const Text(
-                "Forgot Password?",
-                style: TextStyle(color: Colors.green),
+            /// Title
+            const Center(
+              child: Text(
+                "Welcome Back",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 10),
+            const SizedBox(height: 25),
 
-          AuthButton(
-            button: loginButton,
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, AppRoutes.main);
-            },
-          ),
+            /// Email
+            const Text("Email"),
+            const SizedBox(height: 8),
 
-          const SizedBox(height: 25),
+            EmailTextField(
+              controller: widget.emailController,
+            ),
 
-          const Row(
-            children: [
-              Expanded(child: Divider()),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text("Or continue with"),
+            const SizedBox(height: 20),
+
+            /// Password
+            const Text("Password"),
+            const SizedBox(height: 8),
+
+            PasswordTextField(
+              controller: widget.passwordController,
+            ),
+
+            const SizedBox(height: 10),
+
+            /// Forgot Password
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPasswordScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Forgot Password?",
+                  style: TextStyle(color: Colors.green),
+                ),
               ),
-              Expanded(child: Divider()),
-            ],
-          ),
+            ),
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
-          AuthButton(button: googleButton, onPressed: () {}),
-
-          const SizedBox(height: 20),
-
-          Center(
-            child: TextButton(
+            /// Login Button
+            AuthButton(
+              button: loginButton,
               onPressed: () {
-                Navigator.pushReplacementNamed(context, AppRoutes.register);
+
+                if (_formKey.currentState!.validate()) {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    AppRoutes.main,
+                  );
+                }
+
               },
-              child: const Text(
-                "Don't have an account? Register",
-                style: TextStyle(color: Colors.green),
+            ),
+
+            const SizedBox(height: 25),
+
+            /// Divider
+            const Row(
+              children: [
+                Expanded(child: Divider()),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text("Or continue with"),
+                ),
+                Expanded(child: Divider()),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            /// Google Login
+            AuthButton(
+              button: googleButton,
+              onPressed: () {},
+            ),
+
+            const SizedBox(height: 20),
+
+            /// Register Navigation
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    AppRoutes.register,
+                  );
+                },
+                child: const Text(
+                  "Don't have an account? Register",
+                  style: TextStyle(color: Colors.green),
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 15),
+            const SizedBox(height: 15),
 
-          AuthButton(
-            button: guestButton,
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, AppRoutes.main);
-            },
-          ),
-        ],
+            /// Guest Login
+            AuthButton(
+              button: guestButton,
+              onPressed: () {
+                Navigator.pushReplacementNamed(
+                  context,
+                  AppRoutes.main,
+                );
+              },
+            ),
+
+          ],
+        ),
       ),
     );
   }

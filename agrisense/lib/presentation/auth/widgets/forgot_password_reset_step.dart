@@ -19,7 +19,6 @@ class ForgotPasswordResetStep extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-
           /// Step Indicator
           const StepIndicator(currentStep: 3),
 
@@ -45,13 +44,12 @@ class ForgotPasswordResetStep extends StatelessWidget {
 
               child: Column(
                 children: [
-
                   /// Icon Circle
                   Container(
                     width: 70,
                     height: 70,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0E8F3E).withOpacity(0.1),
+                      color: Color(0xFF0E8F3E).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -66,10 +64,7 @@ class ForgotPasswordResetStep extends StatelessWidget {
                   /// Title
                   const Text(
                     "Create New Password",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 10),
@@ -77,10 +72,7 @@ class ForgotPasswordResetStep extends StatelessWidget {
                   const Text(
                     "Choose a strong password for your account",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.black54),
                   ),
 
                   const SizedBox(height: 25),
@@ -176,7 +168,6 @@ class ForgotPasswordResetStep extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () {
-
                         final password = passwordController.text.trim();
                         final confirm = confirmController.text.trim();
 

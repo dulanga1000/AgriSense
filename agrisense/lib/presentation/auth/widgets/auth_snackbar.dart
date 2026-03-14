@@ -10,8 +10,11 @@ class AuthSnackBar {
   }
 
   static void _show(
-      BuildContext context, String message, Color color, IconData icon) {
-
+    BuildContext context,
+    String message,
+    Color color,
+    IconData icon,
+  ) {
     final overlay = Overlay.of(context);
 
     late OverlayEntry overlayEntry;
@@ -39,7 +42,6 @@ class AuthSnackBar {
                 ),
               ],
             ),
-
             child: Row(
               children: [
                 Icon(icon, color: Colors.white),
@@ -58,7 +60,9 @@ class AuthSnackBar {
 
                 GestureDetector(
                   onTap: () {
-                    overlayEntry.remove();
+                    if (overlayEntry.mounted) {
+                      overlayEntry.remove();
+                    }
                   },
                   child: const Icon(
                     Icons.close,
@@ -75,7 +79,9 @@ class AuthSnackBar {
     overlay.insert(overlayEntry);
 
     Future.delayed(const Duration(seconds: 3), () {
-      overlayEntry.remove();
+      if (overlayEntry.mounted) {
+        overlayEntry.remove();
+      }
     });
   }
 }

@@ -13,6 +13,9 @@ import 'package:agrisense/presentation/fertilizer/widgets/fertilizer_result_card
 import 'package:agrisense/presentation/fertilizer/widgets/important_notes_card.dart';
 import 'package:agrisense/presentation/fertilizer/widgets/usage_instruction_card.dart';
 
+import 'package:agrisense/data/models/fertilizer_model.dart';
+import 'package:agrisense/data/repositories/fertilizer_repository.dart';
+
 class FertilizerScreen extends StatefulWidget {
   const FertilizerScreen({super.key});
 
@@ -21,41 +24,46 @@ class FertilizerScreen extends StatefulWidget {
 }
 
 class _FertilizerScreenState extends State<FertilizerScreen> {
-  bool showResult = false;
+  FertilizerModel? recommendation;
+  final FertilizerRepository repository = FertilizerRepository();
 
-  void showRecommendation() {
+  /// Bottom nav selected index
+  int currentIndex = 0;
+
+  void showRecommendation(String cropType, double landSize) {
     setState(() {
-      showResult = true;
+      recommendation = repository.getRecommendation(cropType, landSize);
     });
   }
 
-  void _onNavTap(int index) {
+  void onNavTap(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+
     switch (index) {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
         );
         break;
-
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const DiseaseScanScreen()),
+          MaterialPageRoute(builder: (_) => const DiseaseScanScreen()),
         );
         break;
-
       case 2:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const WeatherScreen()),
+          MaterialPageRoute(builder: (_) => const WeatherScreen()),
         );
         break;
-
       case 3:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(builder: (_) => const ProfileScreen()),
         );
         break;
     }
@@ -69,17 +77,13 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
-
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Fertilizer Guide",
-              style: TextStyle(color: Colors.white),
-            ),
+            Text("Fertilizer Guide"),
             Text(
               "Smart recommendations",
-              style: TextStyle(fontSize: 12, color: Colors.white),
+              style: TextStyle(fontSize: 12),
             ),
           ],
         ),
@@ -89,35 +93,26 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            /// FORM
             FertilizerForm(onSubmit: showRecommendation),
-
             const SizedBox(height: 16),
-
-            /// SHOW RESULTS ONLY AFTER BUTTON CLICK
-            if (showResult) ...[
-              const FertilizerResultCard(),
+            if (recommendation != null) ...[
+              FertilizerResultCard(model: recommendation!),
               const SizedBox(height: 16),
-
               const UsageInstructionCard(),
               const SizedBox(height: 16),
-
               const ApplicationTimingCard(),
               const SizedBox(height: 16),
-
-              const CostCard(),
+              CostCard(estimatedCost: recommendation!.estimatedCost),
               const SizedBox(height: 16),
-
               const ImportantNotesCard(),
             ],
           ],
         ),
       ),
 
-      /// BOTTOM NAVIGATION BAR
       bottomNavigationBar: BottomNavBarWidget(
-        currentIndex: 1,
-        onTap: _onNavTap,
+        currentIndex: 0, // Set Fertilizer as selected (if index 0 is home, adjust accordingly)
+        onTap: onNavTap,
       ),
     );
   }

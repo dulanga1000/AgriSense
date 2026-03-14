@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
 import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
+import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
 import 'package:agrisense/presentation/auth/widgets/auth_snackbar.dart';
 import 'package:agrisense/presentation/auth/widgets/step_indicator.dart';
 import 'package:agrisense/data/models/auth_button_model.dart';
@@ -36,26 +36,26 @@ class _ForgotPasswordResetStepState
 
   bool passwordsMatch = false;
 
-  void validatePassword(String password) {
+  /// Validate everything
+  void validatePassword() {
+
+    final password = newPasswordController.text;
+    final confirm = confirmPasswordController.text;
 
     setState(() {
 
       hasLength = password.length >= 8;
+
       hasUpper = password.contains(RegExp(r'[A-Z]'));
+
       hasLower = password.contains(RegExp(r'[a-z]'));
+
       hasNumber = password.contains(RegExp(r'[0-9]'));
-      hasSpecial = password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
 
-      passwordsMatch =
-          password == confirmPasswordController.text;
-    });
-  }
+      hasSpecial =
+          password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
 
-  void validateConfirm(String confirm) {
-
-    setState(() {
-      passwordsMatch =
-          confirm == newPasswordController.text;
+      passwordsMatch = password == confirm;
     });
   }
 
@@ -65,6 +65,22 @@ class _ForgotPasswordResetStepState
       hasNumber &&
       hasSpecial &&
       hasLength;
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// Listen to typing in both fields
+    newPasswordController.addListener(validatePassword);
+    confirmPasswordController.addListener(validatePassword);
+  }
+
+  @override
+  void dispose() {
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,11 +158,12 @@ class _ForgotPasswordResetStepState
 
               /// NEW PASSWORD
               const Text("New Password"),
+
               const SizedBox(height: 8),
 
               PasswordTextField(
                 controller: newPasswordController,
-                onChanged: validatePassword,
+                hintText: "Enter new password",
               ),
 
               const SizedBox(height: 20),
@@ -158,22 +175,26 @@ class _ForgotPasswordResetStepState
                   color: Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(12),
                 ),
-
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
                     const Text(
                       "Password must contain:",
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500),
                     ),
 
                     const SizedBox(height: 10),
 
                     ruleTile("At least 8 characters", hasLength),
+
                     ruleTile("One uppercase letter", hasUpper),
+
                     ruleTile("One lowercase letter", hasLower),
+
                     ruleTile("One number", hasNumber),
+
                     ruleTile("One special character", hasSpecial),
                   ],
                 ),
@@ -183,11 +204,12 @@ class _ForgotPasswordResetStepState
 
               /// CONFIRM PASSWORD
               const Text("Confirm Password"),
+
               const SizedBox(height: 8),
 
               PasswordTextField(
                 controller: confirmPasswordController,
-                onChanged: validateConfirm,
+                hintText: "Confirm password",
               ),
 
               const SizedBox(height: 8),
@@ -218,7 +240,7 @@ class _ForgotPasswordResetStepState
               /// RESET BUTTON
               AuthButton(
                 button: resetButton,
-                onPressed: () {
+                onPressed: () async {
 
                   if (!passwordValid) {
                     AuthSnackBar.showError(
@@ -241,6 +263,9 @@ class _ForgotPasswordResetStepState
                     "Password reset successfully!",
                   );
 
+                  await Future.delayed(
+                      const Duration(seconds: 1));
+
                   widget.onResetSuccess();
                 },
               ),
@@ -255,7 +280,6 @@ class _ForgotPasswordResetStepState
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
-
       child: Row(
         children: [
 
@@ -280,4 +304,3 @@ class _ForgotPasswordResetStepState
     );
   }
 }
-

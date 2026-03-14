@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class PasswordTextField extends StatefulWidget {
-
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
   final String hintText;
@@ -18,15 +17,15 @@ class PasswordTextField extends StatefulWidget {
 }
 
 class _PasswordTextFieldState extends State<PasswordTextField> {
-
   bool obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
-
     return TextFormField(
       controller: widget.controller,
       obscureText: obscurePassword,
+
+      /// This enables LIVE validation in the reset screen
       onChanged: widget.onChanged,
 
       decoration: InputDecoration(
@@ -47,6 +46,9 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           },
         ),
 
+        filled: true,
+        fillColor: Colors.grey.shade100,
+
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -63,13 +65,9 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
             width: 2,
           ),
         ),
-
-        filled: true,
-        fillColor: Colors.grey.shade100,
       ),
 
       validator: (value) {
-
         if (value == null || value.isEmpty) {
           return "Password is required";
         }
@@ -83,4 +81,3 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     );
   }
 }
-

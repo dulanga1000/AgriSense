@@ -1,17 +1,15 @@
 class FertilizerModel {
   final String cropType;
-  final double landSize;
   final String fertilizerName;
-  final double quantity;
   final String npkRatio;
-  final double estimatedCost;
+  final double totalQuantity; // in kg
+  final double estimatedCost; // in LKR
 
   FertilizerModel({
     required this.cropType,
-    required this.landSize,
     required this.fertilizerName,
-    required this.quantity,
     required this.npkRatio,
+    required this.totalQuantity,
     required this.estimatedCost,
   });
 }

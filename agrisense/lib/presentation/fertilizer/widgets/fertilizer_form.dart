@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class FertilizerForm extends StatefulWidget {
-  final VoidCallback onSubmit;
 
-  const FertilizerForm({super.key, required this.onSubmit});
+  final Function(String cropType, double landSize) onSubmit;
+
+  const FertilizerForm({
+    super.key,
+    required this.onSubmit,
+  });
 
   @override
   State<FertilizerForm> createState() => _FertilizerFormState();
@@ -18,15 +22,25 @@ class _FertilizerFormState extends State<FertilizerForm> {
     return selectedCrop != null && landController.text.isNotEmpty;
   }
 
+  void submitForm() {
+    double landSize = double.tryParse(landController.text) ?? 0;
+    widget.onSubmit(selectedCrop!, landSize);
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+
       child: Padding(
         padding: const EdgeInsets.all(16),
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
 
             Row(
@@ -69,9 +83,8 @@ class _FertilizerFormState extends State<FertilizerForm> {
 
             TextField(
               controller: landController,
-              onChanged: (value) {
-                setState(() {});
-              },
+              keyboardType: TextInputType.number,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 hintText: "Enter land size",
                 border: OutlineInputBorder(),
@@ -87,7 +100,7 @@ class _FertilizerFormState extends State<FertilizerForm> {
                   backgroundColor: Colors.green,
                 ),
 
-                onPressed: isFormValid ? widget.onSubmit : null,
+                onPressed: isFormValid ? submitForm : null,
 
                 child: const Text(
                   "Get Recommendation",

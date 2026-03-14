@@ -7,18 +7,43 @@ class PasswordTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       obscureText: true,
+
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.lock_outlined),
         hintText: "Enter your password",
-        filled: true,
-        fillColor: Colors.white,
+        prefixIcon: const Icon(Icons.lock_outline),
+
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Color(0xFF0E8F3E), // green border
+            width: 2,
+          ),
+        ),
       ),
+
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Password is required";
+        }
+
+        if (value.length < 6) {
+          return "Password must be at least 6 characters";
+        }
+
+        return null;
+      },
     );
   }
 }

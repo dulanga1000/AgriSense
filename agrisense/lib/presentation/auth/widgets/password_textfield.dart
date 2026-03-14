@@ -1,19 +1,51 @@
 import 'package:flutter/material.dart';
 
-class PasswordTextField extends StatelessWidget {
-  final TextEditingController controller;
+class PasswordTextField extends StatefulWidget {
 
-  const PasswordTextField({super.key, required this.controller});
+  final TextEditingController controller;
+  final ValueChanged<String>? onChanged;
+  final String hintText;
+
+  const PasswordTextField({
+    super.key,
+    required this.controller,
+    this.onChanged,
+    this.hintText = "Enter your password",
+  });
+
+  @override
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
+
+  bool obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
+
     return TextFormField(
-      controller: controller,
-      obscureText: true,
+      controller: widget.controller,
+      obscureText: obscurePassword,
+      onChanged: widget.onChanged,
 
       decoration: InputDecoration(
-        hintText: "Enter your password",
+        hintText: widget.hintText,
+
         prefixIcon: const Icon(Icons.lock_outline),
+
+        suffixIcon: IconButton(
+          icon: Icon(
+            obscurePassword
+                ? Icons.visibility_off
+                : Icons.visibility,
+          ),
+          onPressed: () {
+            setState(() {
+              obscurePassword = !obscurePassword;
+            });
+          },
+        ),
 
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -27,13 +59,17 @@ class PasswordTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(
-            color: Color(0xFF0E8F3E), // green border
+            color: Color(0xFF0E8F3E),
             width: 2,
           ),
         ),
+
+        filled: true,
+        fillColor: Colors.grey.shade100,
       ),
 
       validator: (value) {
+
         if (value == null || value.isEmpty) {
           return "Password is required";
         }
@@ -47,3 +83,4 @@ class PasswordTextField extends StatelessWidget {
     );
   }
 }
+

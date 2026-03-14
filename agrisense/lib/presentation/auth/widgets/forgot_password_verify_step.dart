@@ -35,7 +35,6 @@ class ForgotPasswordVerifyStep extends StatefulWidget {
 }
 
 class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
-
   /// Focus Nodes
   final FocusNode f1 = FocusNode();
   final FocusNode f2 = FocusNode();
@@ -80,19 +79,15 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
 
   /// RESEND OTP
   void resendCode() {
-
     setState(() {
       seconds = 58;
     });
 
-    clearOtpBoxes();   // <-- IMPORTANT FIX
+    clearOtpBoxes(); // <-- IMPORTANT FIX
 
     startTimer();
 
-    AuthSnackBar.showSuccess(
-      context,
-      "OTP resent successfully",
-    );
+    AuthSnackBar.showSuccess(context, "OTP resent successfully");
   }
 
   @override
@@ -112,7 +107,6 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
 
   @override
   Widget build(BuildContext context) {
-
     final verifyButton = AuthButtonModel(
       text: "Verify Code",
       icon: Icons.verified,
@@ -121,7 +115,6 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
     return SingleChildScrollView(
       child: Column(
         children: [
-
           const StepIndicator(currentStep: 2),
 
           const SizedBox(height: 20),
@@ -144,13 +137,12 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
 
               child: Column(
                 children: [
-
                   /// Icon
                   Container(
                     width: 70,
                     height: 70,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0E8F3E).withOpacity(0.1),
+                      color: const Color(0xFF0E8F3E).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -164,10 +156,7 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
 
                   const Text(
                     "Enter Verification Code",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 10),
@@ -175,10 +164,7 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
                   Text(
                     "We sent a 6-digit code to ${widget.email}",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
 
                   const SizedBox(height: 25),
@@ -202,10 +188,8 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
                   AuthButton(
                     button: verifyButton,
                     onPressed: () {
-
                       /// OTP expired
                       if (seconds == 0) {
-
                         clearOtpBoxes();
 
                         AuthSnackBar.showError(
@@ -261,4 +245,3 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
     );
   }
 }
-

@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 
 class FertilizerForm extends StatefulWidget {
-
   final Function(String cropType, double landSize) onSubmit;
 
-  const FertilizerForm({
-    super.key,
-    required this.onSubmit,
-  });
+  const FertilizerForm({super.key, required this.onSubmit});
 
   @override
   State<FertilizerForm> createState() => _FertilizerFormState();
 }
 
 class _FertilizerFormState extends State<FertilizerForm> {
-
   String? selectedCrop;
   final TextEditingController landController = TextEditingController();
 
@@ -29,11 +24,8 @@ class _FertilizerFormState extends State<FertilizerForm> {
 
   @override
   Widget build(BuildContext context) {
-
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
 
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -42,7 +34,6 @@ class _FertilizerFormState extends State<FertilizerForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-
             Row(
               children: [
                 Image.asset("assets/images/leaf.png", height: 20),
@@ -60,7 +51,7 @@ class _FertilizerFormState extends State<FertilizerForm> {
             const SizedBox(height: 6),
 
             DropdownButtonFormField<String>(
-              value: selectedCrop,
+              initialValue: selectedCrop,
               items: const [
                 DropdownMenuItem(value: "Corn", child: Text("Corn")),
                 DropdownMenuItem(value: "Rice", child: Text("Rice")),
@@ -71,9 +62,7 @@ class _FertilizerFormState extends State<FertilizerForm> {
                   selectedCrop = value;
                 });
               },
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
 
             const SizedBox(height: 16),
@@ -96,9 +85,7 @@ class _FertilizerFormState extends State<FertilizerForm> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
 
                 onPressed: isFormValid ? submitForm : null,
 

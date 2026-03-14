@@ -6,24 +6,17 @@ import 'package:agrisense/presentation/auth/widgets/step_indicator.dart';
 import 'package:agrisense/data/models/auth_button_model.dart';
 
 class ForgotPasswordResetStep extends StatefulWidget {
-
   final VoidCallback onResetSuccess;
 
-  const ForgotPasswordResetStep({
-    super.key,
-    required this.onResetSuccess,
-  });
+  const ForgotPasswordResetStep({super.key, required this.onResetSuccess});
 
   @override
   State<ForgotPasswordResetStep> createState() =>
       _ForgotPasswordResetStepState();
 }
 
-class _ForgotPasswordResetStepState
-    extends State<ForgotPasswordResetStep> {
-
-  final TextEditingController newPasswordController =
-      TextEditingController();
+class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
+  final TextEditingController newPasswordController = TextEditingController();
 
   final TextEditingController confirmPasswordController =
       TextEditingController();
@@ -38,12 +31,10 @@ class _ForgotPasswordResetStepState
 
   /// Validate everything
   void validatePassword() {
-
     final password = newPasswordController.text;
     final confirm = confirmPasswordController.text;
 
     setState(() {
-
       hasLength = password.length >= 8;
 
       hasUpper = password.contains(RegExp(r'[A-Z]'));
@@ -52,19 +43,14 @@ class _ForgotPasswordResetStepState
 
       hasNumber = password.contains(RegExp(r'[0-9]'));
 
-      hasSpecial =
-          password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
+      hasSpecial = password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
 
       passwordsMatch = password == confirm;
     });
   }
 
   bool get passwordValid =>
-      hasUpper &&
-      hasLower &&
-      hasNumber &&
-      hasSpecial &&
-      hasLength;
+      hasUpper && hasLower && hasNumber && hasSpecial && hasLength;
 
   @override
   void initState() {
@@ -84,7 +70,6 @@ class _ForgotPasswordResetStepState
 
   @override
   Widget build(BuildContext context) {
-
     final resetButton = AuthButtonModel(
       text: "Reset Password",
       icon: Icons.lock,
@@ -92,7 +77,6 @@ class _ForgotPasswordResetStepState
 
     return Column(
       children: [
-
         const StepIndicator(currentStep: 3),
 
         const SizedBox(height: 20),
@@ -108,21 +92,20 @@ class _ForgotPasswordResetStepState
                 blurRadius: 15,
                 color: Colors.black12,
                 offset: Offset(0, 6),
-              )
+              ),
             ],
           ),
 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               /// ICON
               Center(
                 child: Container(
                   width: 70,
                   height: 70,
                   decoration: BoxDecoration(
-                    color: Colors.purple.withOpacity(0.1),
+                    color: Colors.purple.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -138,10 +121,7 @@ class _ForgotPasswordResetStepState
               const Center(
                 child: Text(
                   "Create New Password",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
 
@@ -178,11 +158,9 @@ class _ForgotPasswordResetStepState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     const Text(
                       "Password must contain:",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500),
+                      style: TextStyle(fontWeight: FontWeight.w500),
                     ),
 
                     const SizedBox(height: 10),
@@ -214,19 +192,16 @@ class _ForgotPasswordResetStepState
 
               const SizedBox(height: 8),
 
-              if (!passwordsMatch &&
-                  confirmPasswordController.text.isNotEmpty)
+              if (!passwordsMatch && confirmPasswordController.text.isNotEmpty)
                 const Text(
                   "Passwords do not match",
                   style: TextStyle(color: Colors.red),
                 ),
 
-              if (passwordsMatch &&
-                  confirmPasswordController.text.isNotEmpty)
+              if (passwordsMatch && confirmPasswordController.text.isNotEmpty)
                 const Row(
                   children: [
-                    Icon(Icons.check_circle,
-                        color: Colors.green, size: 16),
+                    Icon(Icons.check_circle, color: Colors.green, size: 16),
                     SizedBox(width: 5),
                     Text(
                       "Passwords match",
@@ -241,7 +216,6 @@ class _ForgotPasswordResetStepState
               AuthButton(
                 button: resetButton,
                 onPressed: () async {
-
                   if (!passwordValid) {
                     AuthSnackBar.showError(
                       context,
@@ -251,10 +225,7 @@ class _ForgotPasswordResetStepState
                   }
 
                   if (!passwordsMatch) {
-                    AuthSnackBar.showError(
-                      context,
-                      "Passwords do not match",
-                    );
+                    AuthSnackBar.showError(context, "Passwords do not match");
                     return;
                   }
 
@@ -263,8 +234,7 @@ class _ForgotPasswordResetStepState
                     "Password reset successfully!",
                   );
 
-                  await Future.delayed(
-                      const Duration(seconds: 1));
+                  await Future.delayed(const Duration(seconds: 1));
 
                   widget.onResetSuccess();
                 },
@@ -277,16 +247,12 @@ class _ForgotPasswordResetStepState
   }
 
   Widget ruleTile(String text, bool valid) {
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
-
           Icon(
-            valid
-                ? Icons.check_circle
-                : Icons.radio_button_unchecked,
+            valid ? Icons.check_circle : Icons.radio_button_unchecked,
             size: 16,
             color: valid ? Colors.green : Colors.grey,
           ),
@@ -295,10 +261,8 @@ class _ForgotPasswordResetStepState
 
           Text(
             text,
-            style: TextStyle(
-              color: valid ? Colors.green : Colors.grey,
-            ),
-          )
+            style: TextStyle(color: valid ? Colors.green : Colors.grey),
+          ),
         ],
       ),
     );

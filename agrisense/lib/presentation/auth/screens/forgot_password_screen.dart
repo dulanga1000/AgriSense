@@ -24,39 +24,26 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController c5 = TextEditingController();
   final TextEditingController c6 = TextEditingController();
 
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmController = TextEditingController();
-
-  /// Go to Verify Step
-  void goToVerify() {
+  void goToStep(int step) {
     setState(() {
-      currentStep = 2;
+      currentStep = step;
     });
   }
 
-  /// Go to Reset Step
-  void goToReset() {
-    setState(() {
-      currentStep = 3;
-    });
-  }
-
-  /// Return correct step widget
-  Widget getStepWidget() {
+  /// Prevent step overflow using switch
+  Widget buildStep() {
     switch (currentStep) {
 
-      /// STEP 1 — EMAIL
       case 1:
         return ForgotPasswordEmailStep(
           emailController: emailController,
-          onNext: goToVerify,
+          onNext: () => goToStep(2),
         );
 
-      /// STEP 2 — VERIFY
       case 2:
         return ForgotPasswordVerifyStep(
-          email: emailController.text,   // ✅ pass entered email
-          onNext: goToReset,
+          email: emailController.text,
+          onNext: () => goToStep(3),
           c1: c1,
           c2: c2,
           c3: c3,
@@ -65,26 +52,34 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           c6: c6,
         );
 
-      /// STEP 3 — RESET
       case 3:
+      default:
         return ForgotPasswordResetStep(
-          passwordController: passwordController,
-          confirmController: confirmController,
-          onReset: () {
+          onResetSuccess: () {
             Navigator.pop(context);
           },
-        );
-
-      default:
-        return ForgotPasswordEmailStep(
-          emailController: emailController,
-          onNext: goToVerify,
         );
     }
   }
 
+  /// Dispose controllers (IMPORTANT)
+  @override
+  void dispose() {
+    emailController.dispose();
+
+    c1.dispose();
+    c2.dispose();
+    c3.dispose();
+    c4.dispose();
+    c5.dispose();
+    c6.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color(0xFFD9F5E1),
 
@@ -116,16 +111,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
 
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-
-            Expanded(
-              child: SingleChildScrollView(
-                child: getStepWidget(),
-              ),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: buildStep(),
+          ),
         ),
       ),
     );

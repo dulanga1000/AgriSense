@@ -30,7 +30,6 @@ class ForgotPasswordVerifyStep extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-
           /// Step Indicator
           const StepIndicator(currentStep: 2),
 
@@ -55,13 +54,12 @@ class ForgotPasswordVerifyStep extends StatelessWidget {
 
               child: Column(
                 children: [
-
                   /// Icon Circle
                   Container(
                     width: 70,
                     height: 70,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0E8F3E).withOpacity(0.1),
+                      color: Color(0xFF0E8F3E).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -76,10 +74,7 @@ class ForgotPasswordVerifyStep extends StatelessWidget {
                   /// Title
                   const Text(
                     "Enter Verification Code",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 10),
@@ -88,10 +83,7 @@ class ForgotPasswordVerifyStep extends StatelessWidget {
                   Text(
                     "We sent a 6-digit code to $email",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
 
                   const SizedBox(height: 25),
@@ -137,9 +129,7 @@ class ForgotPasswordVerifyStep extends StatelessWidget {
                   /// Resend timer
                   const Text(
                     "Resend code in 58s",
-                    style: TextStyle(
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(color: Colors.black54),
                   ),
                 ],
               ),

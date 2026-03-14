@@ -17,7 +17,6 @@ class ForgotPasswordEmailStep extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-
           /// Step Indicator
           const StepIndicator(currentStep: 1),
 
@@ -43,13 +42,12 @@ class ForgotPasswordEmailStep extends StatelessWidget {
 
               child: Column(
                 children: [
-
                   /// Icon Circle
                   Container(
                     width: 70,
                     height: 70,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0E8F3E).withOpacity(0.1),
+                      color: Color(0xFF0E8F3E).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -64,10 +62,7 @@ class ForgotPasswordEmailStep extends StatelessWidget {
                   /// Title
                   const Text(
                     "Enter Your Email",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 10),
@@ -76,10 +71,7 @@ class ForgotPasswordEmailStep extends StatelessWidget {
                   const Text(
                     "We'll send you a verification code to reset your password",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.black54),
                   ),
 
                   const SizedBox(height: 25),
@@ -89,9 +81,7 @@ class ForgotPasswordEmailStep extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Email Address",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ),
 
@@ -134,7 +124,6 @@ class ForgotPasswordEmailStep extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () {
-
                         final email = emailController.text.trim();
 
                         if (email.isEmpty) {
@@ -146,8 +135,9 @@ class ForgotPasswordEmailStep extends StatelessWidget {
                         }
 
                         /// Stronger email validation
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                            .hasMatch(email)) {
+                        if (!RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        ).hasMatch(email)) {
                           AuthSnackBar.showError(
                             context,
                             "Enter a valid email address",

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/data/models/user_model.dart';
-import 'package:agrisense/core/routes/app_routes.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
 class ProfileHeader extends StatelessWidget {
   ProfileHeader({super.key});
@@ -20,7 +20,6 @@ class ProfileHeader extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-
         /// HEADER BACKGROUND
         Container(
           height: 160,
@@ -40,28 +39,33 @@ class ProfileHeader extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                        return;
-                      }
-                      Navigator.pushReplacementNamed(
-                          context, AppRoutes.main);
-                    },
-                    child: const Icon(Icons.arrow_back, color: Colors.white),
-                  ),
                   const SizedBox(width: 40),
-                  const Text(
-                    "Profile",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20, top: 6),
+                    child: Text(
+                      "Profile",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
               ),
+            ),
+          ),
+        ),
+
+        /// BACK BUTTON
+        Positioned(
+          top: 0,
+          left: 0,
+          child: SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, top: 6),
+              child: const AppBackButton(fallbackIndex: 0),
             ),
           ),
         ),
@@ -87,7 +91,6 @@ class ProfileHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 /// AVATAR + NAME SECTION
                 Row(
                   children: [
@@ -160,12 +163,7 @@ class ProfileHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: const Color(0xFF0C8F3E)),
         const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(fontSize: 13),
-          ),
-        ),
+        Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
       ],
     );
   }

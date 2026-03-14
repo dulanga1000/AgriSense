@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_email_step.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_verify_step.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_reset_step.dart';
@@ -11,7 +12,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-
   int currentStep = 1;
 
   /// Controllers
@@ -33,7 +33,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   /// Prevent step overflow using switch
   Widget buildStep() {
     switch (currentStep) {
-
       case 1:
         return ForgotPasswordEmailStep(
           emailController: emailController,
@@ -79,7 +78,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: const Color(0xFFD9F5E1),
 
@@ -87,6 +85,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         backgroundColor: const Color(0xFF0E8F3E),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        leading: const AppBackButton(fallbackIndex: 0),
 
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,10 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             Text(
               "Reset your account password",
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: Colors.white70, fontSize: 12),
             ),
           ],
         ),

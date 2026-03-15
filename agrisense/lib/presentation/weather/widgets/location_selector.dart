@@ -50,15 +50,12 @@ class _LocationSelectorState extends State<LocationSelector> {
               showList = !showList;
             });
           },
-
           child: Container(
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.all(16),
-
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
@@ -67,10 +64,8 @@ class _LocationSelectorState extends State<LocationSelector> {
                 ),
               ],
             ),
-
             child: Row(
               children: [
-                /// Text section
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,9 +74,7 @@ class _LocationSelectorState extends State<LocationSelector> {
                         "Change Location",
                         style: TextStyle(fontSize: 13, color: Colors.grey),
                       ),
-
                       const SizedBox(height: 6),
-
                       Text(
                         selectedLocation,
                         maxLines: 1,
@@ -94,8 +87,6 @@ class _LocationSelectorState extends State<LocationSelector> {
                     ],
                   ),
                 ),
-
-                /// Arrow
                 Icon(
                   showList
                       ? Icons.keyboard_arrow_up
@@ -112,31 +103,30 @@ class _LocationSelectorState extends State<LocationSelector> {
             margin: const EdgeInsets.symmetric(horizontal: 16),
             height: 250,
             padding: const EdgeInsets.all(12),
-
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-
               boxShadow: const [
                 BoxShadow(color: Colors.black12, blurRadius: 6),
               ],
             ),
-
             child: Column(
               children: [
-                /// Search
+                /// Search box
                 SizedBox(
-                  height: 40,
+                  height: 38,
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: "Search location...",
-                      prefixIcon: const Icon(Icons.search),
-
+                      prefixIcon: const Icon(Icons.search, size: 20),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 10,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-
                     onChanged: (value) {
                       setState(() {
                         searchQuery = value;
@@ -145,23 +135,30 @@ class _LocationSelectorState extends State<LocationSelector> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
 
-                /// Results
+                /// Results list
                 Expanded(
                   child: ListView.builder(
                     itemCount: filtered.length,
-
                     itemBuilder: (context, index) {
                       final item = filtered[index];
 
                       return ListTile(
-                        leading: const Icon(Icons.location_on_outlined),
-
-                        title: Text(item["city"]!),
-
-                        subtitle: Text(item["province"]!),
-
+                        dense: true,
+                        visualDensity: const VisualDensity(vertical: -2),
+                        leading: const Icon(
+                          Icons.location_on_outlined,
+                          size: 20,
+                        ),
+                        title: Text(
+                          item["city"]!,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        subtitle: Text(
+                          item["province"]!,
+                          style: const TextStyle(fontSize: 12),
+                        ),
                         onTap: () {
                           setState(() {
                             selectedLocation =

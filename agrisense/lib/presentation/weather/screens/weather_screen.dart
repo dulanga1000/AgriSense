@@ -7,12 +7,21 @@ import 'package:agrisense/presentation/weather/widgets/weather_trends_card.dart'
 import 'package:agrisense/presentation/weather/widgets/weather_alerts_card.dart';
 import 'package:agrisense/presentation/weather/widgets/recommended_activities_card.dart';
 import 'package:agrisense/presentation/weather/widgets/irrigation_advice_card.dart';
+import 'package:agrisense/data/models/weather_model.dart';
 
 class WeatherScreen extends StatelessWidget {
   const WeatherScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final rainData = RainPredictionModel(
+      title: "Rain Prediction",
+      todayPrediction: "Today - 20% chance of rain",
+      rainChance: 0.2,
+      description:
+          "Low rain probability - good day for outdoor farming activities",
+    );
+
     return Scaffold(
       backgroundColor: const Color(0xffF3F4F6),
 
@@ -27,7 +36,7 @@ class WeatherScreen extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            const RainPredictionCard(),
+            RainPredictionCard(rainData: rainData),
 
             const SizedBox(height: 16),
 

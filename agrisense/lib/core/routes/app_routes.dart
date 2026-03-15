@@ -4,7 +4,7 @@ import '../../presentation/auth/screens/login_screen.dart';
 import '../../presentation/auth/screens/register_screen.dart';
 import '../../presentation/main/screens/main_screen.dart';
 import '../../presentation/home/screens/home_screen.dart';
-import '../../presentation/disease/disease_scan_screen.dart';
+import '../../presentation/disease/screens/disease_scan_screen.dart';
 import '../../presentation/weather/screens/weather_screen.dart';
 import '../../presentation/profile/screens/profile_screen.dart';
 import '../../presentation/fertilizer/screens/fertilizer_screen.dart';

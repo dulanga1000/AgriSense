@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/data/models/farm_stats_model.dart';
 
-class ProfileFarm extends StatelessWidget {
+class ProfileFarm extends StatefulWidget {
   const ProfileFarm({super.key});
+
+  @override
+  State<ProfileFarm> createState() => _ProfileFarmState();
+}
+
+class _ProfileFarmState extends State<ProfileFarm> {
+
+  final FarmStatsModel stats = FarmStatsModel(
+    acres: 15,
+    scans: 42,
+    crops: 8,
+    experience: 10,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +36,7 @@ class ProfileFarm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
+
           Row(
             children: const [
               Icon(
@@ -44,27 +58,26 @@ class ProfileFarm extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildFarmStat(
                 icon: Icons.landscape,
-                number: "15",
+                number: stats.acres.toString(),
                 label: "Acres",
                 bgColor: const Color(0xFFDDF1E5),
                 iconColor: const Color(0xFF0C8F3E),
               ),
               _buildFarmStat(
                 icon: Icons.camera_alt,
-                number: "42",
+                number: stats.scans.toString(),
                 label: "Scans",
                 bgColor: const Color(0xFFE3EAF6),
                 iconColor: Colors.blueGrey,
               ),
               _buildFarmStat(
                 icon: Icons.eco,
-                number: "8",
+                number: stats.crops.toString(),
                 label: "Crops",
                 bgColor: const Color(0xFFF5EFD8),
                 iconColor: Colors.green,

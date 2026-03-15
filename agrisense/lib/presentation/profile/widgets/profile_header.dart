@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:agrisense/data/models/user_model.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
-class ProfileHeader extends StatelessWidget {
-  ProfileHeader({super.key});
+class ProfileHeader extends StatefulWidget {
+  const ProfileHeader({super.key});
+
+  @override
+  State<ProfileHeader> createState() => _ProfileHeaderState();
+}
+
+class _ProfileHeaderState extends State<ProfileHeader> {
 
   final user = UserModel(
     id: '1',
@@ -20,7 +26,8 @@ class ProfileHeader extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        /// HEADER BACKGROUND
+
+        
         Container(
           height: 160,
           decoration: const BoxDecoration(
@@ -38,9 +45,9 @@ class ProfileHeader extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 40),
-                  const Padding(
+                children: const [
+                  SizedBox(width: 40),
+                  Padding(
                     padding: EdgeInsets.only(left: 20, top: 6),
                     child: Text(
                       "Profile",
@@ -57,7 +64,7 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
 
-        /// BACK BUTTON
+        
         Positioned(
           top: 0,
           left: 0,
@@ -70,7 +77,7 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
 
-        /// PROFILE CARD
+        
         Positioned(
           top: 95,
           left: 40,
@@ -91,7 +98,8 @@ class ProfileHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// AVATAR + NAME SECTION
+
+                
                 Row(
                   children: [
                     CircleAvatar(
@@ -136,7 +144,7 @@ class ProfileHeader extends StatelessWidget {
 
                 const SizedBox(height: 14),
 
-                /// USER DETAILS BELOW
+               
                 _infoRow(Icons.location_on, user.location),
                 const SizedBox(height: 8),
 
@@ -163,7 +171,12 @@ class ProfileHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: const Color(0xFF0C8F3E)),
         const SizedBox(width: 8),
-        Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(fontSize: 13),
+          ),
+        ),
       ],
     );
   }

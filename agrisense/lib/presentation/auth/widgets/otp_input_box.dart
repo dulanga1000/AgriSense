@@ -22,44 +22,28 @@ class OtpInputBox extends StatelessWidget {
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
         maxLength: 1,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
-        style: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-        ),
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           counterText: "",
           filled: true,
           fillColor: Colors.grey.shade100,
           contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Colors.grey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Color(0xFF0E8F3E),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFF0E8F3E), width: 2),
           ),
         ),
         onChanged: (value) {
-          if (value.length == 1) {
-            FocusScope.of(context).nextFocus();
-          }
-
-          if (value.isEmpty) {
-            FocusScope.of(context).previousFocus();
-          }
+          if (value.length == 1) FocusScope.of(context).nextFocus();
+          if (value.isEmpty) FocusScope.of(context).previousFocus();
         },
       ),
     );
   }
 }
-

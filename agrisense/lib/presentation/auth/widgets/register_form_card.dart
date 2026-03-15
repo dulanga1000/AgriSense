@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/core/routes/app_routes.dart';
-import 'package:agrisense/presentation/auth/widgets/email_textfield.dart';
-import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
-import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
-import 'package:agrisense/data/models/auth_button_model.dart';
+import 'package:agrisense/presentation/common/widgets/email_textfield.dart';
+import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
+import 'package:agrisense/presentation/common/widgets/auth_button.dart';
+import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 
 class RegisterFormCard extends StatefulWidget {
   final TextEditingController nameController;
@@ -22,72 +22,38 @@ class RegisterFormCard extends StatefulWidget {
 }
 
 class _RegisterFormCardState extends State<RegisterFormCard> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-
-    final registerButton = AuthButtonModel(text: "Register");
-
-    final googleButton = AuthButtonModel(
-      text: "Sign in with Google",
-      icon: Icons.g_mobiledata,
-      outlined: true,
-    );
-
-    return Form(
-      key: _formKey,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 5),
-            ),
-          ],
-        ),
-
+    return AuthCard(
+      child: Form(
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             const Center(
               child: Text(
                 "Create Account",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
-
             const SizedBox(height: 25),
 
-            /// NAME
             const Text("Name"),
             const SizedBox(height: 8),
-
             TextFormField(
               controller: widget.nameController,
               decoration: InputDecoration(
                 hintText: "Enter your name",
                 prefixIcon: const Icon(Icons.person_outline),
-
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: const BorderSide(color: Colors.grey),
                 ),
-
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: const BorderSide(
@@ -96,60 +62,42 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
                   ),
                 ),
               ),
-
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "Please enter your name";
                 }
-
                 if (value.length < 3) {
                   return "Name must be at least 3 characters";
                 }
-
                 return null;
               },
             ),
 
             const SizedBox(height: 20),
 
-            /// EMAIL
             const Text("Email"),
             const SizedBox(height: 8),
-
-            EmailTextField(
-              controller: widget.emailController,
-            ),
+            EmailTextField(controller: widget.emailController),
 
             const SizedBox(height: 20),
 
-            /// PASSWORD
             const Text("Password"),
             const SizedBox(height: 8),
-
-            PasswordTextField(
-              controller: widget.passwordController,
-            ),
+            PasswordTextField(controller: widget.passwordController),
 
             const SizedBox(height: 25),
 
-            /// REGISTER BUTTON
             AuthButton(
-              button: registerButton,
+              text: "Register",
               onPressed: () {
-
                 if (_formKey.currentState!.validate()) {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    AppRoutes.main,
-                  );
+                  Navigator.pushReplacementNamed(context, AppRoutes.main);
                 }
-
               },
             ),
 
             const SizedBox(height: 25),
 
-            /// Divider
             const Row(
               children: [
                 Expanded(child: Divider()),
@@ -163,23 +111,19 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
             const SizedBox(height: 20),
 
-            /// Google Sign In
             AuthButton(
-              button: googleButton,
+              text: "Sign in with Google",
+              icon: Icons.g_mobiledata,
+              outlined: true,
               onPressed: () {},
             ),
 
             const SizedBox(height: 20),
 
-            /// Login Link
             Center(
               child: TextButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    AppRoutes.login,
-                  );
-                },
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, AppRoutes.login),
                 child: const Text(
                   "Already have an account? Login",
                   style: TextStyle(color: Colors.green),

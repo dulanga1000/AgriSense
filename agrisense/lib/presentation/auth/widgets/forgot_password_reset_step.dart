@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
-import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
-import 'package:agrisense/presentation/auth/widgets/auth_snackbar.dart';
 import 'package:agrisense/presentation/auth/widgets/step_indicator.dart';
-import 'package:agrisense/data/models/auth_button_model.dart';
+import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
+import 'package:agrisense/presentation/common/widgets/auth_button.dart';
+import 'package:agrisense/presentation/common/widgets/auth_card.dart';
+import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
 
 class ForgotPasswordResetStep extends StatefulWidget {
   final VoidCallback onResetSuccess;
@@ -17,7 +17,6 @@ class ForgotPasswordResetStep extends StatefulWidget {
 
 class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
   final TextEditingController newPasswordController = TextEditingController();
-
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
@@ -26,25 +25,18 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
   bool hasNumber = false;
   bool hasSpecial = false;
   bool hasLength = false;
-
   bool passwordsMatch = false;
 
-  /// Validate everything
   void validatePassword() {
     final password = newPasswordController.text;
     final confirm = confirmPasswordController.text;
 
     setState(() {
       hasLength = password.length >= 8;
-
       hasUpper = password.contains(RegExp(r'[A-Z]'));
-
       hasLower = password.contains(RegExp(r'[a-z]'));
-
       hasNumber = password.contains(RegExp(r'[0-9]'));
-
       hasSpecial = password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
-
       passwordsMatch = password == confirm;
     });
   }
@@ -55,8 +47,6 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
   @override
   void initState() {
     super.initState();
-
-    /// Listen to typing in both fields
     newPasswordController.addListener(validatePassword);
     confirmPasswordController.addListener(validatePassword);
   }
@@ -68,38 +58,37 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
     super.dispose();
   }
 
+  Widget ruleTile(String text, bool valid) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Icon(
+            valid ? Icons.check_circle : Icons.radio_button_unchecked,
+            size: 16,
+            color: valid ? Colors.green : Colors.grey,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(color: valid ? Colors.green : Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final resetButton = AuthButtonModel(
-      text: "Reset Password",
-      icon: Icons.lock,
-    );
-
     return Column(
       children: [
         const StepIndicator(currentStep: 3),
-
         const SizedBox(height: 20),
 
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 15,
-                color: Colors.black12,
-                offset: Offset(0, 6),
-              ),
-            ],
-          ),
-
+        AuthCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// ICON
               Center(
                 child: Container(
                   width: 70,
@@ -115,7 +104,6 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
 
               const Center(
@@ -124,7 +112,6 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
-
               const SizedBox(height: 8),
 
               const Center(
@@ -133,14 +120,10 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
                   style: TextStyle(color: Colors.black54),
                 ),
               ),
-
               const SizedBox(height: 25),
 
-              /// NEW PASSWORD
               const Text("New Password"),
-
               const SizedBox(height: 8),
-
               PasswordTextField(
                 controller: newPasswordController,
                 hintText: "Enter new password",
@@ -148,7 +131,6 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
 
               const SizedBox(height: 20),
 
-              /// PASSWORD RULES
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
@@ -162,17 +144,11 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
                       "Password must contain:",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
-
                     const SizedBox(height: 10),
-
                     ruleTile("At least 8 characters", hasLength),
-
                     ruleTile("One uppercase letter", hasUpper),
-
                     ruleTile("One lowercase letter", hasLower),
-
                     ruleTile("One number", hasNumber),
-
                     ruleTile("One special character", hasSpecial),
                   ],
                 ),
@@ -180,16 +156,12 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
 
               const SizedBox(height: 20),
 
-              /// CONFIRM PASSWORD
               const Text("Confirm Password"),
-
               const SizedBox(height: 8),
-
               PasswordTextField(
                 controller: confirmPasswordController,
                 hintText: "Confirm password",
               ),
-
               const SizedBox(height: 8),
 
               if (!passwordsMatch && confirmPasswordController.text.isNotEmpty)
@@ -212,9 +184,9 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
 
               const SizedBox(height: 20),
 
-              /// RESET BUTTON
               AuthButton(
-                button: resetButton,
+                text: "Reset Password",
+                icon: Icons.lock,
                 onPressed: () async {
                   if (!passwordValid) {
                     AuthSnackBar.showError(
@@ -235,7 +207,6 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
                   );
 
                   await Future.delayed(const Duration(seconds: 1));
-
                   widget.onResetSuccess();
                 },
               ),
@@ -243,28 +214,6 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget ruleTile(String text, bool valid) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        children: [
-          Icon(
-            valid ? Icons.check_circle : Icons.radio_button_unchecked,
-            size: 16,
-            color: valid ? Colors.green : Colors.grey,
-          ),
-
-          const SizedBox(width: 6),
-
-          Text(
-            text,
-            style: TextStyle(color: valid ? Colors.green : Colors.grey),
-          ),
-        ],
-      ),
     );
   }
 }

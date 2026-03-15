@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/data/models/calendar_entry_model.dart';
+import 'package:agrisense/presentation/crop/state/crop_advisory_state.dart';
 
 class AgriculturalCalendarCard extends StatelessWidget {
   const AgriculturalCalendarCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final entries = context.watch<CropAdvisoryState>().calendarEntries;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xfff3f4f6),
+        color: const Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -28,53 +33,19 @@ class AgriculturalCalendarCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 16),
-
-          _calendarItem(
-            image: "assets/images/tractor.png",
-            month: "February",
-            crops: "Rice (Yala)",
-            label: "Land Preparation",
-          ),
-
-          const SizedBox(height: 12),
-
-          _calendarItem(
-            image: "assets/images/plant.png",
-            month: "March-April",
-            crops: "Rice, Vegetables, Maize",
-            label: "Planting",
-          ),
-
-          const SizedBox(height: 12),
-
-          _calendarItem(
-            image: "assets/images/basket.png",
-            month: "June-July",
-            crops: "Vegetables, Cowpea",
-            label: "Harvesting",
-          ),
-
-          const SizedBox(height: 12),
-
-          _calendarItem(
-            image: "assets/images/rice.png",
-            month: "July-August",
-            crops: "Rice (Yala Season)",
-            label: "Harvesting",
+          ...entries.map(
+            (entry) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _calendarItem(entry),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _calendarItem({
-    required String image,
-    required String month,
-    required String crops,
-    required String label,
-  }) {
+  Widget _calendarItem(CalendarEntryModel entry) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -83,16 +54,14 @@ class AgriculturalCalendarCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(image, width: 32, height: 32),
-
+          Image.asset(entry.imagePath, width: 32, height: 32),
           const SizedBox(width: 12),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  month,
+                  entry.month,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -100,21 +69,20 @@ class AgriculturalCalendarCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  crops,
+                  entry.crops,
                   style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ),
           ),
-
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: const Color(0xffe7f0ff),
+              color: const Color(0xFFE7F0FF),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              label,
+              entry.label,
               style: const TextStyle(
                 fontSize: 11,
                 color: Colors.blue,

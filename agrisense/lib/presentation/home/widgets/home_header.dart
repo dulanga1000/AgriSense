@@ -4,66 +4,27 @@ import 'package:agrisense/presentation/main/screens/main_screen.dart';
 import 'package:agrisense/data/models/user_model.dart';
 import 'package:agrisense/data/models/weather_model.dart';
 
-class HomeHeader extends StatefulWidget {
-  const HomeHeader({super.key});
+class HomeHeader extends StatelessWidget {
+  final UserModel user;
+  final WeatherModel? weather;
 
-  @override
-  State<HomeHeader> createState() => _HomeHeaderState();
-}
-
-class _HomeHeaderState extends State<HomeHeader> {
-  UserModel user = UserModel(
-    id: '1',
-    name: 'Guest',
-    role: '',
-    location: '',
-    phone: '',
-    email: '',
-    memberSince: '',
-  );
-
-  WeatherModel weather = WeatherModel(
-    city: 'Kandy, Sri Lanka',
-    temperature: 25.0,
-    humidity: 60,
-    condition: 'Sunny',
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    loadWeather();
-  }
-
-  void loadWeather() {
-    setState(() {
-      weather = WeatherModel(
-        city: 'Kandy, Sri Lanka',
-        temperature: 25.0,
-        humidity: 60,
-        condition: 'Sunny',
-      );
-    });
-  }
+  const HomeHeader({super.key, required this.user, this.weather});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xFF4CAF50), Color(0xFF0D520F)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(25),
           bottomRight: Radius.circular(25),
         ),
       ),
-
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,9 +39,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                     "Welcome back,",
                     style: TextStyle(color: Colors.white70),
                   ),
-
                   const SizedBox(height: 4),
-
                   Text(
                     user.name,
                     style: const TextStyle(
@@ -102,7 +61,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                     ),
                     child: const Icon(CupertinoIcons.bell, color: Colors.white),
                   ),
-
                   Positioned(
                     top: 2,
                     right: 2,
@@ -131,12 +89,10 @@ class _HomeHeaderState extends State<HomeHeader> {
 
           Container(
             padding: const EdgeInsets.all(16),
-
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.20),
               borderRadius: BorderRadius.circular(16),
             ),
-
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -147,8 +103,8 @@ class _HomeHeaderState extends State<HomeHeader> {
                       "Today's Weather",
                       style: TextStyle(color: Colors.white70),
                     ),
-
                     const SizedBox(height: 6),
+
                     Row(
                       children: [
                         const Icon(
@@ -158,7 +114,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          weather.city,
+                          weather?.city ?? "Loading...",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -173,16 +129,16 @@ class _HomeHeaderState extends State<HomeHeader> {
                     Row(
                       children: [
                         Text(
-                          "${weather.temperature.toStringAsFixed(0)}°C",
+                          weather != null
+                              ? "${weather!.temperature.toStringAsFixed(0)}°C"
+                              : "--°C",
                           style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-
                         const SizedBox(width: 10),
-
                         const Icon(
                           CupertinoIcons.cloud_sun,
                           color: Colors.white,
@@ -190,11 +146,12 @@ class _HomeHeaderState extends State<HomeHeader> {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 4),
 
                     Text(
-                      "${weather.condition} • ${weather.humidity}% Humidity",
+                      weather != null
+                          ? "${weather!.condition} • ${weather!.humidity}% Humidity"
+                          : "Loading...",
                       style: const TextStyle(color: Colors.white70),
                     ),
                   ],
@@ -216,7 +173,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                       ),
                     );
                   },
-
                   child: const Text("View More"),
                 ),
               ],

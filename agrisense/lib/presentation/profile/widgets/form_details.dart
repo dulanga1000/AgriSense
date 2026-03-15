@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/data/models/farm_stats_model.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 class FormDetails extends StatefulWidget {
   const FormDetails({super.key});
@@ -9,45 +10,38 @@ class FormDetails extends StatefulWidget {
 }
 
 class _FormDetailsState extends State<FormDetails> {
-
-  final FarmStatsModel farmStats = FarmStatsModel(
-    acres: 15,
-    scans: 42,
-    crops: 8,
-    experience: 10,
-  );
-
-  late TextEditingController farmSizeController;
-  late TextEditingController cropsController;
-  late TextEditingController experienceController;
+  late TextEditingController _farmSizeController;
+  late TextEditingController _cropsController;
+  late TextEditingController _experienceController;
 
   @override
   void initState() {
     super.initState();
-
-    farmSizeController =
-        TextEditingController(text: farmStats.acres.toString());
-
-    cropsController =
-        TextEditingController(text: "Rice, Wheat, Cotton");
-
-    experienceController =
-        TextEditingController(text: "10");
+    final stats = context.read<ProfileState>().farmStats;
+    _farmSizeController = TextEditingController(text: stats.acres.toString());
+    _cropsController = TextEditingController(text: "Rice, Wheat, Cotton");
+    _experienceController = TextEditingController(
+      text: stats.experience.toString(),
+    );
   }
 
-  void increaseFarmSize() {
-    int value = int.tryParse(farmSizeController.text) ?? 0;
-    setState(() {
-      farmSizeController.text = (value + 1).toString();
-    });
+  @override
+  void dispose() {
+    _farmSizeController.dispose();
+    _cropsController.dispose();
+    _experienceController.dispose();
+    super.dispose();
   }
 
-  void decreaseFarmSize() {
-    int value = int.tryParse(farmSizeController.text) ?? 0;
+  void _increase() {
+    final value = int.tryParse(_farmSizeController.text) ?? 0;
+    setState(() => _farmSizeController.text = (value + 1).toString());
+  }
+
+  void _decrease() {
+    final value = int.tryParse(_farmSizeController.text) ?? 0;
     if (value > 0) {
-      setState(() {
-        farmSizeController.text = (value - 1).toString();
-      });
+      setState(() => _farmSizeController.text = (value - 1).toString());
     }
   }
 
@@ -64,14 +58,12 @@ class _FormDetailsState extends State<FormDetails> {
             color: Colors.black12,
             blurRadius: 10,
             offset: Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          /// TITLE
           const Text(
             "Farm Details",
             style: TextStyle(
@@ -83,12 +75,10 @@ class _FormDetailsState extends State<FormDetails> {
 
           const SizedBox(height: 16),
 
-          /// FARM SIZE
           const Text(
             "Farm Size (Acres)",
             style: TextStyle(fontSize: 13, color: Colors.black87),
           ),
-
           const SizedBox(height: 6),
 
           Container(
@@ -98,12 +88,11 @@ class _FormDetailsState extends State<FormDetails> {
             ),
             child: Row(
               children: [
-
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: TextField(
-                      controller: farmSizeController,
+                      controller: _farmSizeController,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
@@ -111,31 +100,26 @@ class _FormDetailsState extends State<FormDetails> {
                     ),
                   ),
                 ),
-
                 Column(
                   children: [
-
                     InkWell(
-                      onTap: increaseFarmSize,
+                      onTap: _increase,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        child: const Icon(
-                          Icons.arrow_drop_up,
-                          size: 20,
+                          horizontal: 6,
+                          vertical: 2,
                         ),
+                        child: const Icon(Icons.arrow_drop_up, size: 20),
                       ),
                     ),
-
                     InkWell(
-                      onTap: decreaseFarmSize,
+                      onTap: _decrease,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        child: const Icon(
-                          Icons.arrow_drop_down,
-                          size: 20,
+                          horizontal: 6,
+                          vertical: 2,
                         ),
+                        child: const Icon(Icons.arrow_drop_down, size: 20),
                       ),
                     ),
                   ],
@@ -146,16 +130,13 @@ class _FormDetailsState extends State<FormDetails> {
 
           const SizedBox(height: 16),
 
-          /// PRIMARY CROPS
           const Text(
             "Primary Crops",
             style: TextStyle(fontSize: 13, color: Colors.black87),
           ),
-
           const SizedBox(height: 6),
-
           TextField(
-            controller: cropsController,
+            controller: _cropsController,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -165,16 +146,13 @@ class _FormDetailsState extends State<FormDetails> {
 
           const SizedBox(height: 16),
 
-          /// EXPERIENCE
           const Text(
             "Farming Experience (Years)",
             style: TextStyle(fontSize: 13, color: Colors.black87),
           ),
-
           const SizedBox(height: 6),
-
           TextField(
-            controller: experienceController,
+            controller: _experienceController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               border: OutlineInputBorder(

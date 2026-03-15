@@ -14,16 +14,10 @@ class EditProfileScreen extends StatelessWidget {
         child: Column(
           children: const [
             EditProfileHeader(),
-
-            
-            SizedBox(height: 200),
-
+            SizedBox(height: 150),
             EditProfileForm(),
-
             SizedBox(height: 30),
-
             FormDetails(),
-
             SizedBox(height: 30),
           ],
         ),

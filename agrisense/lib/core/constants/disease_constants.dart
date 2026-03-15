@@ -1,5 +1,5 @@
 class DiseaseConstants {
-  static const List<String> diseaseTypes = [
+  static const List<String> photographyTips = [
     "Ensure good lighting conditions",
     "Focus on the affected area clearly",
     "Avoid blurry images",

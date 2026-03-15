@@ -19,13 +19,13 @@ class PhotographyTipsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.info_outline, color: Color(0xFF1C398E)),
-              const SizedBox(width: 8),
+              Icon(Icons.info_outline, color: Color(0xFF1C398E)),
+              SizedBox(width: 8),
               Text(
                 "Photography Tips",
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                   color: Color(0xFF1C398E),
@@ -34,7 +34,8 @@ class PhotographyTipsCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ...DiseaseConstants.diseaseTypes.map(
+
+          ...DiseaseConstants.photographyTips.map(
             (tip) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(

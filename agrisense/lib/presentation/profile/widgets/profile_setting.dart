@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../screens/edit_profile_screen.dart';
 class ProfileSetting extends StatelessWidget {
   const ProfileSetting({super.key});
 
@@ -22,7 +22,7 @@ class ProfileSetting extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
+
           Row(
             children: const [
               Icon(Icons.settings, size: 20, color: Colors.black87),
@@ -44,7 +44,14 @@ class ProfileSetting extends StatelessWidget {
             context,
             icon: Icons.person_outline,
             title: "Edit Profile",
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EditProfileScreen(),
+                ),
+              );
+            },
           ),
 
           const SizedBox(height: 12),

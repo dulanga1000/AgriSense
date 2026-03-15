@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/core/routes/app_routes.dart';
-import 'package:agrisense/presentation/auth/widgets/email_textfield.dart';
-import 'package:agrisense/presentation/auth/widgets/password_textfield.dart';
-import 'package:agrisense/presentation/auth/widgets/auth_button.dart';
-import 'package:agrisense/data/models/auth_button_model.dart';
+import 'package:agrisense/presentation/common/widgets/email_textfield.dart';
+import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
+import 'package:agrisense/presentation/common/widgets/auth_button.dart';
+import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/auth/screens/forgot_password_screen.dart';
 
 class LoginFormCard extends StatefulWidget {
@@ -21,92 +21,45 @@ class LoginFormCard extends StatefulWidget {
 }
 
 class _LoginFormCardState extends State<LoginFormCard> {
-
-  /// Form Key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-
-    final loginButton = AuthButtonModel(text: "Login");
-
-    final googleButton = AuthButtonModel(
-      text: "Sign in with Google",
-      icon: Icons.g_mobiledata,
-      outlined: true,
-    );
-
-    final guestButton = AuthButtonModel(
-      text: "Continue as Guest",
-      outlined: true,
-    );
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-
+    return AuthCard(
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            /// Title
             const Center(
               child: Text(
                 "Welcome Back",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
-
             const SizedBox(height: 25),
 
-            /// Email
             const Text("Email"),
             const SizedBox(height: 8),
-
-            EmailTextField(
-              controller: widget.emailController,
-            ),
+            EmailTextField(controller: widget.emailController),
 
             const SizedBox(height: 20),
 
-            /// Password
             const Text("Password"),
             const SizedBox(height: 8),
-
-            PasswordTextField(
-              controller: widget.passwordController,
-            ),
+            PasswordTextField(controller: widget.passwordController),
 
             const SizedBox(height: 10),
 
-            /// Forgot Password
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ForgotPasswordScreen(),
-                    ),
-                  );
-                },
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ForgotPasswordScreen(),
+                  ),
+                ),
                 child: const Text(
                   "Forgot Password?",
                   style: TextStyle(color: Colors.green),
@@ -116,24 +69,17 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 10),
 
-            /// Login Button
             AuthButton(
-              button: loginButton,
+              text: "Login",
               onPressed: () {
-
                 if (_formKey.currentState!.validate()) {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    AppRoutes.main,
-                  );
+                  Navigator.pushReplacementNamed(context, AppRoutes.main);
                 }
-
               },
             ),
 
             const SizedBox(height: 25),
 
-            /// Divider
             const Row(
               children: [
                 Expanded(child: Divider()),
@@ -147,23 +93,19 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 20),
 
-            /// Google Login
             AuthButton(
-              button: googleButton,
+              text: "Sign in with Google",
+              icon: Icons.g_mobiledata,
+              outlined: true,
               onPressed: () {},
             ),
 
             const SizedBox(height: 20),
 
-            /// Register Navigation
             Center(
               child: TextButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    AppRoutes.register,
-                  );
-                },
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, AppRoutes.register),
                 child: const Text(
                   "Don't have an account? Register",
                   style: TextStyle(color: Colors.green),
@@ -173,17 +115,12 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 15),
 
-            /// Guest Login
             AuthButton(
-              button: guestButton,
-              onPressed: () {
-                Navigator.pushReplacementNamed(
-                  context,
-                  AppRoutes.main,
-                );
-              },
+              text: "Continue as Guest",
+              outlined: true,
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, AppRoutes.main),
             ),
-
           ],
         ),
       ),

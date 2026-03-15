@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/data/models/weather_model.dart';
 
 class ForecastCard extends StatelessWidget {
   const ForecastCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final forecastData = [
+      ForecastModel(day: "Mon", temp: "28°", rain: "20%", condition: "cloud"),
+      ForecastModel(day: "Tue", temp: "30°", rain: "5%", condition: "sunny"),
+      ForecastModel(day: "Wed", temp: "26°", rain: "80%", condition: "rain"),
+      ForecastModel(day: "Thu", temp: "27°", rain: "30%", condition: "cloud"),
+      ForecastModel(day: "Fri", temp: "29°", rain: "10%", condition: "sunny"),
+    ];
+
+    IconData getWeatherIcon(String condition) {
+      switch (condition) {
+        case "sunny":
+          return Icons.wb_sunny_outlined;
+        case "rain":
+          return Icons.grain;
+        case "cloud":
+          return Icons.cloud_outlined;
+        default:
+          return Icons.wb_sunny_outlined;
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -29,42 +51,14 @@ class ForecastCard extends StatelessWidget {
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              ForecastItem(
-                day: "Mon",
-                icon: Icons.cloud_outlined,
-                temp: "28°",
-                rain: "20%",
-              ),
-
-              ForecastItem(
-                day: "Tue",
-                icon: Icons.wb_sunny_outlined,
-                temp: "30°",
-                rain: "5%",
-              ),
-
-              ForecastItem(
-                day: "Wed",
-                icon: Icons.grain,
-                temp: "26°",
-                rain: "80%",
-              ),
-
-              ForecastItem(
-                day: "Thu",
-                icon: Icons.cloud_outlined,
-                temp: "27°",
-                rain: "30%",
-              ),
-
-              ForecastItem(
-                day: "Fri",
-                icon: Icons.wb_sunny_outlined,
-                temp: "29°",
-                rain: "10%",
-              ),
-            ],
+            children: forecastData.map((data) {
+              return ForecastItem(
+                day: data.day,
+                icon: getWeatherIcon(data.condition),
+                temp: data.temp,
+                rain: data.rain,
+              );
+            }).toList(),
           ),
         ],
       ),

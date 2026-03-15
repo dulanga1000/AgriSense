@@ -16,7 +16,6 @@ class AuthSnackBar {
     IconData icon,
   ) {
     final overlay = Overlay.of(context);
-
     late OverlayEntry overlayEntry;
 
     overlayEntry = OverlayEntry(
@@ -27,10 +26,7 @@ class AuthSnackBar {
         child: Material(
           color: Colors.transparent,
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(14),
@@ -45,29 +41,18 @@ class AuthSnackBar {
             child: Row(
               children: [
                 Icon(icon, color: Colors.white),
-
                 const SizedBox(width: 12),
-
                 Expanded(
                   child: Text(
                     message,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ),
-
                 GestureDetector(
                   onTap: () {
-                    if (overlayEntry.mounted) {
-                      overlayEntry.remove();
-                    }
+                    if (overlayEntry.mounted) overlayEntry.remove();
                   },
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  ),
+                  child: const Icon(Icons.close, color: Colors.white),
                 ),
               ],
             ),
@@ -77,11 +62,8 @@ class AuthSnackBar {
     );
 
     overlay.insert(overlayEntry);
-
     Future.delayed(const Duration(seconds: 3), () {
-      if (overlayEntry.mounted) {
-        overlayEntry.remove();
-      }
+      if (overlayEntry.mounted) overlayEntry.remove();
     });
   }
 }

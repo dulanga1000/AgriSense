@@ -1,7 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/data/models/weather_model.dart';
 
-class RecommendedActivitiesCard extends StatelessWidget {
+class RecommendedActivitiesCard extends StatefulWidget {
   const RecommendedActivitiesCard({super.key});
+
+  @override
+  State<RecommendedActivitiesCard> createState() =>
+      _RecommendedActivitiesCardState();
+}
+
+class _RecommendedActivitiesCardState extends State<RecommendedActivitiesCard> {
+  final activities = RecommendedActivitiesModel(
+    bestActivities: [
+      "Planting & transplanting seedlings",
+      "Field preparation and plowing",
+      "Irrigation system maintenance",
+    ],
+    avoidActivities: [
+      "Postpone fertilizer application (80% rain Wed)",
+      "Delay fungicide spraying due to humidity",
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +31,6 @@ class RecommendedActivitiesCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
         ],
@@ -26,7 +44,6 @@ class RecommendedActivitiesCard extends StatelessWidget {
             children: const [
               Icon(Icons.agriculture, color: Colors.green),
               SizedBox(width: 8),
-
               Text(
                 "Recommended Activities Today",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -47,14 +64,11 @@ class RecommendedActivitiesCard extends StatelessWidget {
 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Icon(Icons.check_circle, color: Color(0xff22C55E)),
-
                     SizedBox(width: 8),
-
                     Text(
                       "Best For Today",
                       style: TextStyle(
@@ -67,42 +81,30 @@ class RecommendedActivitiesCard extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                const Row(
-                  children: [
-                    Icon(Icons.eco, color: Color(0xff166534), size: 18),
-                    SizedBox(width: 8),
-                    Text(
-                      "Planting & transplanting seedlings",
-                      style: TextStyle(color: Color(0xff166534), fontSize: 13),
+                ...activities.bestActivities.map((activity) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.eco,
+                          color: Color(0xff166534),
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            activity,
+                            style: const TextStyle(
+                              color: Color(0xff166534),
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-
-                const SizedBox(height: 6),
-
-                const Row(
-                  children: [
-                    Icon(Icons.grass, color: Color(0xff166534), size: 18),
-                    SizedBox(width: 8),
-                    Text(
-                      "Field preparation and plowing",
-                      style: TextStyle(color: Color(0xff166534), fontSize: 13),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 6),
-
-                const Row(
-                  children: [
-                    Icon(Icons.water_drop, color: Color(0xff166534), size: 18),
-                    SizedBox(width: 8),
-                    Text(
-                      "Irrigation system maintenance",
-                      style: TextStyle(color: Color(0xff166534), fontSize: 13),
-                    ),
-                  ],
-                ),
+                  );
+                }),
               ],
             ),
           ),
@@ -120,14 +122,11 @@ class RecommendedActivitiesCard extends StatelessWidget {
 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Icon(Icons.warning_amber_rounded, color: Colors.deepOrange),
-
                     SizedBox(width: 8),
-
                     Text(
                       "Avoid Today",
                       style: TextStyle(
@@ -140,43 +139,30 @@ class RecommendedActivitiesCard extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                const Row(
-                  children: [
-                    Icon(Icons.umbrella, color: Colors.deepOrange, size: 18),
-
-                    SizedBox(width: 8),
-
-                    Expanded(
-                      child: Text(
-                        "Wait for Wed (80% rain) - postpone fertilizer application",
-                        style: TextStyle(
+                ...activities.avoidActivities.map((activity) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.umbrella,
                           color: Colors.deepOrange,
-                          fontSize: 13,
+                          size: 18,
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 6),
-
-                const Row(
-                  children: [
-                    Icon(Icons.water_drop, color: Colors.deepOrange, size: 18),
-
-                    SizedBox(width: 8),
-
-                    Expanded(
-                      child: Text(
-                        "High humidity - delay fungicide spraying",
-                        style: TextStyle(
-                          color: Colors.deepOrange,
-                          fontSize: 13,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            activity,
+                            style: const TextStyle(
+                              color: Colors.deepOrange,
+                              fontSize: 13,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ],
             ),
           ),

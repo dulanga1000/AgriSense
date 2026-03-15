@@ -55,8 +55,9 @@ class WeatherTrendsCard extends StatelessWidget {
                       showTitles: true,
                       interval: 1,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= days.length)
+                        if (value.toInt() >= days.length) {
                           return const SizedBox();
+                        }
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
@@ -160,8 +161,9 @@ class WeatherTrendsCard extends StatelessWidget {
                       showTitles: true,
                       interval: 1,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= days.length)
+                        if (value.toInt() >= days.length) {
                           return const SizedBox();
+                        }
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(

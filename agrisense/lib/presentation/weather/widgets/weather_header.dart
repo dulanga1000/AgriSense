@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/data/models/weather_model.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
 class WeatherHeader extends StatefulWidget {
   const WeatherHeader({super.key});
@@ -39,16 +39,9 @@ class _WeatherHeaderState extends State<WeatherHeader> {
         children: [
           Row(
             children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.white,
-                  size: 18,
-                ),
-
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, AppRoutes.main);
-                },
+              Padding(
+                padding: const EdgeInsets.only(right: 16, top: 6),
+                child: const AppBackButton(fallbackIndex: 0),
               ),
 
               const Column(

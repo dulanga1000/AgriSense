@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FertilizerForm extends StatefulWidget {
-  final VoidCallback onSubmit;
+  final Function(String cropType, double landSize) onSubmit;
 
   const FertilizerForm({super.key, required this.onSubmit});
 
@@ -10,7 +10,6 @@ class FertilizerForm extends StatefulWidget {
 }
 
 class _FertilizerFormState extends State<FertilizerForm> {
-
   String? selectedCrop;
   final TextEditingController landController = TextEditingController();
 
@@ -18,17 +17,23 @@ class _FertilizerFormState extends State<FertilizerForm> {
     return selectedCrop != null && landController.text.isNotEmpty;
   }
 
+  void submitForm() {
+    double landSize = double.tryParse(landController.text) ?? 0;
+    widget.onSubmit(selectedCrop!, landSize);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+
       child: Padding(
         padding: const EdgeInsets.all(16),
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
 
+          children: [
             Row(
               children: [
                 Image.asset("assets/images/leaf.png", height: 20),
@@ -46,7 +51,7 @@ class _FertilizerFormState extends State<FertilizerForm> {
             const SizedBox(height: 6),
 
             DropdownButtonFormField<String>(
-              value: selectedCrop,
+              initialValue: selectedCrop,
               items: const [
                 DropdownMenuItem(value: "Corn", child: Text("Corn")),
                 DropdownMenuItem(value: "Rice", child: Text("Rice")),
@@ -57,9 +62,7 @@ class _FertilizerFormState extends State<FertilizerForm> {
                   selectedCrop = value;
                 });
               },
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
 
             const SizedBox(height: 16),
@@ -69,9 +72,8 @@ class _FertilizerFormState extends State<FertilizerForm> {
 
             TextField(
               controller: landController,
-              onChanged: (value) {
-                setState(() {});
-              },
+              keyboardType: TextInputType.number,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 hintText: "Enter land size",
                 border: OutlineInputBorder(),
@@ -83,11 +85,9 @@ class _FertilizerFormState extends State<FertilizerForm> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
 
-                onPressed: isFormValid ? widget.onSubmit : null,
+                onPressed: isFormValid ? submitForm : null,
 
                 child: const Text(
                   "Get Recommendation",

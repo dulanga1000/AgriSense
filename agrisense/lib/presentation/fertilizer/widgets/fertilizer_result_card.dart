@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import '../../../data/models/fertilizer_model.dart';
 
 class FertilizerResultCard extends StatelessWidget {
-  const FertilizerResultCard({super.key});
+  final FertilizerModel model;
+
+  const FertilizerResultCard({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
-
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -13,57 +15,33 @@ class FertilizerResultCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Row(
               children: [
                 Image.asset("assets/images/cube.png", height: 20),
                 const SizedBox(width: 8),
-                const Text(
-                  "Recommended Fertilizer",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
+                const Text("Recommended Fertilizer", style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
-
             const SizedBox(height: 12),
-
-            const Text(
-              "NPK Complex Fertilizer + Urea",
-              style: TextStyle(
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-
+            Text(model.fertilizerName, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16)),
             const Divider(),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-
+              children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Total Quantity"),
-                    Text(
-                      "480 kg",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("Total Quantity"),
+                    Text("${model.totalQuantity.toStringAsFixed(0)} kg", style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 ),
-
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("NPK Ratio"),
-                    Text(
-                      "20:10:10",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text("NPK Ratio"),
+                    Text(model.npkRatio, style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 )
-
               ],
             )
           ],

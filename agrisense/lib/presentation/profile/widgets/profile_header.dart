@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/data/models/user_model.dart';
-import 'package:agrisense/core/routes/app_routes.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
 class ProfileHeader extends StatelessWidget {
   ProfileHeader({super.key});
@@ -20,11 +20,13 @@ class ProfileHeader extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        
+        /// HEADER BACKGROUND
         Container(
           height: 160,
           decoration: const BoxDecoration(
-            color: Color(0xFF0C8F3E),
+            gradient: LinearGradient(
+              colors: [Color(0xFF4CAF50), Color(0xFF0D520F)],
+            ),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(28),
               bottomRight: Radius.circular(28),
@@ -37,24 +39,16 @@ class ProfileHeader extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                        return;
-                      }
-
-                      Navigator.pushReplacementNamed(context, AppRoutes.main);
-                    },
-                    child: const Icon(Icons.arrow_back, color: Colors.white),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    "Profile",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                  const SizedBox(width: 40),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20, top: 6),
+                    child: Text(
+                      "Profile",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -63,11 +57,24 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
 
-        
+        /// BACK BUTTON
+        Positioned(
+          top: 0,
+          left: 0,
+          child: SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, top: 6),
+              child: const AppBackButton(fallbackIndex: 0),
+            ),
+          ),
+        ),
+
+        /// PROFILE CARD
         Positioned(
           top: 95,
-          left: 20,
-          right: 20,
+          left: 40,
+          right: 40,
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
@@ -81,65 +88,67 @@ class ProfileHeader extends StatelessWidget {
                 ),
               ],
             ),
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
-                CircleAvatar(
-                  radius: 28,
-                  backgroundColor: const Color(0xFF0C8F3E),
-                  child: Text(
-                    user.avatarLetter,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 14),
-
-                
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.name,
+                /// AVATAR + NAME SECTION
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundColor: const Color(0xFF4CAF50),
+                      child: Text(
+                        user.avatarLetter,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 22,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
 
-                      const SizedBox(height: 2),
+                    const SizedBox(width: 14),
 
-                      Text(
-                        user.role,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(height: 12),
+                        const SizedBox(height: 2),
 
-                      _infoRow(Icons.location_on, user.location),
-                      const SizedBox(height: 8),
+                        Text(
+                          user.role,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
 
-                      _infoRow(Icons.phone, user.phone),
-                      const SizedBox(height: 8),
+                const SizedBox(height: 14),
 
-                      _infoRow(Icons.email, user.email),
-                      const SizedBox(height: 8),
+                /// USER DETAILS BELOW
+                _infoRow(Icons.location_on, user.location),
+                const SizedBox(height: 8),
 
-                      _infoRow(
-                        Icons.calendar_today,
-                        "Member since ${user.memberSince}",
-                      ),
-                    ],
-                  ),
+                _infoRow(Icons.phone, user.phone),
+                const SizedBox(height: 8),
+
+                _infoRow(Icons.email, user.email),
+                const SizedBox(height: 8),
+
+                _infoRow(
+                  Icons.calendar_today,
+                  "Member since ${user.memberSince}",
                 ),
               ],
             ),

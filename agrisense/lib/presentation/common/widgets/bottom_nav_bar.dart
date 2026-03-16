@@ -4,20 +4,29 @@ import 'package:flutter/cupertino.dart';
 class BottomNavBarWidget extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
+  final bool highlightSelected;
+
   const BottomNavBarWidget({
     super.key,
     required this.currentIndex,
     required this.onTap,
+    this.highlightSelected = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final Color neutralColor = Colors.grey.shade600;
+
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTap,
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.green,
-      unselectedItemColor: Colors.grey[600],
+      selectedItemColor: highlightSelected ? Colors.green : neutralColor,
+      unselectedItemColor: neutralColor,
+      selectedLabelStyle: highlightSelected
+          ? null
+          : const TextStyle(fontWeight: FontWeight.normal),
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
       items: const [
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.house),

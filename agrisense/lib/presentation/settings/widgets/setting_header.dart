@@ -26,12 +26,12 @@ class SettingHeader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: const [
-              /// BACK BUTTON
+              
               AppBackButton(fallbackIndex: 0),
 
               SizedBox(width: 12),
 
-              /// TITLE
+              
               Text(
                 "App Settings",
                 style: TextStyle(

@@ -1,33 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/data/models/user_model.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
-class ProfileHeader extends StatefulWidget {
+class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key});
 
   @override
-  State<ProfileHeader> createState() => _ProfileHeaderState();
-}
-
-class _ProfileHeaderState extends State<ProfileHeader> {
-
-  final user = UserModel(
-    id: '1',
-    name: "Guest",
-    role: "Farmer",
-    location: "Western Province, Sri Lanka",
-    phone: "+91 98765 43210",
-    email: "guest@email.com",
-    memberSince: "Jan 2024",
-  );
-
-  @override
   Widget build(BuildContext context) {
+    final user = context.watch<ProfileState>().user;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
-
-        
         Container(
           height: 160,
           decoration: const BoxDecoration(
@@ -64,7 +49,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           ),
         ),
 
-        
         Positioned(
           top: 0,
           left: 0,
@@ -77,7 +61,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           ),
         ),
 
-        
         Positioned(
           top: 95,
           left: 40,
@@ -98,8 +81,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                
                 Row(
                   children: [
                     CircleAvatar(
@@ -114,9 +95,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         ),
                       ),
                     ),
-
                     const SizedBox(width: 14),
-
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -127,9 +106,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         const SizedBox(height: 2),
-
                         Text(
                           user.role,
                           style: const TextStyle(
@@ -144,16 +121,12 @@ class _ProfileHeaderState extends State<ProfileHeader> {
 
                 const SizedBox(height: 14),
 
-               
                 _infoRow(Icons.location_on, user.location),
                 const SizedBox(height: 8),
-
                 _infoRow(Icons.phone, user.phone),
                 const SizedBox(height: 8),
-
                 _infoRow(Icons.email, user.email),
                 const SizedBox(height: 8),
-
                 _infoRow(
                   Icons.calendar_today,
                   "Member since ${user.memberSince}",
@@ -171,12 +144,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
       children: [
         Icon(icon, size: 18, color: const Color(0xFF0C8F3E)),
         const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(fontSize: 13),
-          ),
-        ),
+        Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
       ],
     );
   }

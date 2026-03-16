@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/data/models/user_model.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 class EditProfileForm extends StatefulWidget {
   const EditProfileForm({super.key});
@@ -9,32 +10,28 @@ class EditProfileForm extends StatefulWidget {
 }
 
 class _EditProfileFormState extends State<EditProfileForm> {
-
-  final UserModel user = UserModel(
-    id: '1',
-    name: "Guest",
-    role: "Farmer",
-    location: "Western Province, Sri Lanka",
-    phone: "+91 98765 43210",
-    email: "guest@email.com",
-    memberSince: "Jan 2024",
-    bio: "Experienced farmer specializing in rice and wheat cultivation",
-  );
-
-  late TextEditingController nameController;
-  late TextEditingController emailController;
-  late TextEditingController phoneController;
-  late TextEditingController bioController;
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+  late TextEditingController _bioController;
 
   @override
   void initState() {
     super.initState();
+    final user = context.read<ProfileState>().user;
+    _nameController = TextEditingController(text: user.name);
+    _emailController = TextEditingController(text: user.email);
+    _phoneController = TextEditingController(text: user.phone);
+    _bioController = TextEditingController(text: user.bio);
+  }
 
-    nameController = TextEditingController(text: user.name);
-    emailController = TextEditingController(text: user.email);
-    phoneController = TextEditingController(text: user.phone);
-    bioController = TextEditingController(
-        text: "Experienced farmer specializing in rice and wheat cultivation");
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _bioController.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,111 +47,70 @@ class _EditProfileFormState extends State<EditProfileForm> {
             color: Colors.black12,
             blurRadius: 10,
             offset: Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          /// FULL NAME
-          const Text(
-            "Full Name",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-
+          _label("Full Name"),
           const SizedBox(height: 6),
-
-          TextField(
-            controller: nameController,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.person_outline),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-            ),
-          ),
+          _field(controller: _nameController, icon: Icons.person_outline),
 
           const SizedBox(height: 16),
 
-          /// EMAIL
-          const Text(
-            "Email",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-
+          _label("Email"),
           const SizedBox(height: 6),
-
-          TextField(
-            controller: emailController,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.email_outlined),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-            ),
-          ),
+          _field(controller: _emailController, icon: Icons.email_outlined),
 
           const SizedBox(height: 16),
 
-          /// PHONE NUMBER
-          const Text(
-            "Phone Number",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-
+          _label("Phone Number"),
           const SizedBox(height: 6),
-
-          TextField(
-            controller: phoneController,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.phone_outlined),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-            ),
-          ),
+          _field(controller: _phoneController, icon: Icons.phone_outlined),
 
           const SizedBox(height: 16),
 
-          /// BIO
-          const Text(
-            "Bio",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-
+          _label("Bio"),
           const SizedBox(height: 6),
-
           TextField(
-            controller: bioController,
+            controller: _bioController,
             maxLines: 4,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 14,
+                horizontal: 12,
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _label(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+    );
+  }
+
+  Widget _field({
+    required TextEditingController controller,
+    required IconData icon,
+  }) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 14,
+          horizontal: 12,
+        ),
       ),
     );
   }

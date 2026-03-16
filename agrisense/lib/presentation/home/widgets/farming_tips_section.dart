@@ -3,24 +3,12 @@ import 'package:agrisense/data/models/farming_tip_model.dart';
 import './tip_item.dart';
 
 class FarmingTipsSection extends StatelessWidget {
-  const FarmingTipsSection({super.key});
+  final List<FarmingTip> tips;
+
+  const FarmingTipsSection({super.key, required this.tips});
 
   @override
   Widget build(BuildContext context) {
-    final List<FarmingTip> tips = [
-      FarmingTip(
-        id: 1,
-        description: "Good day for rice cultivation - high humidity detected",
-        icon: "plant",
-      ),
-      FarmingTip(
-        id: 2,
-        description:
-            "Light rain expected tomorrow - postpone pesticide application",
-        icon: "rain",
-      ),
-    ];
-
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       padding: const EdgeInsets.all(16),
@@ -38,8 +26,8 @@ class FarmingTipsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               Icon(Icons.lightbulb_outline, color: Colors.orange),
               SizedBox(width: 8),
               Text(
@@ -48,9 +36,7 @@ class FarmingTipsSection extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 16),
-
           ...tips.map((tip) => TipItem(farmingTip: tip)),
         ],
       ),

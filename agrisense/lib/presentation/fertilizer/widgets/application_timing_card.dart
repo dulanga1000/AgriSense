@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/data/models/fertilizer_model.dart';
 
 class ApplicationTimingCard extends StatelessWidget {
-  const ApplicationTimingCard({super.key});
+  final FertilizerModel model;
+
+  const ApplicationTimingCard({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-
-            Image.asset(
-              'assets/images/timer.png',
-              width: 30,
-              height: 30,
-            ),
-
+            Image.asset("assets/images/timer.png", width: 30, height: 30),
             const SizedBox(width: 10),
 
-            const Text(
-              "Application Timing\nSplit application in 3 stages",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+            Text(
+              "Application Timing\n${model.applicationTiming}",
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-
           ],
         ),
       ),

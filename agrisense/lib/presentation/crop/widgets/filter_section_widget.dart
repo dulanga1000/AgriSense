@@ -1,210 +1,315 @@
 import 'package:flutter/material.dart';
-import 'globals.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/core/constants/season_constants.dart';
+import 'package:agrisense/core/constants/location_constants.dart';
+import 'package:agrisense/data/models/district_model.dart';
+import 'package:agrisense/presentation/crop/state/crop_advisory_state.dart';
 
-class FilterSectionWidget extends StatefulWidget {
+class FilterSectionWidget extends StatelessWidget {
   const FilterSectionWidget({super.key});
 
   @override
-  State<FilterSectionWidget> createState() => _FilterSectionWidgetState();
-}
-
-class _FilterSectionWidgetState extends State<FilterSectionWidget> {
-  String selectedSeasonLocal = selectedSeason.value;
-  String selectedProvinceLocal = selectedProvince.value;
-
-  final List<Map<String, String>> seasons = [
-    {"name": "Yala Season", "period": "April - September"},
-    {"name": "Maha Season", "period": "October - March"},
-  ];
-
-  final List<String> provinces = [
-    "Central Province, Sri Lanka",
-    "Eastern Province, Sri Lanka",
-    "North Central Province, Sri Lanka",
-    "Northern Province, Sri Lanka",
-    "North Western Province, Sri Lanka",
-    "Sabaragamuwa Province, Sri Lanka",
-    "Southern Province, Sri Lanka",
-    "Uva Province, Sri Lanka",
-    "Western Province",
-  ];
-
-  @override
   Widget build(BuildContext context) {
+    final state = context.watch<CropAdvisoryState>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-
-          // --- Season Selector ---
           Expanded(
-            child: GestureDetector(
-              onTap: showSeasonSearch,
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(blurRadius: 6, color: Colors.black12),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Season", style: TextStyle(fontSize: 12)),
-                        Text(
-                          selectedSeasonLocal,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    const Icon(Icons.keyboard_arrow_down), // same as Location
-                  ],
-                ),
-              ),
+            child: _SelectorCard(
+              label: "Select Season",
+              value: state.selectedSeason.name.split(" ").first,
+              isOpen: state.isSeasonOpen,
+              onTap: () => state.toggleSeason(),
             ),
           ),
 
-          // --- Province Selector ---
+          const SizedBox(width: 12),
+
           Expanded(
-            child: GestureDetector(
-              onTap: showProvinceSearch,
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(blurRadius: 6, color: Colors.black12),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Location", style: TextStyle(fontSize: 12)),
-                          Text(
-                            selectedProvinceLocal,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Icon(Icons.keyboard_arrow_down),
-                  ],
-                ),
-              ),
+            child: _SelectorCard(
+              label: "Location",
+              value: state.selectedDistrict.province.length > 10
+                  ? "${state.selectedDistrict.province.substring(0, 10)}..."
+                  : state.selectedDistrict.province,
+              isOpen: state.isLocationOpen,
+              onTap: () => state.toggleLocation(),
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  void showSeasonSearch() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setStateDialog) {
-            return AlertDialog(
-              title: const Text("Select Season"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: seasons.map((season) {
-                  return ListTile(
-                    title: Text(season["name"]!),
-                    subtitle: Text(season["period"]!),
-                    onTap: () {
-                      setState(() {
-                        selectedSeasonLocal = season["name"]!;
-                      });
-                      selectedSeason.value = season["name"]!;
-                      selectedSeasonPeriod.value = season["period"]!;
-                      Navigator.pop(context);
-                    },
-                  );
-                }).toList(),
+class _SelectorCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final bool isOpen;
+  final VoidCallback onTap;
+
+  const _SelectorCard({
+    required this.label,
+    required this.value,
+    required this.isOpen,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 64,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: isOpen
+              ? const BorderRadius.vertical(top: Radius.circular(12))
+              : BorderRadius.circular(12),
+          boxShadow: const [BoxShadow(blurRadius: 6, color: Colors.black12)],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ],
               ),
-            );
-          },
-        );
-      },
+            ),
+            Icon(
+              isOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+              color: Colors.black54,
+            ),
+          ],
+        ),
+      ),
     );
   }
+}
 
-  void showProvinceSearch() {
-    TextEditingController searchController = TextEditingController();
-    List<String> filteredList = provinces;
+class SeasonDropdownContent extends StatelessWidget {
+  final CropAdvisoryState state;
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setStateDialog) {
-            void filter(String value) {
-              setStateDialog(() {
-                filteredList = provinces
-                    .where((p) => p.toLowerCase().contains(value.toLowerCase()))
-                    .toList();
-              });
-            }
+  const SeasonDropdownContent({super.key, required this.state});
 
-            return AlertDialog(
-              title: const Text("Select Province"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: SeasonConstants.seasons.map((season) {
+          final isSelected = state.selectedSeason.name == season.name;
+          final isLast = season == SeasonConstants.seasons.last;
+
+          return GestureDetector(
+            onTap: () {
+              state.updateSeason(season);
+              state.toggleSeason();
+            },
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFFE8F5E9) : Colors.white,
+                borderRadius: isLast
+                    ? const BorderRadius.vertical(bottom: Radius.circular(12))
+                    : null,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                      hintText: "Search province...",
-                      prefixIcon: Icon(Icons.search),
+                  Text(
+                    season.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: isSelected
+                          ? const Color(0xFF16A34A)
+                          : Colors.black,
                     ),
-                    onChanged: filter,
                   ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 200,
-                    width: double.maxFinite,
-                    child: ListView.builder(
-                      itemCount: filteredList.length,
-                      itemBuilder: (context, index) {
-                        final province = filteredList[index];
-                        return ListTile(
-                          title: Text(
-                            province,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              selectedProvinceLocal = province;
-                            });
-                            selectedProvince.value = province;
-                            Navigator.pop(context);
-                          },
-                        );
-                      },
+                  const SizedBox(height: 2),
+                  Text(
+                    season.period,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isSelected ? const Color(0xFF16A34A) : Colors.grey,
                     ),
                   ),
                 ],
               ),
-            );
-          },
-        );
-      },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class LocationDropdownContent extends StatefulWidget {
+  final CropAdvisoryState state;
+
+  const LocationDropdownContent({super.key, required this.state});
+
+  @override
+  State<LocationDropdownContent> createState() =>
+      _LocationDropdownContentState();
+}
+
+class _LocationDropdownContentState extends State<LocationDropdownContent> {
+  final TextEditingController _searchController = TextEditingController();
+  List<DistrictModel> _filtered = LocationConstants.districts;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filter(String value) {
+    setState(() {
+      _filtered = LocationConstants.districts
+          .where(
+            (d) =>
+                d.district.toLowerCase().contains(value.toLowerCase()) ||
+                d.province.toLowerCase().contains(value.toLowerCase()),
+          )
+          .toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _filter,
+              decoration: InputDecoration(
+                hintText: "Search location",
+                hintStyle: const TextStyle(fontSize: 13),
+                prefixIcon: const Icon(Icons.search, size: 18),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+
+          SizedBox(
+            height: 220,
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: _filtered.length,
+              itemBuilder: (context, index) {
+                final district = _filtered[index];
+                final isSelected =
+                    widget.state.selectedDistrict.district == district.district;
+                final showHeader =
+                    index == 0 ||
+                    _filtered[index - 1].province != district.province;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (showHeader)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 6,
+                        ),
+                        color: Colors.grey.shade100,
+                        child: Text(
+                          district.province,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    GestureDetector(
+                      onTap: () {
+                        widget.state.updateDistrict(district);
+                        widget.state.toggleLocation();
+                      },
+                      child: Container(
+                        color: isSelected
+                            ? const Color(0xFFE8F5E9)
+                            : Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 10,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              size: 16,
+                              color: isSelected
+                                  ? const Color(0xFF16A34A)
+                                  : Colors.grey,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              district.district,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: isSelected
+                                    ? const Color(0xFF16A34A)
+                                    : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import '../../core/routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,10 +19,6 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
       duration: const Duration(seconds: 1),
     )..repeat();
-
-    Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
-    });
   }
 
   @override

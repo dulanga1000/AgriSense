@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/data/models/expert_tip_model.dart';
+import 'package:agrisense/presentation/crop/state/crop_advisory_state.dart';
 
 class ExpertTipsCard extends StatelessWidget {
   const ExpertTipsCard({super.key});
 
+  Color _getTipColor(String type) {
+    switch (type) {
+      case 'water':
+        return Colors.green.shade100;
+      case 'soil':
+        return Colors.blue.shade100;
+      case 'pest':
+        return Colors.orange.shade100;
+      default:
+        return Colors.grey.shade100;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    
-    final double cardWidth = MediaQuery.of(context).size.width * 0.9;
+    final tips = context.watch<CropAdvisoryState>().expertTips;
 
     return Center(
       child: Container(
-        width: cardWidth,
+        width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -26,7 +41,6 @@ class ExpertTipsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             Row(
               children: [
                 Image.asset("assets/images/bulb.png", width: 22, height: 22),
@@ -37,33 +51,12 @@ class ExpertTipsCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 16),
-
-            
-            _tipItem(
-              color: Colors.green.shade100,
-              title: "Water Management",
-              description:
-                  "Monitor rainfall patterns and adjust irrigation schedules accordingly",
-            ),
-
-            const SizedBox(height: 10),
-
-            _tipItem(
-              color: Colors.blue.shade100,
-              title: "Soil Preparation",
-              description:
-                  "Test soil pH and add organic matter before planting",
-            ),
-
-            const SizedBox(height: 10),
-
-            _tipItem(
-              color: Colors.orange.shade100,
-              title: "Pest Control",
-              description:
-                  "Regular monitoring helps prevent major outbreaks during this season",
+            ...tips.map(
+              (tip) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: _tipItem(tip),
+              ),
             ),
           ],
         ),
@@ -71,16 +64,11 @@ class ExpertTipsCard extends StatelessWidget {
     );
   }
 
-  
-  static Widget _tipItem({
-    required Color color,
-    required String title,
-    required String description,
-  }) {
+  Widget _tipItem(ExpertTipModel tip) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color,
+        color: _getTipColor(tip.type),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -94,10 +82,10 @@ class ExpertTipsCard extends StatelessWidget {
                 style: const TextStyle(color: Colors.black, fontSize: 13),
                 children: [
                   TextSpan(
-                    text: "$title: ",
+                    text: "${tip.title}: ",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(text: description),
+                  TextSpan(text: tip.description),
                 ],
               ),
             ),

@@ -1,31 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/data/models/user_model.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
-class EditProfileHeader extends StatefulWidget {
+class EditProfileHeader extends StatelessWidget {
   const EditProfileHeader({super.key});
 
   @override
-  State<EditProfileHeader> createState() => _EditProfileHeaderState();
-}
-
-class _EditProfileHeaderState extends State<EditProfileHeader> {
-
-  final UserModel user = UserModel(
-    id: '1',
-    name: "Guest",
-    role: "Farmer",
-    location: "Western Province, Sri Lanka",
-    phone: "+91 98765 43210",
-    email: "guest@email.com",
-    memberSince: "Jan 2024",
-  );
-
-  @override
   Widget build(BuildContext context) {
+    final user = context.watch<ProfileState>().user;
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
-
         Container(
           height: 130,
           decoration: const BoxDecoration(
@@ -41,19 +27,11 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(Icons.arrow_back, color: Colors.white),
                   ),
-
                   const SizedBox(width: 12),
-
                   const Text(
                     "Edit Profile",
                     style: TextStyle(
@@ -62,32 +40,39 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-
                   const Spacer(),
 
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1FA755),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.save_outlined,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          "Save",
-                          style: TextStyle(
+                  // ✅ Save button
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1FA755),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.save_outlined,
                             color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                            size: 18,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 6),
+                          Text(
+                            "Save",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -110,16 +95,14 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
                   color: Colors.black12,
                   blurRadius: 10,
                   offset: Offset(0, 4),
-                )
+                ),
               ],
             ),
             child: Column(
               children: [
-
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-
                     CircleAvatar(
                       radius: 40,
                       backgroundColor: const Color(0xFF12B24B),
@@ -132,7 +115,6 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
                         ),
                       ),
                     ),
-
                     Positioned(
                       right: -2,
                       bottom: -2,
@@ -148,19 +130,14 @@ class _EditProfileHeaderState extends State<EditProfileHeader> {
                           size: 16,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-
                 const SizedBox(height: 12),
-
                 const Text(
                   "Tap to change profile picture",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey,
-                  ),
-                )
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                ),
               ],
             ),
           ),

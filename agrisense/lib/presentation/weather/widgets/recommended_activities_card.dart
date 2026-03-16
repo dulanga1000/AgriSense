@@ -1,33 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/data/models/weather_model.dart';
 
-class RecommendedActivitiesCard extends StatefulWidget {
-  const RecommendedActivitiesCard({super.key});
+class RecommendedActivitiesCard extends StatelessWidget {
+  final RecommendedActivitiesModel activities;
 
-  @override
-  State<RecommendedActivitiesCard> createState() =>
-      _RecommendedActivitiesCardState();
-}
-
-class _RecommendedActivitiesCardState extends State<RecommendedActivitiesCard> {
-  final activities = RecommendedActivitiesModel(
-    bestActivities: [
-      "Planting & transplanting seedlings",
-      "Field preparation and plowing",
-      "Irrigation system maintenance",
-    ],
-    avoidActivities: [
-      "Postpone fertilizer application (80% rain Wed)",
-      "Delay fungicide spraying due to humidity",
-    ],
-  );
+  const RecommendedActivitiesCard({super.key, required this.activities});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -35,13 +18,11 @@ class _RecommendedActivitiesCardState extends State<RecommendedActivitiesCard> {
           BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
         ],
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Title
-          Row(
-            children: const [
+          const Row(
+            children: [
               Icon(Icons.agriculture, color: Colors.green),
               SizedBox(width: 8),
               Text(
@@ -50,18 +31,14 @@ class _RecommendedActivitiesCardState extends State<RecommendedActivitiesCard> {
               ),
             ],
           ),
-
           const SizedBox(height: 14),
 
-          /// Best For Today
           Container(
             padding: const EdgeInsets.all(14),
-
             decoration: BoxDecoration(
               color: const Color(0xffE8F7EE),
               borderRadius: BorderRadius.circular(12),
             ),
-
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -78,11 +55,10 @@ class _RecommendedActivitiesCardState extends State<RecommendedActivitiesCard> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 10),
 
-                ...activities.bestActivities.map((activity) {
-                  return Padding(
+                ...activities.bestActivities.map(
+                  (activity) => Padding(
                     padding: const EdgeInsets.only(bottom: 6),
                     child: Row(
                       children: [
@@ -103,23 +79,20 @@ class _RecommendedActivitiesCardState extends State<RecommendedActivitiesCard> {
                         ),
                       ],
                     ),
-                  );
-                }),
+                  ),
+                ),
               ],
             ),
           ),
 
           const SizedBox(height: 12),
 
-          /// Avoid Today
           Container(
             padding: const EdgeInsets.all(14),
-
             decoration: BoxDecoration(
               color: const Color(0xffF6EFE7),
               borderRadius: BorderRadius.circular(12),
             ),
-
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -136,11 +109,10 @@ class _RecommendedActivitiesCardState extends State<RecommendedActivitiesCard> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 10),
 
-                ...activities.avoidActivities.map((activity) {
-                  return Padding(
+                ...activities.avoidActivities.map(
+                  (activity) => Padding(
                     padding: const EdgeInsets.only(bottom: 6),
                     child: Row(
                       children: [
@@ -161,8 +133,8 @@ class _RecommendedActivitiesCardState extends State<RecommendedActivitiesCard> {
                         ),
                       ],
                     ),
-                  );
-                }).toList(),
+                  ),
+                ),
               ],
             ),
           ),

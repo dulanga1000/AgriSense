@@ -33,7 +33,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           onPressed: () => setState(() => obscurePassword = !obscurePassword),
         ),
         filled: true,
-        fillColor: Colors.grey.shade100,
+        fillColor: const Color.fromARGB(255, 255, 255, 255),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

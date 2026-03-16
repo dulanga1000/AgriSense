@@ -38,10 +38,12 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
+
             const SizedBox(height: 25),
 
             const Text("Name"),
             const SizedBox(height: 8),
+
             TextFormField(
               controller: widget.nameController,
               decoration: InputDecoration(
@@ -111,11 +113,35 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
             const SizedBox(height: 20),
 
-            AuthButton(
-              text: "Sign in with Google",
-              icon: Icons.g_mobiledata,
-              outlined: true,
+            /// GOOGLE BUTTON WITH PNG ICON
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                side: const BorderSide(color: Colors.grey),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               onPressed: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/google_logo.png",
+                    width: 20,
+                    height: 20,
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    "Sign up with Google",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 20),
@@ -128,6 +154,29 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
                   "Already have an account? Login",
                   style: TextStyle(color: Colors.green),
                 ),
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            /// CONTINUE AS GUEST BUTTON WITH BLACK TEXT
+            Theme(
+              data: Theme.of(context).copyWith(
+                outlinedButtonTheme: OutlinedButtonThemeData(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              child: AuthButton(
+                text: "Continue as Guest",
+                outlined: true,
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, AppRoutes.main),
               ),
             ),
           ],

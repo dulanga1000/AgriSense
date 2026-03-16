@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/fertilizer/state/fertilizer_state.dart';
 
 class FertilizerForm extends StatefulWidget {
   final Function(String cropType, double landSize) onSubmit;
@@ -10,29 +12,49 @@ class FertilizerForm extends StatefulWidget {
 }
 
 class _FertilizerFormState extends State<FertilizerForm> {
+  static const String _defaultCropOption = "Select Crop";
   String? selectedCrop;
-  final TextEditingController landController = TextEditingController();
+  final TextEditingController _landController = TextEditingController();
 
-  bool get isFormValid {
-    return selectedCrop != null && landController.text.isNotEmpty;
+  static const List<String> _cropTypes = [
+    _defaultCropOption,
+    "Rice",
+    "Corn",
+    "Wheat",
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedCrop = _cropTypes.first;
   }
 
-  void submitForm() {
-    double landSize = double.tryParse(landController.text) ?? 0;
+  bool get _isFormValid =>
+      selectedCrop != null &&
+      selectedCrop != _defaultCropOption &&
+      _landController.text.isNotEmpty;
+
+  @override
+  void dispose() {
+    _landController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final landSize = double.tryParse(_landController.text) ?? 0;
     widget.onSubmit(selectedCrop!, landSize);
   }
 
   @override
   Widget build(BuildContext context) {
+    final fertilizerState = context.watch<FertilizerState>();
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-
       child: Padding(
         padding: const EdgeInsets.all(16),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-
           children: [
             Row(
               children: [
@@ -44,7 +66,6 @@ class _FertilizerFormState extends State<FertilizerForm> {
                 ),
               ],
             ),
-
             const SizedBox(height: 16),
 
             const Text("Crop Type"),
@@ -52,16 +73,12 @@ class _FertilizerFormState extends State<FertilizerForm> {
 
             DropdownButtonFormField<String>(
               initialValue: selectedCrop,
-              items: const [
-                DropdownMenuItem(value: "Corn", child: Text("Corn")),
-                DropdownMenuItem(value: "Rice", child: Text("Rice")),
-                DropdownMenuItem(value: "Wheat", child: Text("Wheat")),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  selectedCrop = value;
-                });
-              },
+              items: _cropTypes
+                  .map(
+                    (crop) => DropdownMenuItem(value: crop, child: Text(crop)),
+                  )
+                  .toList(),
+              onChanged: (value) => setState(() => selectedCrop = value),
               decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
 
@@ -71,7 +88,7 @@ class _FertilizerFormState extends State<FertilizerForm> {
             const SizedBox(height: 6),
 
             TextField(
-              controller: landController,
+              controller: _landController,
               keyboardType: TextInputType.number,
               onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
@@ -86,12 +103,14 @@ class _FertilizerFormState extends State<FertilizerForm> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-
-                onPressed: isFormValid ? submitForm : null,
-
-                child: const Text(
-                  "Get Recommendation",
-                  style: TextStyle(color: Colors.white),
+                onPressed: _isFormValid && !fertilizerState.isLoading
+                    ? _submit
+                    : null,
+                child: Text(
+                  fertilizerState.isLoading
+                      ? "Loading..."
+                      : "Get Recommendation",
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ),

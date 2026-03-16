@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:agrisense/data/models/weather_model.dart';
 
 class WeatherTrendsCard extends StatelessWidget {
-  const WeatherTrendsCard({super.key});
+  final List<WeatherTrendModel> trends;
+
+  const WeatherTrendsCard({super.key, required this.trends});
 
   @override
   Widget build(BuildContext context) {
-    final days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-    final rainfall = [20, 5, 75, 30, 10, 18, 25];
-    final temperature = [28, 30, 26, 27, 29, 28, 27];
-    final humidity = [65, 60, 80, 70, 60, 55, 62];
+    final days = trends.map((t) => t.day).toList();
+    final temperature = trends.map((t) => t.temperature).toList();
+    final humidity = trends.map((t) => t.humidity).toList();
 
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6)],
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -29,15 +28,13 @@ class WeatherTrendsCard extends StatelessWidget {
             "7-Day Weather Trends",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-
           const SizedBox(height: 20),
 
-          /// Temperature & Rainfall
+          // Temperature Chart
           const Text(
             "Temperature & Rainfall",
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
-
           const SizedBox(height: 12),
 
           SizedBox(
@@ -46,26 +43,21 @@ class WeatherTrendsCard extends StatelessWidget {
               LineChartData(
                 minY: 0,
                 maxY: 80,
-
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: 20,
                 ),
-
                 borderData: FlBorderData(show: false),
-
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
                       interval: 1,
-
                       getTitlesWidget: (value, meta) {
                         if (value.toInt() >= days.length) {
                           return const SizedBox();
                         }
-
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
@@ -76,13 +68,11 @@ class WeatherTrendsCard extends StatelessWidget {
                       },
                     ),
                   ),
-
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
                       interval: 20,
                       reservedSize: 30,
-
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toInt().toString(),
@@ -94,26 +84,20 @@ class WeatherTrendsCard extends StatelessWidget {
                       },
                     ),
                   ),
-
                   topTitles: AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
-
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
-
                 lineTouchData: LineTouchData(
                   enabled: true,
-
                   touchTooltipData: LineTouchTooltipData(
                     getTooltipColor: (spot) => Colors.black,
-
                     getTooltipItems: (spots) {
                       return spots.map((spot) {
                         int index = spot.x.toInt();
-
                         return LineTooltipItem(
                           "${days[index]}\n",
                           const TextStyle(
@@ -123,18 +107,10 @@ class WeatherTrendsCard extends StatelessWidget {
                           ),
                           children: [
                             TextSpan(
-                              text: "Temp: ${temperature[index]} °C\n",
+                              text: "Temp: ${temperature[index]} °C",
                               style: const TextStyle(
                                 fontSize: 10,
                                 color: Colors.orange,
-                              ),
-                            ),
-
-                            TextSpan(
-                              text: "Rain: ${rainfall[index]} mm",
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.blue,
                               ),
                             ),
                           ],
@@ -143,22 +119,15 @@ class WeatherTrendsCard extends StatelessWidget {
                     },
                   ),
                 ),
-
                 lineBarsData: [
-                  /// Single Temperature Line
                   LineChartBarData(
                     spots: List.generate(
                       temperature.length,
-                      (index) => FlSpot(
-                        index.toDouble(),
-                        temperature[index].toDouble(),
-                      ),
+                      (i) => FlSpot(i.toDouble(), temperature[i].toDouble()),
                     ),
-
                     isCurved: true,
                     color: Colors.orange,
                     barWidth: 3,
-
                     dotData: FlDotData(show: true),
                   ),
                 ],
@@ -168,12 +137,10 @@ class WeatherTrendsCard extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          /// Humidity Levels
           const Text(
             "Humidity Levels",
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
-
           const SizedBox(height: 12),
 
           SizedBox(
@@ -182,26 +149,21 @@ class WeatherTrendsCard extends StatelessWidget {
               LineChartData(
                 minY: 0,
                 maxY: 100,
-
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: 25,
                 ),
-
                 borderData: FlBorderData(show: false),
-
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
                       interval: 1,
-
                       getTitlesWidget: (value, meta) {
                         if (value.toInt() >= days.length) {
                           return const SizedBox();
                         }
-
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
@@ -212,13 +174,11 @@ class WeatherTrendsCard extends StatelessWidget {
                       },
                     ),
                   ),
-
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
                       interval: 25,
                       reservedSize: 28,
-
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toInt().toString(),
@@ -230,26 +190,20 @@ class WeatherTrendsCard extends StatelessWidget {
                       },
                     ),
                   ),
-
                   topTitles: AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
-
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
-
                 lineTouchData: LineTouchData(
                   enabled: true,
-
                   touchTooltipData: LineTouchTooltipData(
                     getTooltipColor: (spot) => Colors.black,
-
                     getTooltipItems: (spots) {
                       return spots.map((spot) {
                         int index = spot.x.toInt();
-
                         return LineTooltipItem(
                           "${days[index]}\nHumidity: ${humidity[index]} %",
                           const TextStyle(fontSize: 11, color: Colors.white),
@@ -258,15 +212,12 @@ class WeatherTrendsCard extends StatelessWidget {
                     },
                   ),
                 ),
-
                 lineBarsData: [
                   LineChartBarData(
                     spots: List.generate(
                       humidity.length,
-                      (index) =>
-                          FlSpot(index.toDouble(), humidity[index].toDouble()),
+                      (i) => FlSpot(i.toDouble(), humidity[i].toDouble()),
                     ),
-
                     isCurved: true,
                     color: const Color(0xFF1DB954),
                     barWidth: 3,
@@ -283,9 +234,7 @@ class WeatherTrendsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Icon(Icons.circle, color: Color(0xFF1DB954), size: 10),
-
               SizedBox(width: 6),
-
               Text(
                 "Humidity (%)",
                 style: TextStyle(fontSize: 12, color: Color(0xFF1DB954)),

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 class ProfileFarm extends StatelessWidget {
   const ProfileFarm({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final stats = context.watch<ProfileState>().farmStats;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(18),
@@ -16,20 +20,15 @@ class ProfileFarm extends StatelessWidget {
             color: Colors.black12,
             blurRadius: 10,
             offset: Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
-          Row(
-            children: const [
-              Icon(
-                Icons.eco,
-                color: Color(0xFF0C8F3E),
-                size: 20,
-              ),
+          const Row(
+            children: [
+              Icon(Icons.eco, color: Color(0xFF0C8F3E), size: 20),
               SizedBox(width: 8),
               Text(
                 "Farming Stats",
@@ -44,27 +43,26 @@ class ProfileFarm extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildFarmStat(
                 icon: Icons.landscape,
-                number: "15",
+                number: stats.acres.toString(),
                 label: "Acres",
                 bgColor: const Color(0xFFDDF1E5),
                 iconColor: const Color(0xFF0C8F3E),
               ),
               _buildFarmStat(
                 icon: Icons.camera_alt,
-                number: "42",
+                number: stats.scans.toString(),
                 label: "Scans",
                 bgColor: const Color(0xFFE3EAF6),
                 iconColor: Colors.blueGrey,
               ),
               _buildFarmStat(
                 icon: Icons.eco,
-                number: "8",
+                number: stats.crops.toString(),
                 label: "Crops",
                 bgColor: const Color(0xFFF5EFD8),
                 iconColor: Colors.green,
@@ -87,25 +85,15 @@ class ProfileFarm extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: bgColor,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
           child: Icon(icon, color: iconColor, size: 22),
         ),
-
         const SizedBox(height: 10),
-
         Text(
           number,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-
         const SizedBox(height: 2),
-
         Text(
           label,
           style: const TextStyle(

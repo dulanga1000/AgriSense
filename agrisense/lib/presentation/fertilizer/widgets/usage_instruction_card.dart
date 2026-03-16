@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/data/models/fertilizer_model.dart';
 
 class UsageInstructionCard extends StatelessWidget {
-  const UsageInstructionCard({super.key});
+  final FertilizerModel model;
 
-  Widget step(String number, String text) {
+  const UsageInstructionCard({super.key, required this.model});
+
+  Widget _step(String number, String text) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
@@ -43,16 +46,11 @@ class UsageInstructionCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
 
-            step("1", "Apply 40% as basal dose during land preparation"),
-            step(
-              "2",
-              "Apply 30% at tillering stage (20–25 days after planting)",
+            ...model.usageSteps.asMap().entries.map(
+              (e) => _step("${e.key + 1}", e.value),
             ),
-            step("3", "Apply 30% at panicle initiation stage (40–45 days)"),
-            step("4", "Mix thoroughly with soil and irrigate immediately"),
           ],
         ),
       ),

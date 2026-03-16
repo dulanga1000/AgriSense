@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/disease/widgets/upload_plant_image_card.dart';
+import 'package:agrisense/presentation/disease/widgets/photography_tips_card.dart';
 
 class DiseaseScanScreen extends StatelessWidget {
   const DiseaseScanScreen({super.key});
@@ -9,6 +10,7 @@ class DiseaseScanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         toolbarHeight: 60,
         leading: const AppBackButton(fallbackIndex: 0),
         title: const Column(
@@ -40,7 +42,9 @@ class DiseaseScanScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: const Column(children: [UploadPlantImageCard()]),
+        child: const Column(
+          children: [UploadPlantImageCard(), PhotographyTipsCard()],
+        ),
       ),
     );
   }

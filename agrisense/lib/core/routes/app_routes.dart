@@ -11,7 +11,7 @@ import '../../presentation/fertilizer/screens/fertilizer_screen.dart';
 import '../../presentation/crop/screens/crop_advisory_screen.dart';
 
 class AppRoutes {
-  static const String splash = '/';
+  static const String splash = '/splash';
   static const String login = '/login';
   static const String register = '/register';
   static const String main = '/main_screen';

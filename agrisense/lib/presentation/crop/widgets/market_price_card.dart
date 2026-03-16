@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/data/models/market_price_model.dart';
+import 'package:agrisense/presentation/crop/state/crop_advisory_state.dart';
 
 class MarketPriceCard extends StatelessWidget {
   const MarketPriceCard({super.key});
 
+  Color _getDemandColor(String demandType) {
+    switch (demandType) {
+      case 'high':
+        return const Color(0xFF9C8F2B);
+      case 'medium':
+        return const Color(0xFFB39B9B);
+      case 'very_high':
+        return const Color(0xFF7C8F2B);
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final prices = context.watch<CropAdvisoryState>().marketPrices;
+
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9, 
+        width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
@@ -27,7 +45,6 @@ class MarketPriceCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             const Row(
               children: [
                 Icon(Icons.trending_up, color: Colors.white),
@@ -42,45 +59,19 @@ class MarketPriceCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 10),
-
             const Text(
               "Recent prices at local markets",
               style: TextStyle(color: Colors.white70, fontSize: 13),
             ),
-
             const SizedBox(height: 20),
-
-            
-            _priceItem(
-              crop: "Tomato",
-              price: "Rs. 150-200/kg",
-              demand: "↑ High Demand",
-              demandColor: const Color(0xFF9C8F2B),
+            ...prices.map(
+              (item) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _priceItem(item),
+              ),
             ),
-
-            const SizedBox(height: 12),
-
-            _priceItem(
-              crop: "Cabbage",
-              price: "Rs. 80-120/kg",
-              demand: "→ Medium Demand",
-              demandColor: const Color(0xFFB39B9B),
-            ),
-
-            const SizedBox(height: 12),
-
-            _priceItem(
-              crop: "Green Chili",
-              price: "Rs. 300-400/kg",
-              demand: "↑ Very High Demand",
-              demandColor: const Color(0xFF7C8F2B),
-            ),
-
-            const SizedBox(height: 18),
-
-            
+            const SizedBox(height: 6),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -106,12 +97,7 @@ class MarketPriceCard extends StatelessWidget {
     );
   }
 
-  static Widget _priceItem({
-    required String crop,
-    required String price,
-    required String demand,
-    required Color demandColor,
-  }) {
+  Widget _priceItem(MarketPriceModel item) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -125,7 +111,7 @@ class MarketPriceCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  crop,
+                  item.crop,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -134,7 +120,7 @@ class MarketPriceCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  price,
+                  item.price,
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ],
@@ -143,11 +129,11 @@ class MarketPriceCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: demandColor,
+              color: _getDemandColor(item.demandType),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              demand,
+              item.demand,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,

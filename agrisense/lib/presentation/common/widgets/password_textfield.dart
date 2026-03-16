@@ -24,58 +24,29 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     return TextFormField(
       controller: widget.controller,
       obscureText: obscurePassword,
-
-      /// This enables LIVE validation in the reset screen
       onChanged: widget.onChanged,
-
       decoration: InputDecoration(
         hintText: widget.hintText,
-
         prefixIcon: const Icon(Icons.lock_outline),
-
         suffixIcon: IconButton(
-          icon: Icon(
-            obscurePassword
-                ? Icons.visibility_off
-                : Icons.visibility,
-          ),
-          onPressed: () {
-            setState(() {
-              obscurePassword = !obscurePassword;
-            });
-          },
+          icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
+          onPressed: () => setState(() => obscurePassword = !obscurePassword),
         ),
-
         filled: true,
         fillColor: Colors.grey.shade100,
-
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.grey),
         ),
-
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color(0xFF0E8F3E),
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF0E8F3E), width: 2),
         ),
       ),
-
       validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Password is required";
-        }
-
-        if (value.length < 6) {
-          return "Password must be at least 6 characters";
-        }
-
+        if (value == null || value.isEmpty) return "Password is required";
+        if (value.length < 6) return "Password must be at least 6 characters";
         return null;
       },
     );

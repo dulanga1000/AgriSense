@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/weather/state/weather_state.dart';
 import 'package:agrisense/presentation/weather/widgets/weather_header.dart';
 import 'package:agrisense/presentation/weather/widgets/location_selector.dart';
 import 'package:agrisense/presentation/weather/widgets/rain_prediction_card.dart';
@@ -7,55 +9,55 @@ import 'package:agrisense/presentation/weather/widgets/weather_trends_card.dart'
 import 'package:agrisense/presentation/weather/widgets/weather_alerts_card.dart';
 import 'package:agrisense/presentation/weather/widgets/recommended_activities_card.dart';
 import 'package:agrisense/presentation/weather/widgets/irrigation_advice_card.dart';
-import 'package:agrisense/data/models/weather_model.dart';
 
 class WeatherScreen extends StatelessWidget {
   const WeatherScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final rainData = RainPredictionModel(
-      title: "Rain Prediction",
-      todayPrediction: "Today - 20% chance of rain",
-      rainChance: 0.2,
-      description:
-          "Low rain probability - good day for outdoor farming activities",
-    );
+    return ChangeNotifierProvider(
+      create: (_) => WeatherState()..loadWeatherData(),
+      child: Scaffold(
+        backgroundColor: const Color(0xffF3F4F6),
+        body: Consumer<WeatherState>(
+          builder: (context, state, _) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-    return Scaffold(
-      backgroundColor: const Color(0xffF3F4F6),
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  WeatherHeader(weather: state.weather),
+                  const SizedBox(height: 16),
 
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const WeatherHeader(),
+                  const LocationSelector(),
+                  const SizedBox(height: 16),
 
-            const SizedBox(height: 16),
+                  if (state.rainPrediction != null)
+                    RainPredictionCard(rainData: state.rainPrediction!),
+                  const SizedBox(height: 16),
 
-            const LocationSelector(),
+                  ForecastCard(forecastList: state.forecast),
 
-            const SizedBox(height: 16),
+                  WeatherTrendsCard(trends: state.trends),
+                  const SizedBox(height: 16),
 
-            RainPredictionCard(rainData: rainData),
+                  WeatherAlertsCard(alerts: state.alerts),
+                  const SizedBox(height: 16),
 
-            const SizedBox(height: 16),
+                  if (state.activities != null)
+                    RecommendedActivitiesCard(activities: state.activities!),
+                  const SizedBox(height: 16),
 
-            const ForecastCard(),
+                  if (state.irrigationAdvice != null)
+                    IrrigationAdviceCard(advice: state.irrigationAdvice!),
 
-            const WeatherTrendsCard(),
-
-            const SizedBox(height: 16),
-
-            const WeatherAlertsCard(),
-
-            const SizedBox(height: 16),
-
-            const RecommendedActivitiesCard(),
-
-            const SizedBox(height: 16),
-
-            const IrrigationAdviceCard(),
-          ],
+                  const SizedBox(height: 30),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

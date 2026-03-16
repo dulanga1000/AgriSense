@@ -2,9 +2,20 @@ import 'package:flutter/material.dart';
 import '../widgets/edit_profile_header.dart';
 import '../widgets/edit_profile_form.dart';
 import '../widgets/form_details.dart';
+import '../widgets/edit_save.dart';
+import '../widgets/edit_cancel.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
+
+  void _saveChanges(BuildContext context) {
+    // Add save logic here if needed
+    Navigator.pop(context);
+  }
+
+  void _cancelEdit(BuildContext context) {
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,13 +23,34 @@ class EditProfileScreen extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Column(
-          children: const [
-            EditProfileHeader(),
-            SizedBox(height: 150),
-            EditProfileForm(),
-            SizedBox(height: 30),
-            FormDetails(),
-            SizedBox(height: 30),
+          children: [
+            
+            
+            const EditProfileHeader(),
+
+            const SizedBox(height: 200),
+
+            
+            const EditProfileForm(),
+
+            const SizedBox(height: 20),
+
+            
+            const FormDetails(),
+
+            const SizedBox(height: 10),
+
+            
+            EditSaveButton(
+              onPressed: () => _saveChanges(context),
+            ),
+
+            
+            EditCancelButton(
+              onPressed: () => _cancelEdit(context),
+            ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),

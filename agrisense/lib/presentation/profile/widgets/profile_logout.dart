@@ -4,9 +4,6 @@ class ProfileLogout extends StatelessWidget {
   const ProfileLogout({super.key});
 
   void _handleLogout(BuildContext context) {
-    
-    
-
     Navigator.pushReplacementNamed(context, '/login');
   }
 
@@ -25,9 +22,9 @@ class ProfileLogout extends StatelessWidget {
           ),
           elevation: 6,
         ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Icon(Icons.logout, color: Colors.white, size: 20),
             SizedBox(width: 8),
             Text(

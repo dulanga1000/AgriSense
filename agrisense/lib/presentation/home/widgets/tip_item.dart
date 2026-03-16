@@ -6,6 +6,36 @@ class TipItem extends StatelessWidget {
 
   const TipItem({super.key, required this.farmingTip});
 
+  IconData _getIcon() {
+    switch (farmingTip.type) {
+      case 'rain':
+        return Icons.water_drop;
+      case 'plant':
+        return Icons.eco;
+      case 'sun':
+        return Icons.wb_sunny;
+      case 'warning':
+        return Icons.warning_amber;
+      default:
+        return Icons.lightbulb_outline;
+    }
+  }
+
+  Color _getIconColor() {
+    switch (farmingTip.type) {
+      case 'rain':
+        return Colors.blue;
+      case 'plant':
+        return Colors.green;
+      case 'sun':
+        return Colors.orange;
+      case 'warning':
+        return Colors.amber;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,35 +61,5 @@ class TipItem extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  IconData _getIcon() {
-    switch (farmingTip.icon) {
-      case 'plant':
-        return Icons.eco;
-      case 'rain':
-        return Icons.water_drop;
-      case 'sun':
-        return Icons.wb_sunny;
-      case 'warning':
-        return Icons.warning_amber;
-      default:
-        return Icons.lightbulb_outline;
-    }
-  }
-
-  Color _getIconColor() {
-    switch (farmingTip.icon) {
-      case 'plant':
-        return Colors.green;
-      case 'rain':
-        return Colors.blue;
-      case 'sun':
-        return Colors.orange;
-      case 'warning':
-        return Colors.amber;
-      default:
-        return Colors.grey;
-    }
   }
 }

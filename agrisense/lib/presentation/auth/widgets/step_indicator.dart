@@ -3,19 +3,10 @@ import 'package:flutter/material.dart';
 class StepIndicator extends StatelessWidget {
   final int currentStep;
 
-  const StepIndicator({
-    super.key,
-    required this.currentStep,
-  });
+  const StepIndicator({super.key, required this.currentStep});
 
   Color _getStepColor(int step) {
-    if (currentStep > step) {
-      return Colors.green;
-    } else if (currentStep == step) {
-      return Colors.green;
-    } else {
-      return Colors.grey.shade400;
-    }
+    return currentStep >= step ? Colors.green : Colors.grey.shade400;
   }
 
   Widget _buildStep(int step, String label) {
@@ -32,10 +23,7 @@ class StepIndicator extends StatelessWidget {
                 ),
         ),
         const SizedBox(height: 6),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12),
-        ),
+        Text(label, style: const TextStyle(fontSize: 12)),
       ],
     );
   }

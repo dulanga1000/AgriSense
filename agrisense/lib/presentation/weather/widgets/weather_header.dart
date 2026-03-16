@@ -1,29 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/data/models/weather_model.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
-class WeatherHeader extends StatefulWidget {
-  const WeatherHeader({super.key});
+class WeatherHeader extends StatelessWidget {
+  final WeatherModel? weather;
 
-  @override
-  State<WeatherHeader> createState() => _WeatherHeaderState();
-}
-
-class _WeatherHeaderState extends State<WeatherHeader> {
-  WeatherModel weather = WeatherModel(
-    city: "Western Province, Sri Lanka",
-    temperature: 28,
-    humidity: 65,
-    condition: "Cloudy",
-  );
+  const WeatherHeader({super.key, required this.weather});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 45, 20, 25),
-
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xff3B82F6), Color(0xff2563EB)],
@@ -33,24 +22,15 @@ class _WeatherHeaderState extends State<WeatherHeader> {
           bottomRight: Radius.circular(30),
         ),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.white,
-                  size: 18,
-                ),
-
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, AppRoutes.main);
-                },
+              const Padding(
+                padding: EdgeInsets.only(right: 16, top: 6),
+                child: AppBackButton(fallbackIndex: 0),
               ),
-
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -62,7 +42,6 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   Text(
                     "Real-time farming insights",
                     style: TextStyle(color: Colors.white70, fontSize: 12),
@@ -76,12 +55,10 @@ class _WeatherHeaderState extends State<WeatherHeader> {
 
           Container(
             padding: const EdgeInsets.all(18),
-
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(18),
             ),
-
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -92,11 +69,9 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                       color: Colors.white70,
                       size: 14,
                     ),
-
                     const SizedBox(width: 5),
-
                     Text(
-                      weather.city,
+                      weather?.city ?? "-",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -108,26 +83,25 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                 ),
 
                 const SizedBox(height: 6),
-
                 const Text(
                   "Current Weather",
                   style: TextStyle(color: Colors.white70, fontSize: 12),
                 ),
-
                 const SizedBox(height: 10),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${weather.temperature.toStringAsFixed(0)}°C",
+                      weather != null
+                          ? "${weather!.temperature.toStringAsFixed(0)}°C"
+                          : "-",
                       style: const TextStyle(
                         fontSize: 44,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-
                     const Icon(
                       CupertinoIcons.cloud,
                       color: Colors.white,
@@ -141,9 +115,21 @@ class _WeatherHeaderState extends State<WeatherHeader> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _weatherInfo(Icons.water_drop, "Humidity", "65%"),
-                    _weatherInfo(Icons.air, "Wind Speed", "12 km/h"),
-                    _weatherInfo(Icons.remove_red_eye, "Visibility", "8 km"),
+                    _weatherInfo(
+                      Icons.water_drop,
+                      "Humidity",
+                      "${weather?.humidity ?? '-'}%",
+                    ),
+                    _weatherInfo(
+                      Icons.air,
+                      "Wind Speed",
+                      "${weather?.windSpeed ?? '-'} km/h",
+                    ),
+                    _weatherInfo(
+                      Icons.remove_red_eye,
+                      "Visibility",
+                      "${weather?.visibility ?? '-'} km",
+                    ),
                   ],
                 ),
               ],
@@ -158,14 +144,11 @@ class _WeatherHeaderState extends State<WeatherHeader> {
     return Column(
       children: [
         Icon(icon, color: Colors.white70, size: 18),
-
         const SizedBox(height: 4),
-
         Text(
           title,
           style: const TextStyle(color: Colors.white70, fontSize: 11),
         ),
-
         Text(
           value,
           style: const TextStyle(

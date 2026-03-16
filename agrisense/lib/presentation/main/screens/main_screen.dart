@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../common/widgets/bottom_nav_bar.dart';
 import '../../home/screens/home_screen.dart';
-import '../../disease/disease_scan_screen.dart';
+import '../../disease/screens/disease_scan_screen.dart';
 import '../../weather/screens/weather_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 

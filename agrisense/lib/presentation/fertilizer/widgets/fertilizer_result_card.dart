@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/fertilizer_model.dart';
+import 'package:agrisense/data/models/fertilizer_model.dart';
 
 class FertilizerResultCard extends StatelessWidget {
   final FertilizerModel model;
@@ -19,11 +19,21 @@ class FertilizerResultCard extends StatelessWidget {
               children: [
                 Image.asset("assets/images/cube.png", height: 20),
                 const SizedBox(width: 8),
-                const Text("Recommended Fertilizer", style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  "Recommended Fertilizer",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             const SizedBox(height: 12),
-            Text(model.fertilizerName, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(
+              model.fertilizerName,
+              style: const TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
             const Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,18 +42,24 @@ class FertilizerResultCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text("Total Quantity"),
-                    Text("${model.totalQuantity.toStringAsFixed(0)} kg", style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      "${model.totalQuantity.toStringAsFixed(0)} kg",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text("NPK Ratio"),
-                    Text(model.npkRatio, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      model.npkRatio,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ],
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

@@ -45,6 +45,7 @@ class CropAdvisoryScreen extends StatelessWidget {
         bottomNavigationBar: Builder(
           builder: (context) => BottomNavBarWidget(
             currentIndex: 0,
+            highlightSelected: false,
             onTap: (index) => MainTabNavigator.goToTab(context, index),
           ),
         ),

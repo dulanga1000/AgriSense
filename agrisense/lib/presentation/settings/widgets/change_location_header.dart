@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
-class SettingHeader extends StatelessWidget {
-  const SettingHeader({super.key});
+class ChangeLocationHeader extends StatelessWidget {
+  const ChangeLocationHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF2D6CDF), Color(0xFF214EBF)],
+          colors: [Color(0xFF9114FF), Color(0xFF7A0BC0)],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(1),
@@ -23,9 +23,11 @@ class SettingHeader extends StatelessWidget {
           child: Row(
             children: const [
               AppBackButton(fallbackIndex: 0),
+
               SizedBox(width: 12),
+
               Text(
-                "App Settings",
+                "Change Location",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,

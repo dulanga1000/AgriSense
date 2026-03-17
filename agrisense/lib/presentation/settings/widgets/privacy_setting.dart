@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/change_password_screen.dart'; 
 
 class PrivacySetting extends StatelessWidget {
   const PrivacySetting({super.key});

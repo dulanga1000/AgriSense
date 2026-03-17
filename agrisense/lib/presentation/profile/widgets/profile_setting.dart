@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import '../screens/edit_profile_screen.dart';
 import '../../settings/screens/app_setting_screen.dart';
+import '../../settings/screens/location_screen.dart'; // Make sure this path matches your folder structure!
 
 class ProfileSetting extends StatelessWidget {
   const ProfileSetting({super.key});
@@ -82,7 +83,15 @@ class ProfileSetting extends StatelessWidget {
             context,
             icon: Icons.location_on_outlined,
             title: "Change Location",
-            onTap: () {},
+            onTap: () {
+              // Added navigation to LocationScreen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LocationScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),

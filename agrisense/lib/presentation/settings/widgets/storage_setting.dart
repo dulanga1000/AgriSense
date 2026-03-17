@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../state/setting_state.dart';
 
 class StorageSetting extends StatelessWidget {
-  final SettingState settingState; // Pass the model in
+  final SettingState settingState; 
 
   const StorageSetting({super.key, required this.settingState});
 

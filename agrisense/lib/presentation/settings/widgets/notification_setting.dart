@@ -83,7 +83,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
     );
   }
 
-  /// REUSABLE SWITCH ROW WIDGET
+  
   Widget _buildSwitchTile({
     required String title,
     required String subtitle,
@@ -102,14 +102,14 @@ class _NotificationSettingState extends State<NotificationSetting> {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black, // CHANGED TO BLACK
+                  color: Colors.black, 
                 ),
               ),
               Text(
                 subtitle,
                 style: const TextStyle(
                   fontSize: 12,
-                  color: Colors.grey, // Kept grey for visual hierarchy
+                  color: Colors.grey, 
                 ),
               ),
             ],

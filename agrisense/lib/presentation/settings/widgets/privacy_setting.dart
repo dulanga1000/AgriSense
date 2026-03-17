@@ -17,13 +17,12 @@ class PrivacySetting extends StatelessWidget {
             color: Colors.black12,
             blurRadius: 10,
             offset: Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           const Text(
             "Privacy & Security",
             style: TextStyle(
@@ -32,49 +31,29 @@ class PrivacySetting extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          
           const SizedBox(height: 20),
-
-          /// CHANGE PASSWORD
           _buildNavigationTile(
             icon: Icons.lock_outline,
             title: "Change Password",
-            onTap: () {
-              // ADDED NAVIGATION HERE
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ChangePasswordScreen(),
-                ),
-              );
-            },
+            onTap: () => debugPrint("Change Password Tapped"),
           ),
-          
           const SizedBox(height: 16),
-
-          /// PRIVACY POLICY
           _buildNavigationTile(
-            icon: Icons.lock_outline, 
+            icon: Icons.lock_outline,
             title: "Privacy Policy",
-            onTap: () {
-            },
+            onTap: () => debugPrint("Privacy Policy Tapped"),
           ),
-          
           const SizedBox(height: 16),
-
-          /// TERMS OF SERVICE
           _buildNavigationTile(
             icon: Icons.info_outline,
             title: "Terms of Service",
-            onTap: () {
-            },
+            onTap: () => debugPrint("Terms of Service Tapped"),
           ),
         ],
       ),
     );
   }
 
-  /// REUSABLE NAVIGATION ROW WIDGET
   Widget _buildNavigationTile({
     required IconData icon,
     required String title,
@@ -99,11 +78,7 @@ class PrivacySetting extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
           ],
         ),
       ),

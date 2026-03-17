@@ -8,28 +8,13 @@ class AboutSetting extends StatefulWidget {
 }
 
 class _AboutSettingState extends State<AboutSetting> {
-  
   bool _isCheckingForUpdates = false;
 
-  
   Future<void> _checkForUpdates() async {
-    
-    setState(() {
-      _isCheckingForUpdates = true;
-    });
-
-    
+    setState(() => _isCheckingForUpdates = true);
     await Future.delayed(const Duration(seconds: 2));
-
-    
     if (!mounted) return;
-
-    
-    setState(() {
-      _isCheckingForUpdates = false;
-    });
-
-    
+    setState(() => _isCheckingForUpdates = false);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Your app is already up to date!'),
@@ -52,14 +37,12 @@ class _AboutSettingState extends State<AboutSetting> {
             color: Colors.black12,
             blurRadius: 10,
             offset: Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
-          /// TITLE
           const Text(
             "About",
             style: TextStyle(
@@ -68,29 +51,21 @@ class _AboutSettingState extends State<AboutSetting> {
               color: Colors.black,
             ),
           ),
-          
           const SizedBox(height: 20),
-
-          
           _buildInfoRow(label: "Version", value: "1.0.0"),
-          
           const SizedBox(height: 16),
-
-          
           _buildInfoRow(label: "Build", value: "2024.02.07"),
-          
           const SizedBox(height: 24),
-
-          
           Center(
             child: InkWell(
-              
-              onTap: _isCheckingForUpdates ? null : _checkForUpdates, 
+              onTap: _isCheckingForUpdates ? null : _checkForUpdates,
               borderRadius: BorderRadius.circular(8),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
                 child: _isCheckingForUpdates
-                    
                     ? const SizedBox(
                         width: 20,
                         height: 20,
@@ -99,7 +74,6 @@ class _AboutSettingState extends State<AboutSetting> {
                           color: Color(0xFF00AA4F),
                         ),
                       )
-                    
                     : const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -114,7 +88,7 @@ class _AboutSettingState extends State<AboutSetting> {
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF00AA4F), 
+                              color: Color(0xFF00AA4F),
                             ),
                           ),
                         ],
@@ -127,24 +101,20 @@ class _AboutSettingState extends State<AboutSetting> {
     );
   }
 
-  
   Widget _buildInfoRow({required String label, required String value}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 15,
-            color: Colors.black54, 
-          ),
+          style: const TextStyle(fontSize: 15, color: Colors.black54),
         ),
         Text(
           value,
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
-            color: Colors.black, 
+            color: Colors.black,
           ),
         ),
       ],

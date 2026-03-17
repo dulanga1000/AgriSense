@@ -7,14 +7,9 @@ class ChangeLocationHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
       decoration: const BoxDecoration(
-        
         gradient: LinearGradient(
-          colors: [
-            Color(0xFF9114FF), 
-            Color(0xFF7A0BC0),
-          ],
+          colors: [Color(0xFF9114FF), Color(0xFF7A0BC0)],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(1),
@@ -27,7 +22,6 @@ class ChangeLocationHeader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: const [
-              
               AppBackButton(fallbackIndex: 0),
 
               SizedBox(width: 12),

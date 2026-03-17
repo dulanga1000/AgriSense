@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../state/setting_state.dart'; 
-import '../screens/language_screen.dart'; 
+import 'package:agrisense/presentation/settings/state/setting_state.dart';
 
 class GeneralSetting extends StatelessWidget {
   final SettingState settingState;
@@ -9,121 +8,82 @@ class GeneralSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: settingState,
-      builder: (context, child) {
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              )
-            ],
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, 4),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              
-              const Text(
-                "General",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              _buildSwitchTile(
-                icon: Icons.notifications_none,
-                title: "Notifications",
-                subtitle: "Enable push notifications",
-                value: settingState.notifications, 
-                onChanged: (val) {
-                  settingState.toggleNotifications(val); 
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              _buildSwitchTile(
-                icon: Icons.dark_mode_outlined,
-                title: "Dark Mode",
-                subtitle: "Switch to dark theme",
-                value: settingState.darkMode,
-                onChanged: (val) {
-                  settingState.toggleDarkMode(val);
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              _buildSwitchTile(
-                icon: Icons.volume_up_outlined,
-                title: "Sound",
-                subtitle: "Enable sound effects",
-                value: settingState.sound,
-                onChanged: (val) {
-                  settingState.toggleSound(val);
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              
-              InkWell(
-                
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LanguageScreen(),
-                    ),
-                  );
-                },
-                child: Row(
-                  children: const [
-                    Icon(Icons.language, size: 22),
-                    SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Language",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            "English",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "General",
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 20),
+          _buildSwitchTile(
+            icon: Icons.notifications_none,
+            title: "Notifications",
+            subtitle: "Enable push notifications",
+            value: settingState.notifications,
+            onChanged: settingState.toggleNotifications,
+          ),
+          const SizedBox(height: 16),
+          _buildSwitchTile(
+            icon: Icons.dark_mode_outlined,
+            title: "Dark Mode",
+            subtitle: "Switch to dark theme",
+            value: settingState.darkMode,
+            onChanged: settingState.toggleDarkMode,
+          ),
+          const SizedBox(height: 16),
+          _buildSwitchTile(
+            icon: Icons.volume_up_outlined,
+            title: "Sound",
+            subtitle: "Enable sound effects",
+            value: settingState.sound,
+            onChanged: settingState.toggleSound,
+          ),
+          const SizedBox(height: 16),
+          InkWell(
+            onTap: () {},
+            child: const Row(
+              children: [
+                Icon(Icons.language, size: 22),
+                SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Language",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.grey,
-                    )
-                  ],
+                      Text(
+                        "English",
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+              ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 
@@ -151,10 +111,7 @@ class GeneralSetting extends StatelessWidget {
               ),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),

@@ -1,38 +1,48 @@
 import 'package:flutter/material.dart';
 
 class SettingState extends ChangeNotifier {
-  
-  bool _notifications = false;
-  bool _darkMode = true;
-  bool _sound = false;
+  bool notifications = true;
+  bool darkMode = false;
+  bool sound = true;
 
-  
-  bool _autoUpdate = true; 
+  bool diseaseAlerts = true;
+  bool weatherUpdates = true;
+  bool farmingTips = true;
 
-  
-  bool get notifications => _notifications;
-  bool get darkMode => _darkMode;
-  bool get sound => _sound;
-  bool get autoUpdate => _autoUpdate; 
+  bool autoUpdate = true;
 
-  
-  void toggleNotifications(bool value) {
-    _notifications = value;
+  void toggleNotifications(bool val) {
+    notifications = val;
     notifyListeners();
   }
 
-  void toggleDarkMode(bool value) {
-    _darkMode = value;
+  void toggleDarkMode(bool val) {
+    darkMode = val;
     notifyListeners();
   }
 
-  void toggleSound(bool value) {
-    _sound = value;
+  void toggleSound(bool val) {
+    sound = val;
     notifyListeners();
   }
 
-  void toggleAutoUpdate(bool value) {
-    _autoUpdate = value;
+  void toggleDiseaseAlerts(bool val) {
+    diseaseAlerts = val;
+    notifyListeners();
+  }
+
+  void toggleWeatherUpdates(bool val) {
+    weatherUpdates = val;
+    notifyListeners();
+  }
+
+  void toggleFarmingTips(bool val) {
+    farmingTips = val;
+    notifyListeners();
+  }
+
+  void toggleAutoUpdate(bool val) {
+    autoUpdate = val;
     notifyListeners();
   }
 }

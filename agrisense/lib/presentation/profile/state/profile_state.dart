@@ -21,6 +21,26 @@ class ProfileState extends ChangeNotifier {
     experience: 10,
   );
 
+  void updateProfileImage(String path) {
+    user = user.copyWith(imagePath: path);
+    notifyListeners();
+  }
+
+  void updateProfile({
+    String? name,
+    String? phone,
+    String? email,
+    String? bio,
+  }) {
+    user = user.copyWith(
+      name: name ?? user.name,
+      phone: phone ?? user.phone,
+      email: email ?? user.email,
+      bio: bio ?? user.bio,
+    );
+    notifyListeners();
+  }
+
   void updateUser(UserModel updatedUser) {
     user = updatedUser;
     notifyListeners();

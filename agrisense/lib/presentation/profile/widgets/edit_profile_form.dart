@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 class EditProfileForm extends StatefulWidget {
-  const EditProfileForm({super.key});
+  final Function(String name, String email, String phone, String bio) onChanged;
+
+  const EditProfileForm({super.key, required this.onChanged});
 
   @override
   State<EditProfileForm> createState() => _EditProfileFormState();
@@ -19,6 +21,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
   void initState() {
     super.initState();
     final user = context.read<ProfileState>().user;
+
     _nameController = TextEditingController(text: user.name);
     _emailController = TextEditingController(text: user.email);
     _phoneController = TextEditingController(text: user.phone);
@@ -34,6 +37,15 @@ class _EditProfileFormState extends State<EditProfileForm> {
     super.dispose();
   }
 
+  void _sendData() {
+    widget.onChanged(
+      _nameController.text.trim(),
+      _emailController.text.trim(),
+      _phoneController.text.trim(),
+      _bioController.text.trim(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,32 +54,26 @@ class _EditProfileFormState extends State<EditProfileForm> {
       decoration: BoxDecoration(
         color: const Color(0xFFF2F2F2),
         borderRadius: BorderRadius.circular(18),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _label("Full Name"),
           const SizedBox(height: 6),
-          _field(controller: _nameController, icon: Icons.person_outline),
+          _field(_nameController, Icons.person_outline),
 
           const SizedBox(height: 16),
 
           _label("Email"),
           const SizedBox(height: 6),
-          _field(controller: _emailController, icon: Icons.email_outlined),
+          _field(_emailController, Icons.email_outlined),
 
           const SizedBox(height: 16),
 
           _label("Phone Number"),
           const SizedBox(height: 6),
-          _field(controller: _phoneController, icon: Icons.phone_outlined),
+          _field(_phoneController, Icons.phone_outlined),
 
           const SizedBox(height: 16),
 
@@ -76,13 +82,10 @@ class _EditProfileFormState extends State<EditProfileForm> {
           TextField(
             controller: _bioController,
             maxLines: 4,
+            onChanged: (_) => _sendData(),
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 14,
-                horizontal: 12,
               ),
             ),
           ),
@@ -98,19 +101,13 @@ class _EditProfileFormState extends State<EditProfileForm> {
     );
   }
 
-  Widget _field({
-    required TextEditingController controller,
-    required IconData icon,
-  }) {
+  Widget _field(TextEditingController controller, IconData icon) {
     return TextField(
       controller: controller,
+      onChanged: (_) => _sendData(),
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 14,
-          horizontal: 12,
-        ),
       ),
     );
   }

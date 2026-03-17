@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import '../widgets/edit_profile_header.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
+
+import '../widgets/edit_profile_image.dart';
 import '../widgets/edit_profile_form.dart';
 import '../widgets/form_details.dart';
 import '../widgets/edit_save.dart';
@@ -9,8 +13,7 @@ class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
 
   void _saveChanges(BuildContext context) {
-    
-    Navigator.pop(context);
+    Navigator.pop(context); // 🔥 data already saved
   }
 
   void _cancelEdit(BuildContext context) {
@@ -21,34 +24,44 @@ class EditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        elevation: 0,
+        leading: const AppBackButton(fallbackIndex: 0),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF00A63E), Color(0xFF008236)],
+            ),
+          ),
+        ),
+        title: const Text(
+          "Edit Profile",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            
-            
-            const EditProfileHeader(),
-
-            const SizedBox(height: 200),
-
-            
-            const EditProfileForm(),
-
+            const EditProfileImage(),
             const SizedBox(height: 20),
 
-            
+            // 🔥 FIXED FORM
+            EditProfileForm(
+              onChanged: (name, email, phone, bio) {
+                context.read<ProfileState>().updateProfile(
+                  name: name,
+                  email: email,
+                  phone: phone,
+                  bio: bio,
+                );
+              },
+            ),
+
+            const SizedBox(height: 20),
             const FormDetails(),
 
-            const SizedBox(height: 10),
-
-            
-            EditSaveButton(
-              onPressed: () => _saveChanges(context),
-            ),
-
-            
-            EditCancelButton(
-              onPressed: () => _cancelEdit(context),
-            ),
+            EditSaveButton(onPressed: () => _saveChanges(context)),
+            EditCancelButton(onPressed: () => _cancelEdit(context)),
 
             const SizedBox(height: 20),
           ],

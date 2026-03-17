@@ -19,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: const [
               ProfileHeader(),
-              SizedBox(height: 150),
+              SizedBox(height: 200),
               ProfileFarm(),
               SizedBox(height: 20),
               ProfileSetting(),

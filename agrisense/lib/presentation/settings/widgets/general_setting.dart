@@ -45,9 +45,9 @@ class GeneralSetting extends StatelessWidget {
                 icon: Icons.notifications_none,
                 title: "Notifications",
                 subtitle: "Enable push notifications",
-                value: settingState.notifications, // Read from state
+                value: settingState.notifications, 
                 onChanged: (val) {
-                  settingState.toggleNotifications(val); // Update via state
+                  settingState.toggleNotifications(val); 
                 },
               ),
 

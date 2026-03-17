@@ -119,10 +119,10 @@ class _NotificationSettingState extends State<NotificationSetting> {
           value: value,
           onChanged: onChanged,
           activeTrackColor: const Color(0xFF00AA4F),
-          activeColor: Colors.white,
+          activeThumbColor: Colors.white,
           inactiveTrackColor: const Color(0xFFE4E6EB),
           inactiveThumbColor: Colors.white,
-          trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
+          trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
         ),
       ],
     );

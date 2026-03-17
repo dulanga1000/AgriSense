@@ -5,6 +5,7 @@ class StorageSetting extends StatelessWidget {
   final SettingState settingState; 
 
   const StorageSetting({super.key, required this.settingState});
+  
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,6 @@ class StorageSetting extends StatelessWidget {
                 title: "Clear Cache",
                 trailingText: "45 MB",
                 onTap: () {
-                  print("Clear Cache Tapped");
                 },
               ),
             ],
@@ -110,12 +110,12 @@ class StorageSetting extends StatelessWidget {
           value: value,
           onChanged: onChanged,
           activeTrackColor: const Color(0xFF00AA4F),
-          activeColor: Colors.white,
+          activeThumbColor: Colors.white,
           inactiveTrackColor: const Color(0xFFE4E6EB),
           inactiveThumbColor: Colors.white,
-          trackOutlineColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.selected)) {
+          trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.selected)) {
                 return const Color(0xFF69F0AE);
               }
               return Colors.transparent;

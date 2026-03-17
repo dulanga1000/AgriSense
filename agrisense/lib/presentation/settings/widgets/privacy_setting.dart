@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/change_password_screen.dart'; 
 
 class PrivacySetting extends StatelessWidget {
   const PrivacySetting({super.key});
@@ -23,7 +24,6 @@ class PrivacySetting extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           
-          
           const Text(
             "Privacy & Security",
             style: TextStyle(
@@ -35,37 +35,38 @@ class PrivacySetting extends StatelessWidget {
           
           const SizedBox(height: 20),
 
-          
+          /// CHANGE PASSWORD
           _buildNavigationTile(
             icon: Icons.lock_outline,
             title: "Change Password",
             onTap: () {
-              // Add navigation logic here
-              print("Change Password Tapped");
+              // ADDED NAVIGATION HERE
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChangePasswordScreen(),
+                ),
+              );
             },
           ),
           
           const SizedBox(height: 16),
 
-          
+          /// PRIVACY POLICY
           _buildNavigationTile(
             icon: Icons.lock_outline, 
             title: "Privacy Policy",
             onTap: () {
-              
-              print("Privacy Policy Tapped");
             },
           ),
           
           const SizedBox(height: 16),
 
-          
+          /// TERMS OF SERVICE
           _buildNavigationTile(
             icon: Icons.info_outline,
             title: "Terms of Service",
             onTap: () {
-              
-              print("Terms of Service Tapped");
             },
           ),
         ],
@@ -73,7 +74,7 @@ class PrivacySetting extends StatelessWidget {
     );
   }
 
-  
+  /// REUSABLE NAVIGATION ROW WIDGET
   Widget _buildNavigationTile({
     required IconData icon,
     required String title,

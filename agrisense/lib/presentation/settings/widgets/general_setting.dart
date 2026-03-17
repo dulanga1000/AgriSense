@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../state/setting_state.dart'; 
+import '../screens/language_screen.dart'; 
 
 class GeneralSetting extends StatelessWidget {
   final SettingState settingState;
@@ -8,7 +9,6 @@ class GeneralSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return ListenableBuilder(
       listenable: settingState,
       builder: (context, child) {
@@ -40,7 +40,6 @@ class GeneralSetting extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-             
               _buildSwitchTile(
                 icon: Icons.notifications_none,
                 title: "Notifications",
@@ -53,7 +52,6 @@ class GeneralSetting extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-            
               _buildSwitchTile(
                 icon: Icons.dark_mode_outlined,
                 title: "Dark Mode",
@@ -66,7 +64,6 @@ class GeneralSetting extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              
               _buildSwitchTile(
                 icon: Icons.volume_up_outlined,
                 title: "Sound",
@@ -79,9 +76,17 @@ class GeneralSetting extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-            
+              
               InkWell(
-                onTap: () {},
+                
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LanguageScreen(),
+                    ),
+                  );
+                },
                 child: Row(
                   children: const [
                     Icon(Icons.language, size: 22),
@@ -158,10 +163,10 @@ class GeneralSetting extends StatelessWidget {
           value: value,
           onChanged: onChanged,
           activeTrackColor: const Color(0xFF00AA4F),
-          activeColor: Colors.white,
+          activeThumbColor: Colors.white,
           inactiveTrackColor: const Color(0xFFE4E6EB),
           inactiveThumbColor: Colors.white,
-          trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
+          trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
         ),
       ],
     );

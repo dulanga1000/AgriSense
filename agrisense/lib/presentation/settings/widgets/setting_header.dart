@@ -7,13 +7,9 @@ class SettingHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Color(0xFF2D6CDF),
-            Color(0xFF214EBF),
-          ],
+          colors: [Color(0xFF2D6CDF), Color(0xFF214EBF)],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(1),
@@ -26,12 +22,8 @@ class SettingHeader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: const [
-              
               AppBackButton(fallbackIndex: 0),
-
               SizedBox(width: 12),
-
-              
               Text(
                 "App Settings",
                 style: TextStyle(

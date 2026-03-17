@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import '../state/setting_state.dart';
 import '../widgets/setting_header.dart';
 import '../widgets/general_setting.dart';
-import '../widgets/notification_setting.dart'; // Make sure this is imported!
-import '../state/setting_state.dart';
+import '../widgets/notification_setting.dart';
+import '../widgets/storage_setting.dart';
+import '../widgets/privacy_setting.dart';
+import '../widgets/about_setting.dart'; 
 
 final settingState = SettingState();
 
@@ -12,26 +15,29 @@ class AppSettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[100], 
+      
       body: Column(
         children: [
-          /// HEADER
+          
           const SettingHeader(),
 
-          /// SETTINGS CONTENT
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   const SizedBox(height: 20),
 
-                  /// GENERAL SETTINGS CARD
                   GeneralSetting(settingState: settingState),
 
-                  /// ADD YOUR NEW WIDGET HERE:
                   const NotificationSetting(), 
 
-                  const SizedBox(height: 40),
+                  StorageSetting(settingState: settingState),
+
+                  const PrivacySetting(),
+
+                  const AboutSetting(), 
+                  const SizedBox(height: 40), 
                 ],
               ),
             ),

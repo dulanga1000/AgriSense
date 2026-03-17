@@ -8,7 +8,7 @@ class NotificationSetting extends StatefulWidget {
 }
 
 class _NotificationSettingState extends State<NotificationSetting> {
-  // Local state variables (Ephemeral State)
+  
   bool diseaseAlerts = true;
   bool weatherUpdates = true;
   bool farmingTips = true;
@@ -39,13 +39,13 @@ class _NotificationSettingState extends State<NotificationSetting> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF002244), // Deep navy tone from the screenshot
+              color: Colors.black, 
             ),
           ),
           
           const SizedBox(height: 20),
 
-          /// DISEASE ALERTS
+          
           _buildSwitchTile(
             title: "Disease Alerts",
             subtitle: "Get alerts about plant diseases",
@@ -57,7 +57,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
           
           const SizedBox(height: 16),
 
-          /// WEATHER UPDATES
+          
           _buildSwitchTile(
             title: "Weather Updates",
             subtitle: "Get weather forecasts",
@@ -69,7 +69,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
           
           const SizedBox(height: 16),
 
-          /// FARMING TIPS
+         
           _buildSwitchTile(
             title: "Farming Tips",
             subtitle: "Get daily farming tips",
@@ -83,7 +83,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
     );
   }
 
-  /// REUSABLE SWITCH ROW WIDGET
+  
   Widget _buildSwitchTile({
     required String title,
     required String subtitle,
@@ -102,14 +102,14 @@ class _NotificationSettingState extends State<NotificationSetting> {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF002244),
+                  color: Colors.black, 
                 ),
               ),
               Text(
                 subtitle,
                 style: const TextStyle(
                   fontSize: 12,
-                  color: Colors.grey,
+                  color: Colors.grey, 
                 ),
               ),
             ],

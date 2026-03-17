@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ActionButton extends StatelessWidget {
+class GradientIconButton extends StatelessWidget {
   final IconData icon;
   final String text;
   final VoidCallback onPressed;
   final bool isPrimary;
 
-  const ActionButton({
+  const GradientIconButton({
     super.key,
     required this.icon,
     required this.text,

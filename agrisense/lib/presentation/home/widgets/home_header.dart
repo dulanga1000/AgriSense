@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:agrisense/presentation/main/screens/main_screen.dart';
+import 'package:agrisense/presentation/common/navigation/main_tab_navigator.dart';
 import 'package:agrisense/data/models/user_model.dart';
 import 'package:agrisense/data/models/weather_model.dart';
 
@@ -166,12 +166,7 @@ class HomeHeader extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainScreen(initialIndex: 2),
-                      ),
-                    );
+                    MainTabNavigator.goToTab(context, 2);
                   },
                   child: const Text("View More"),
                 ),

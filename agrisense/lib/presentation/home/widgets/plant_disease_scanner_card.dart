@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/main/screens/main_screen.dart';
+import 'package:agrisense/presentation/common/navigation/main_tab_navigator.dart';
 
 class PlantDiseaseScannerCard extends StatelessWidget {
   const PlantDiseaseScannerCard({super.key});
@@ -9,12 +9,7 @@ class PlantDiseaseScannerCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MainScreen(initialIndex: 1),
-          ),
-        );
+        MainTabNavigator.goToTab(context, 1);
       },
       child: Container(
         margin: const EdgeInsets.all(16),

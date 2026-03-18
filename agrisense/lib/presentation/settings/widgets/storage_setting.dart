@@ -1,78 +1,59 @@
 import 'package:flutter/material.dart';
-import '../state/setting_state.dart';
+import 'package:agrisense/presentation/settings/state/setting_state.dart';
 
 class StorageSetting extends StatelessWidget {
-  final SettingState settingState; 
+  final SettingState settingState;
 
   const StorageSetting({super.key, required this.settingState});
+  
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: settingState,
-      builder: (context, child) {
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              )
-            ],
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, 4),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              
-             
-              const Text(
-                "Data & Storage",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black, 
-                ),
-              ),
-              
-              const SizedBox(height: 20),
-
-              
-              _buildSwitchTile(
-                
-                icon: Icons.dns_outlined, 
-                title: "Auto Update",
-                subtitle: "Update data automatically",
-                value: settingState.autoUpdate, 
-                onChanged: (val) {
-                  settingState.toggleAutoUpdate(val); 
-                },
-              ),
-              
-              const SizedBox(height: 16),
-
-              
-              _buildActionTile(
-                
-                icon: Icons.dns_outlined,
-                title: "Clear Cache",
-                trailingText: "45 MB",
-                onTap: () {
-                  print("Clear Cache Tapped");
-                },
-              ),
-            ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Data & Storage",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
-        );
-      },
+          const SizedBox(height: 20),
+          _buildSwitchTile(
+            icon: Icons.dns_outlined,
+            title: "Auto Update",
+            subtitle: "Update data automatically",
+            value: settingState.autoUpdate,
+            onChanged: settingState.toggleAutoUpdate,
+          ),
+          const SizedBox(height: 16),
+          _buildActionTile(
+            icon: Icons.dns_outlined,
+            title: "Clear Cache",
+            trailingText: "45 MB",
+            onTap: () => debugPrint("Clear Cache Tapped"),
+          ),
+        ],
+      ),
     );
   }
 
-  
   Widget _buildSwitchTile({
     required IconData icon,
     required String title,
@@ -82,7 +63,7 @@ class StorageSetting extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Icon(icon, size: 22, color: Colors.black), // Slightly smaller size to match screenshot
+        Icon(icon, size: 22, color: Colors.black),
         const SizedBox(width: 14),
         Expanded(
           child: Column(
@@ -93,15 +74,12 @@ class StorageSetting extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black, 
+                  color: Colors.black,
                 ),
               ),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey, 
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),
@@ -110,23 +88,15 @@ class StorageSetting extends StatelessWidget {
           value: value,
           onChanged: onChanged,
           activeTrackColor: const Color(0xFF00AA4F),
-          activeColor: Colors.white,
+          activeThumbColor: Colors.white,
           inactiveTrackColor: const Color(0xFFE4E6EB),
           inactiveThumbColor: Colors.white,
-          trackOutlineColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.selected)) {
-                return const Color(0xFF69F0AE);
-              }
-              return Colors.transparent;
-            },
-          ),
+          trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
         ),
       ],
     );
   }
 
-  
   Widget _buildActionTile({
     required IconData icon,
     required String title,
@@ -140,7 +110,7 @@ class StorageSetting extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6.0),
         child: Row(
           children: [
-            Icon(icon, size: 22, color: Colors.black), 
+            Icon(icon, size: 22, color: Colors.black),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
@@ -148,16 +118,13 @@ class StorageSetting extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black, 
+                  color: Colors.black,
                 ),
               ),
             ),
             Text(
               trailingText,
-              style: const TextStyle(
-                fontSize: 13,
-                color: Colors.grey, 
-              ),
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
             ),
           ],
         ),

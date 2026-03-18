@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/change_location_header.dart'; 
+import '../widgets/change_password_header.dart'; 
 
-class LocationScreen extends StatelessWidget {
-  const LocationScreen({super.key});
+class ChangePasswordScreen extends StatelessWidget {
+  const ChangePasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class LocationScreen extends StatelessWidget {
       body: Column(
         children: const [
           
-          ChangeLocationHeader(),
+          ChangePasswordHeader(),
           
           
           Expanded(

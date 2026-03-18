@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/fertilizer/state/fertilizer_state.dart';
+import 'package:flutter/services.dart';
 
 class FertilizerForm extends StatefulWidget {
   final Function(String cropType, double landSize) onSubmit;
@@ -79,7 +80,20 @@ class _FertilizerFormState extends State<FertilizerForm> {
                   )
                   .toList(),
               onChanged: (value) => setState(() => selectedCrop = value),
-              decoration: const InputDecoration(border: OutlineInputBorder()),
+
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+
+                
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+
+                
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green, width: 2),
+                ),
+              ),
             ),
 
             const SizedBox(height: 16),
@@ -89,11 +103,28 @@ class _FertilizerFormState extends State<FertilizerForm> {
 
             TextField(
               controller: _landController,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
               onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: "Enter land size",
-                border: OutlineInputBorder(),
+
+            
+                border: const OutlineInputBorder(),
+
+                
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+
+                
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green, width: 2),
+                ),
               ),
             ),
 

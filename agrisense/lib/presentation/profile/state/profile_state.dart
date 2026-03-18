@@ -33,12 +33,14 @@ class ProfileState extends ChangeNotifier {
     String? phone,
     String? email,
     String? bio,
+    String? role,
   }) async {
     user = user.copyWith(
       name: name ?? user.name,
       phone: phone ?? user.phone,
       email: email ?? user.email,
       bio: bio ?? user.bio,
+      role: role ?? user.role,
     );
 
     await _repository.saveUser(user);

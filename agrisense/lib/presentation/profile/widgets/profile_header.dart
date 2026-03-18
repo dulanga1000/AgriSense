@@ -14,7 +14,6 @@ class ProfileHeader extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        // GREEN HEADER
         Container(
           height: 160,
           decoration: const BoxDecoration(
@@ -39,11 +38,10 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
 
-        // PROFILE CARD
         Positioned(
           top: 95,
-          left: 40,
-          right: 40,
+          left: 20,
+          right: 20,
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
@@ -60,11 +58,10 @@ class ProfileHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // PROFILE IMAGE + NAME
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 28,
+                      radius: 30,
                       backgroundColor: const Color(0xFF4CAF50),
                       backgroundImage: user.imagePath != null
                           ? FileImage(File(user.imagePath!))
@@ -73,32 +70,52 @@ class ProfileHeader extends StatelessWidget {
                           ? Text(
                               user.avatarLetter,
                               style: const TextStyle(
-                                fontSize: 22,
+                                fontSize: 24,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             )
                           : null,
                     ),
+
                     const SizedBox(width: 14),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          user.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          user.role,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
+
+                          const SizedBox(height: 4),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFF4CAF50,
+                              ).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              user.role.isNotEmpty ? user.role : "No Role",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF0C8F3E),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -128,7 +145,12 @@ class ProfileHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: const Color(0xFF0C8F3E)),
         const SizedBox(width: 8),
-        Expanded(child: Text(text)),
+        Expanded(
+          child: Text(
+            text.isNotEmpty ? text : "-",
+            style: const TextStyle(fontSize: 13),
+          ),
+        ),
       ],
     );
   }

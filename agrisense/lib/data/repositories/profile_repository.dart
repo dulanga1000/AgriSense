@@ -7,6 +7,7 @@ class ProfileRepository {
   static const _phoneKey = 'phone';
   static const _bioKey = 'bio';
   static const _imageKey = 'image';
+  static const _roleKey = 'role';
 
   Future<UserModel> loadUser() async {
     final prefs = await SharedPreferences.getInstance();
@@ -14,7 +15,7 @@ class ProfileRepository {
     return UserModel(
       id: '1',
       name: prefs.getString(_nameKey) ?? "Guest",
-      role: "Farmer",
+      role: prefs.getString(_roleKey) ?? "Farmer",
       location: "Sri Lanka",
       phone: prefs.getString(_phoneKey) ?? "+94 000 000 000",
       email: prefs.getString(_emailKey) ?? "guest@email.com",
@@ -34,5 +35,6 @@ class ProfileRepository {
     if (user.imagePath != null) {
       await prefs.setString(_imageKey, user.imagePath!);
     }
+    await prefs.setString(_roleKey, user.role);
   }
 }

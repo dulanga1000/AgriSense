@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
@@ -13,6 +14,7 @@ class ProfileHeader extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
+        // GREEN HEADER
         Container(
           height: 160,
           decoration: const BoxDecoration(
@@ -24,43 +26,20 @@ class ProfileHeader extends StatelessWidget {
               bottomRight: Radius.circular(28),
             ),
           ),
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  SizedBox(width: 40),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, top: 6),
-                    child: Text(
-                      "Profile",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
 
-        Positioned(
+        const Positioned(
           top: 0,
           left: 0,
           child: SafeArea(
-            bottom: false,
             child: Padding(
-              padding: const EdgeInsets.only(left: 16, top: 6),
-              child: const AppBackButton(fallbackIndex: 0),
+              padding: EdgeInsets.only(left: 16, top: 6),
+              child: AppBackButton(fallbackIndex: 0),
             ),
           ),
         ),
 
+        // PROFILE CARD
         Positioned(
           top: 95,
           left: 40,
@@ -81,19 +60,25 @@ class ProfileHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // PROFILE IMAGE + NAME
                 Row(
                   children: [
                     CircleAvatar(
                       radius: 28,
                       backgroundColor: const Color(0xFF4CAF50),
-                      child: Text(
-                        user.avatarLetter,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      backgroundImage: user.imagePath != null
+                          ? FileImage(File(user.imagePath!))
+                          : null,
+                      child: user.imagePath == null
+                          ? Text(
+                              user.avatarLetter,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : null,
                     ),
                     const SizedBox(width: 14),
                     Column(
@@ -106,7 +91,6 @@ class ProfileHeader extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 2),
                         Text(
                           user.role,
                           style: const TextStyle(
@@ -144,7 +128,7 @@ class ProfileHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: const Color(0xFF0C8F3E)),
         const SizedBox(width: 8),
-        Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
+        Expanded(child: Text(text)),
       ],
     );
   }

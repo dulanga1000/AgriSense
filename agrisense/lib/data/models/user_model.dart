@@ -28,11 +28,12 @@ class UserModel {
     String? email,
     String? bio,
     String? imagePath,
+    String? role,
   }) {
     return UserModel(
       id: id,
       name: name ?? this.name,
-      role: role,
+      role: role ?? this.role,
       location: location,
       phone: phone ?? this.phone,
       email: email ?? this.email,

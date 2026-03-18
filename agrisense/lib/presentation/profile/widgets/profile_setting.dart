@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import '../screens/edit_profile_screen.dart';
+import '../../settings/screens/app_setting_screen.dart';
+import '../../settings/screens/location_screen.dart'; // Make sure this path matches your folder structure!
 
 class ProfileSetting extends StatelessWidget {
   const ProfileSetting({super.key});
@@ -38,6 +40,7 @@ class ProfileSetting extends StatelessWidget {
 
           const SizedBox(height: 16),
 
+          /// EDIT PROFILE
           _buildSettingTile(
             context,
             icon: Icons.person_outline,
@@ -58,20 +61,37 @@ class ProfileSetting extends StatelessWidget {
 
           const SizedBox(height: 12),
 
+          /// APP SETTINGS
           _buildSettingTile(
             context,
             icon: Icons.settings_outlined,
             title: "App Settings",
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const AppSettingScreen(),
+                ),
+              );
+            },
           ),
 
           const SizedBox(height: 12),
 
+          /// CHANGE LOCATION
           _buildSettingTile(
             context,
             icon: Icons.location_on_outlined,
             title: "Change Location",
-            onTap: () {},
+            onTap: () {
+              // Added navigation to LocationScreen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LocationScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),

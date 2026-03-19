@@ -6,6 +6,7 @@ import 'package:agrisense/presentation/notification/state/notification_state.dar
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import 'package:agrisense/presentation/settings/state/setting_state.dart';
 import 'package:agrisense/presentation/weather/state/weather_state.dart';
+import 'package:agrisense/presentation/settings/state/location_state.dart';
 
 class AppProviders {
   AppProviders._();
@@ -17,5 +18,6 @@ class AppProviders {
     ChangeNotifierProvider(
       create: (_) => sl<WeatherState>()..loadWeatherData(),
     ),
+    ChangeNotifierProvider(create: (_) => sl<LocationState>()),
   ];
 }

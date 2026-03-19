@@ -7,7 +7,7 @@ class WeatherState extends ChangeNotifier {
 
   WeatherState(this._repository);
 
-  String _selectedLocation = 'Western Province, Sri Lanka';
+  String _selectedLocation = 'Colombo, Western Province';
   bool _isLoading = false;
   String? _errorMessage;
 

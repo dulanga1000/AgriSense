@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/core/constants/disease_constants.dart';
 
-class PhotographyTipsCard extends StatelessWidget {
-  const PhotographyTipsCard({super.key});
+class TipsCard extends StatelessWidget {
+  final String title;
+  final List<String> tips;
+  final IconData icon;
+  final EdgeInsetsGeometry margin;
+
+  const TipsCard({
+    super.key,
+    required this.title,
+    required this.tips,
+    required this.icon,
+    this.margin = EdgeInsets.zero,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: margin,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -19,13 +29,13 @@ class PhotographyTipsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.info_outline, color: Color(0xFF1C398E)),
-              SizedBox(width: 8),
+              Icon(icon, color: const Color(0xFF1C398E)),
+              const SizedBox(width: 8),
               Text(
-                "Photography Tips",
-                style: TextStyle(
+                title,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                   color: Color(0xFF1C398E),
@@ -35,7 +45,7 @@ class PhotographyTipsCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          ...DiseaseConstants.photographyTips.map(
+          ...tips.map(
             (tip) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(

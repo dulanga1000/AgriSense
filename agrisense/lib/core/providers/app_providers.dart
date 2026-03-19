@@ -18,6 +18,13 @@ class AppProviders {
     ChangeNotifierProvider(
       create: (_) => sl<WeatherState>()..loadWeatherData(),
     ),
-    ChangeNotifierProvider(create: (_) => sl<LocationState>()),
+    ChangeNotifierProxyProvider<WeatherState, LocationState>(
+      create: (_) => sl<LocationState>(),
+      update: (_, weatherState, locationState) {
+        final state = locationState ?? sl<LocationState>();
+        state.syncFromWeatherLocation(weatherState.selectedLocation);
+        return state;
+      },
+    ),
   ];
 }

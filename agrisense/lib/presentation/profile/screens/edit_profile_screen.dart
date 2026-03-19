@@ -36,7 +36,11 @@ class EditProfileScreen extends StatelessWidget {
         ),
         title: const Text(
           "Edit Profile",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
         ),
       ),
       body: SingleChildScrollView(

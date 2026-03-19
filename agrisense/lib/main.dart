@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'core/di/service_locator.dart';
+import 'core/providers/app_providers.dart';
+import 'core/routes/app_routes.dart';
 import 'presentation/auth/screens/login_screen.dart';
 import 'presentation/splash/splash_screen.dart';
-import 'core/routes/app_routes.dart';
-import 'presentation/profile/state/profile_state.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupLocator(); // ✅ register everything first
   runApp(const MyApp());
 }
 
@@ -16,15 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) {
-            final state = ProfileState();
-            state.loadUser();
-            return state;
-          },
-        ),
-      ],
+      providers: AppProviders.providers,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: const AppStartupScreen(),

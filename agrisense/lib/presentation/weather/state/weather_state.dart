@@ -3,7 +3,9 @@ import 'package:agrisense/data/models/weather_model.dart';
 import 'package:agrisense/data/repositories/weather_repository.dart';
 
 class WeatherState extends ChangeNotifier {
-  final WeatherRepository _repository = WeatherRepository();
+  final WeatherRepository _repository;
+
+  WeatherState(this._repository);
 
   String selectedLocation = "Western Province, Sri Lanka";
   bool isLoading = false;

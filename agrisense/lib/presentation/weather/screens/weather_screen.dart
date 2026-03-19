@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:agrisense/core/di/service_locator.dart';
 import 'package:agrisense/presentation/weather/state/weather_state.dart';
 import 'package:agrisense/presentation/weather/widgets/weather_header.dart';
 import 'package:agrisense/presentation/weather/widgets/location_selector.dart';
@@ -16,7 +17,7 @@ class WeatherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => WeatherState()..loadWeatherData(),
+      create: (_) => sl<WeatherState>()..loadWeatherData(),
       child: Scaffold(
         backgroundColor: const Color(0xffF3F4F6),
         body: Consumer<WeatherState>(

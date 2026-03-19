@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+
 import 'package:agrisense/presentation/common/navigation/main_tab_navigator.dart';
 import 'package:agrisense/data/models/user_model.dart';
 import 'package:agrisense/data/models/weather_model.dart';
+import 'package:agrisense/presentation/notification/screens/notification_screen.dart';
+import 'package:agrisense/presentation/notification/state/notification_state.dart';
 
 class HomeHeader extends StatelessWidget {
   final UserModel user;
@@ -12,6 +16,10 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final unreadCount = context.select<NotificationState, int>(
+      (state) => state.notifications.where((n) => n.isUnread).length,
+    );
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
       decoration: const BoxDecoration(
@@ -25,6 +33,7 @@ class HomeHeader extends StatelessWidget {
           bottomRight: Radius.circular(25),
         ),
       ),
+
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,36 +60,55 @@ class HomeHeader extends StatelessWidget {
                 ],
               ),
 
-              Stack(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.25),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(CupertinoIcons.bell, color: Colors.white),
-                  ),
-                  Positioned(
-                    top: 2,
-                    right: 2,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(50),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const NotificationScreen(),
                       ),
-                      child: const Text(
-                        '3',
-                        style: TextStyle(
+                    );
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.25),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          CupertinoIcons.bell,
                           color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
+
+                      if (unreadCount > 0)
+                        Positioned(
+                          top: 2,
+                          right: 2,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              unreadCount > 99 ? "99+" : unreadCount.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),
@@ -93,6 +121,7 @@ class HomeHeader extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.20),
               borderRadius: BorderRadius.circular(16),
             ),
+
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -124,6 +153,7 @@ class HomeHeader extends StatelessWidget {
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 4),
 
                     Row(
@@ -146,6 +176,7 @@ class HomeHeader extends StatelessWidget {
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 4),
 
                     Text(

@@ -2,31 +2,27 @@ import 'dart:io';
 import 'package:agrisense/data/models/disease_result_model.dart';
 
 class DiseaseRepository {
-  Future<DiseaseResultModel> detectDisease(File image) async {
+  Future<DiseaseResultModel> analyzeImage(File image) async {
     await Future.delayed(const Duration(seconds: 2));
 
     return const DiseaseResultModel(
-      diseaseName: "Late Blight",
-      scientificName: "Phytophthora infestans",
+      diseaseName: 'Leaf Spot',
+      scientificName: 'Cercospora spp.',
       confidence: 0.92,
       symptoms: [
-        "Dark brown spots on leaves",
-        "White fungal growth on leaf undersides",
-        "Rapid wilting and decay",
-        "Affected stems turn black",
+        'Small brown or dark spots on leaves',
+        'Yellow halo around lesions',
+        'Premature leaf drop in severe cases',
       ],
       treatments: [
-        "Remove and destroy infected plants immediately",
-        "Apply copper-based fungicides",
-        "Use Mancozeb (2g per liter) spray every 7-10 days",
-        "Ensure proper drainage in the field",
+        'Remove and destroy infected leaves',
+        'Apply a suitable fungicide as directed',
+        'Avoid overhead irrigation late in the day',
       ],
       preventions: [
-        "Use disease-resistant varieties",
-        "Maintain proper plant spacing",
-        "Avoid overhead irrigation",
-        "Apply preventive fungicide sprays during humid weather",
-        "Remove plant debris after harvest",
+        'Ensure good airflow between plants',
+        'Water at soil level to keep leaves dry',
+        'Use disease-free seeds and tools',
       ],
     );
   }

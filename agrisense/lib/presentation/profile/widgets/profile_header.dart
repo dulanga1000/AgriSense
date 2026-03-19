@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
+import 'package:agrisense/presentation/weather/state/weather_state.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -10,6 +11,7 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<ProfileState>().user;
+    final weatherLocation = context.watch<WeatherState>().selectedLocation;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -122,7 +124,7 @@ class ProfileHeader extends StatelessWidget {
 
                 const SizedBox(height: 14),
 
-                _infoRow(Icons.location_on, user.location),
+                _infoRow(Icons.location_on, weatherLocation),
                 const SizedBox(height: 8),
                 _infoRow(Icons.phone, user.phone),
                 const SizedBox(height: 8),

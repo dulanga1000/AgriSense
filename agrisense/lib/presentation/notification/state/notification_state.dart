@@ -45,7 +45,6 @@ class NotificationState extends ChangeNotifier {
     final index = _notifications.indexWhere((n) => n.id == notificationId);
     if (index == -1) return;
 
-    // ✅ Optimistic update
     _notifications[index] = _notifications[index].copyWith(isUnread: false);
     notifyListeners();
 
@@ -56,7 +55,6 @@ class NotificationState extends ChangeNotifier {
     final hasUnread = _notifications.any((n) => n.isUnread);
     if (!hasUnread) return;
 
-    // ✅ Optimistic update
     _notifications = _notifications
         .map((n) => n.copyWith(isUnread: false))
         .toList();

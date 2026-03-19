@@ -3,10 +3,8 @@ import 'package:agrisense/data/models/notification_model.dart';
 class NotificationRepository {
   static List<NotificationModel>? _store;
 
-  // ✅ This is the single source of truth for read/unread state
   static final Map<String, bool> _unreadById = <String, bool>{};
 
-  // ✅ Track if we have ever seeded _unreadById at least once
   static bool _initialSeedDone = false;
 
   List<NotificationModel> _hardcodedNotifications() => [
@@ -60,7 +58,6 @@ class NotificationRepository {
   void _seedStore({bool forceRefresh = false}) {
     final raw = _hardcodedNotifications();
 
-    // ✅ First time ever: seed _unreadById from hardcoded defaults
     if (!_initialSeedDone) {
       for (final n in raw) {
         _unreadById[n.id] = n.isUnread;
@@ -68,11 +65,8 @@ class NotificationRepository {
       _initialSeedDone = true;
     }
 
-    // ✅ On forceRefresh or first load: rebuild _store
-    // BUT always apply _unreadById — never overwrite it
     if (_store == null || forceRefresh) {
       _store = raw.map((n) {
-        // ✅ _unreadById is always the truth — hardcoded isUnread is ignored after first seed
         final isUnread = _unreadById[n.id] ?? n.isUnread;
         return n.copyWith(isUnread: isUnread);
       }).toList();
@@ -94,7 +88,6 @@ class NotificationRepository {
     if (index == -1) return false;
 
     if (_store![index].isUnread) {
-      // ✅ Update both _store and _unreadById together
       _store![index] = _store![index].copyWith(isUnread: false);
       _unreadById[notificationId] = false;
     }
@@ -110,7 +103,6 @@ class NotificationRepository {
     for (var i = 0; i < _store!.length; i++) {
       final n = _store![i];
       if (n.isUnread) {
-        // ✅ Update both _store and _unreadById together
         _store![i] = n.copyWith(isUnread: false);
         _unreadById[n.id] = false;
         updatedCount++;

@@ -3,7 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 class EditProfileForm extends StatefulWidget {
-  final Function(String name, String email, String phone, String bio) onChanged;
+  final Function(
+    String name,
+    String email,
+    String phone,
+    String bio,
+    String role,
+  )
+  onChanged;
 
   const EditProfileForm({super.key, required this.onChanged});
 
@@ -16,12 +23,13 @@ class _EditProfileFormState extends State<EditProfileForm> {
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
   late TextEditingController _bioController;
+  late TextEditingController _roleController;
 
   @override
   void initState() {
     super.initState();
     final user = context.read<ProfileState>().user;
-
+    _roleController = TextEditingController(text: user.role);
     _nameController = TextEditingController(text: user.name);
     _emailController = TextEditingController(text: user.email);
     _phoneController = TextEditingController(text: user.phone);
@@ -34,6 +42,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
     _emailController.dispose();
     _phoneController.dispose();
     _bioController.dispose();
+    _roleController.dispose();
     super.dispose();
   }
 
@@ -43,6 +52,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
       _emailController.text.trim(),
       _phoneController.text.trim(),
       _bioController.text.trim(),
+      _roleController.text.trim(),
     );
   }
 
@@ -89,6 +99,10 @@ class _EditProfileFormState extends State<EditProfileForm> {
               ),
             ),
           ),
+          const SizedBox(height: 16),
+          _label("Role"),
+          const SizedBox(height: 6),
+          _field(_roleController, Icons.work_outline),
         ],
       ),
     );

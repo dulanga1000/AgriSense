@@ -13,7 +13,7 @@ class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
 
   void _saveChanges(BuildContext context) {
-    Navigator.pop(context); // 🔥 data already saved
+    Navigator.pop(context);
   }
 
   void _cancelEdit(BuildContext context) {
@@ -36,7 +36,11 @@ class EditProfileScreen extends StatelessWidget {
         ),
         title: const Text(
           "Edit Profile",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -45,14 +49,14 @@ class EditProfileScreen extends StatelessWidget {
             const EditProfileImage(),
             const SizedBox(height: 20),
 
-            // 🔥 FIXED FORM
             EditProfileForm(
-              onChanged: (name, email, phone, bio) {
+              onChanged: (name, email, phone, bio, role) {
                 context.read<ProfileState>().updateProfile(
                   name: name,
                   email: email,
                   phone: phone,
                   bio: bio,
+                  role: role,
                 );
               },
             ),

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:device_preview/device_preview.dart';
+import 'package:provider/provider.dart';
+
+import 'core/di/service_locator.dart';
+import 'core/providers/app_providers.dart';
+import 'core/routes/app_routes.dart';
 import 'presentation/auth/screens/login_screen.dart';
 import 'presentation/splash/splash_screen.dart';
-import 'core/routes/app_routes.dart';
 
-void main() {
-  runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupLocator(); // ✅ register everything first
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,14 +18,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-
-      home: const AppStartupScreen(),
-      routes: AppRoutes.routes,
+    return MultiProvider(
+      providers: AppProviders.providers,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const AppStartupScreen(),
+        routes: AppRoutes.routes,
+      ),
     );
   }
 }
@@ -38,22 +42,14 @@ class _AppStartupScreenState extends State<AppStartupScreen> {
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(const Duration(seconds: 3), () {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _showSplash = false;
-      });
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      setState(() => _showSplash = false);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_showSplash) {
-      return const SplashScreen();
-    }
-
-    return LoginScreen();
+    return _showSplash ? const SplashScreen() : LoginScreen();
   }
 }

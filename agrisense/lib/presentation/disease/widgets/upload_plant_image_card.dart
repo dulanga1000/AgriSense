@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../widgets/gradient_icon_button.dart';
 
@@ -16,24 +17,39 @@ class UploadPlantImageCard extends StatefulWidget {
 class _UploadPlantImageCardState extends State<UploadPlantImageCard> {
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> takePhoto() async {
-    final XFile? photo = await _picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 85,
-    );
-    if (photo != null) {
-      widget.onImageSelected(File(photo.path));
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        widget.onImageSelected(File(image.path));
+      }
+    } on PlatformException catch (e) {
+      _showError(
+        'Unable to open ${source == ImageSource.camera ? 'camera' : 'gallery'}: ${e.message ?? 'permission denied or unavailable.'}',
+      );
+    } catch (_) {
+      _showError(
+        'Something went wrong while selecting image. Please try again.',
+      );
     }
   }
 
+  Future<void> takePhoto() async {
+    await _pickImage(ImageSource.camera);
+  }
+
   Future<void> uploadFromGallery() async {
-    final XFile? image = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-    );
-    if (image != null) {
-      widget.onImageSelected(File(image.path));
-    }
+    await _pickImage(ImageSource.gallery);
   }
 
   @override

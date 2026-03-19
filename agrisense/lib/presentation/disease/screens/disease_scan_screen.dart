@@ -1,8 +1,9 @@
+import 'package:agrisense/core/constants/tips_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/disease/widgets/upload_plant_image_card.dart';
-import 'package:agrisense/presentation/disease/widgets/photography_tips_card.dart';
+import 'package:agrisense/presentation/common/widgets/tips_card.dart';
 import 'package:agrisense/presentation/disease/widgets/image_preview_card.dart';
 import 'package:agrisense/presentation/disease/widgets/analyzing_card.dart';
 import 'package:agrisense/presentation/disease/widgets/detection_result_card.dart';
@@ -128,7 +129,11 @@ class _DiseaseScanScreenState extends State<DiseaseScanScreen> {
             if (_selectedImage == null) ...[
               UploadPlantImageCard(onImageSelected: _onImageSelected),
               const SizedBox(height: 16),
-              const PhotographyTipsCard(),
+              TipsCard(
+                title: 'Photography Tips',
+                icon: Icons.camera_alt,
+                tips: TipsConstants.photographyTips,
+              ),
             ],
 
             if (_selectedImage != null) ...[

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/core/constants/season_constants.dart';
+import 'package:agrisense/presentation/crop/constants/season_constants.dart';
 import 'package:agrisense/core/constants/location_constants.dart';
 import 'package:agrisense/data/models/season_model.dart';
 import 'package:agrisense/data/models/district_model.dart';

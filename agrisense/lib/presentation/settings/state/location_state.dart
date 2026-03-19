@@ -3,13 +3,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 class LocationState extends ChangeNotifier {
-  String _currentLocation = 'Gampaha, Western Province';
+  String _currentLocation = '';
   bool _isLoading = false;
   String? _error;
 
   String get currentLocation => _currentLocation;
   bool get isLoading => _isLoading;
   String? get error => _error;
+
+  void syncFromWeatherLocation(String location) {
+    if (location.isEmpty || _currentLocation == location) return;
+    _currentLocation = location;
+    notifyListeners();
+  }
 
   void setLocation(String location) {
     _currentLocation = location;
@@ -60,7 +66,12 @@ class LocationState extends ChangeNotifier {
 
       if (placemarks.isNotEmpty) {
         final Placemark place = placemarks.first;
-        final String city = place.locality ?? place.subAdministrativeArea ?? '';
+        final String city =
+            place.locality ??
+            place.subLocality ??
+            place.subAdministrativeArea ??
+            place.name ??
+            '';
         final String province = place.administrativeArea ?? '';
         _currentLocation = [
           city,

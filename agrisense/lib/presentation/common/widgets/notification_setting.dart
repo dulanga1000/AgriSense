@@ -1,61 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/settings/state/setting_state.dart';
+import 'package:agrisense/presentation/notification/state/notification_state.dart';
 
 class NotificationSetting extends StatelessWidget {
   const NotificationSetting({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingState>(
-      builder: (context, state, _) {
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, 4),
+    return Consumer2<SettingState, NotificationState>(
+      builder: (context, settingState, notificationState, _) {
+        final isNotificationsEnabled = settingState.notifications;
+
+        return Opacity(
+          opacity: isNotificationsEnabled ? 1.0 : 0.5,
+          child: IgnorePointer(
+            ignoring: !isNotificationsEnabled,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: isNotificationsEnabled ? Colors.white : Colors.grey[200],
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Notification Preferences",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Notification Preferences",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      if (!isNotificationsEnabled)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            "Disabled",
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  _buildSwitchTile(
+                    title: "Disease Alerts",
+                    subtitle: "Get alerts about plant diseases",
+                    value: settingState.diseaseAlerts,
+                    onChanged: isNotificationsEnabled
+                        ? settingState.toggleDiseaseAlerts
+                        : null,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildSwitchTile(
+                    title: "Weather Updates",
+                    subtitle: "Get weather forecasts",
+                    value: settingState.weatherUpdates,
+                    onChanged: isNotificationsEnabled
+                        ? settingState.toggleWeatherUpdates
+                        : null,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildSwitchTile(
+                    title: "Farming Tips",
+                    subtitle: "Get daily farming tips",
+                    value: settingState.farmingTips,
+                    onChanged: isNotificationsEnabled
+                        ? settingState.toggleFarmingTips
+                        : null,
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              _buildSwitchTile(
-                title: "Disease Alerts",
-                subtitle: "Get alerts about plant diseases",
-                value: state.diseaseAlerts,
-                onChanged: state.toggleDiseaseAlerts,
-              ),
-              const SizedBox(height: 16),
-              _buildSwitchTile(
-                title: "Weather Updates",
-                subtitle: "Get weather forecasts",
-                value: state.weatherUpdates,
-                onChanged: state.toggleWeatherUpdates,
-              ),
-              const SizedBox(height: 16),
-              _buildSwitchTile(
-                title: "Farming Tips",
-                subtitle: "Get daily farming tips",
-                value: state.farmingTips,
-                onChanged: state.toggleFarmingTips,
-              ),
-            ],
+            ),
           ),
         );
       },
@@ -66,7 +105,7 @@ class NotificationSetting extends StatelessWidget {
     required String title,
     required String subtitle,
     required bool value,
-    required ValueChanged<bool> onChanged,
+    required ValueChanged<bool>? onChanged,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

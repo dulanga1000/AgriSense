@@ -4,7 +4,9 @@ import 'package:agrisense/data/models/farm_stats_model.dart';
 import 'package:agrisense/data/repositories/profile_repository.dart';
 
 class ProfileState extends ChangeNotifier {
-  final ProfileRepository _repository = ProfileRepository();
+  final ProfileRepository _repository;
+
+  ProfileState(this._repository);
 
   UserModel user = UserModel(
     id: '1',

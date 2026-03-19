@@ -3,7 +3,9 @@ import 'package:agrisense/data/models/fertilizer_model.dart';
 import 'package:agrisense/data/repositories/fertilizer_repository.dart';
 
 class FertilizerState extends ChangeNotifier {
-  final FertilizerRepository _repository = FertilizerRepository();
+  final FertilizerRepository _repository;
+
+  FertilizerState(this._repository);
 
   FertilizerModel? recommendation;
   bool isLoading = false;

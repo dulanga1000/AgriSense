@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:agrisense/core/di/service_locator.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/common/widgets/bottom_nav_bar.dart';
 import 'package:agrisense/presentation/common/navigation/main_tab_navigator.dart';
@@ -17,7 +18,7 @@ class FertilizerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => FertilizerState(),
+      create: (_) => sl<FertilizerState>(),
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(

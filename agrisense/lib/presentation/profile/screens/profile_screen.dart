@@ -9,6 +9,15 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const _ProfileScreenBody();
+  }
+}
+
+class _ProfileScreenBody extends StatelessWidget {
+  const _ProfileScreenBody();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(

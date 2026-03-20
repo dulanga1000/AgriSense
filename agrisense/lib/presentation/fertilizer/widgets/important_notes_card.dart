@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/core/constants/fertilizer_constants.dart';
+import 'package:agrisense/presentation/fertilizer/constants/fertilizer_constants.dart';
 
 class ImportantNotesCard extends StatelessWidget {
   const ImportantNotesCard({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:agrisense/core/constants/season_constants.dart';
+import 'package:agrisense/presentation/crop/constants/season_constants.dart';
 import 'package:agrisense/core/constants/location_constants.dart';
 import 'package:agrisense/data/models/district_model.dart';
 import 'package:agrisense/presentation/crop/state/crop_advisory_state.dart';

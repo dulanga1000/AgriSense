@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/weather/state/weather_state.dart';
 import 'package:agrisense/presentation/weather/widgets/weather_header.dart';
-import 'package:agrisense/presentation/weather/widgets/location_selector.dart';
+import 'package:agrisense/presentation/common/widgets/location_selector.dart';
 import 'package:agrisense/presentation/weather/widgets/rain_prediction_card.dart';
 import 'package:agrisense/presentation/weather/widgets/forecast_card.dart';
 import 'package:agrisense/presentation/weather/widgets/weather_trends_card.dart';

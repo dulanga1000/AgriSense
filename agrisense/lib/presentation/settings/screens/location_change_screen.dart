@@ -1,6 +1,9 @@
+import 'package:agrisense/core/constants/tips_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/settings/widgets/current_location_card.dart';
+import 'package:agrisense/presentation/common/widgets/location_selector.dart';
+import 'package:agrisense/presentation/common/widgets/tips_card.dart';
 
 class LocationChangeScreen extends StatelessWidget {
   const LocationChangeScreen({super.key});
@@ -28,9 +31,21 @@ class LocationChangeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(children: [const CurrentLocationCard()]),
+        child: Column(
+          children: [
+            const CurrentLocationCard(),
+            const SizedBox(height: 20),
+            const LocationSelector(),
+            const SizedBox(height: 20),
+            TipsCard(
+              title: 'Why we need your location?',
+              tips: TipsConstants.locationTips,
+              icon: Icons.lightbulb_outline,
+            ),
+          ],
+        ),
       ),
     );
   }

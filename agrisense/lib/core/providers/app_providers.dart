@@ -13,11 +13,30 @@ class AppProviders {
 
   static List<SingleChildWidget> get providers => [
     ChangeNotifierProvider(create: (_) => sl<ProfileState>()..loadUser()),
-    ChangeNotifierProvider(create: (_) => sl<NotificationState>()),
     ChangeNotifierProvider(create: (_) => sl<SettingState>()),
     ChangeNotifierProvider(
       create: (_) => sl<WeatherState>()..loadWeatherData(),
     ),
-    ChangeNotifierProvider(create: (_) => sl<LocationState>()),
+    ChangeNotifierProxyProvider<SettingState, NotificationState>(
+      create: (_) => sl<NotificationState>(),
+      update: (_, settingState, notificationState) {
+        final state = notificationState ?? sl<NotificationState>();
+        state.updateNotificationSettings(
+          notificationsEnabled: settingState.notifications,
+          diseaseAlertsEnabled: settingState.diseaseAlerts,
+          weatherUpdatesEnabled: settingState.weatherUpdates,
+          farmingTipsEnabled: settingState.farmingTips,
+        );
+        return state;
+      },
+    ),
+    ChangeNotifierProxyProvider<WeatherState, LocationState>(
+      create: (_) => sl<LocationState>(),
+      update: (_, weatherState, locationState) {
+        final state = locationState ?? sl<LocationState>();
+        state.syncFromWeatherLocation(weatherState.selectedLocation);
+        return state;
+      },
+    ),
   ];
 }

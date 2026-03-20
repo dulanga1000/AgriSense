@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/core/routes/app_routes.dart';
 
 class PrivacySetting extends StatelessWidget {
   const PrivacySetting({super.key});
@@ -34,7 +35,7 @@ class PrivacySetting extends StatelessWidget {
           _buildNavigationTile(
             icon: Icons.lock_outline,
             title: "Change Password",
-            onTap: () => debugPrint("Change Password Tapped"),
+            onTap: () => Navigator.pushNamed(context, AppRoutes.changePassword),
           ),
           const SizedBox(height: 16),
           _buildNavigationTile(

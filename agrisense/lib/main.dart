@@ -9,7 +9,7 @@ import 'presentation/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await setupLocator(); // ✅ register everything first
+  await setupLocator();
   runApp(const MyApp());
 }
 

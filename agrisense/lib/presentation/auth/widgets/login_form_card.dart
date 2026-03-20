@@ -94,7 +94,6 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 20),
 
-            /// GOOGLE BUTTON WITH PNG ICON
             OutlinedButton(
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
@@ -140,7 +139,6 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 15),
 
-            /// CONTINUE AS GUEST BUTTON WITH BLACK TEXT
             Theme(
               data: Theme.of(context).copyWith(
                 outlinedButtonTheme: OutlinedButtonThemeData(

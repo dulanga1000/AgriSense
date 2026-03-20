@@ -38,6 +38,8 @@ class TipItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = _getIconColor();
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -46,10 +48,10 @@ class TipItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: _getIconColor().withValues(alpha: 0.1),
+              color: iconColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(_getIcon(), color: _getIconColor(), size: 20),
+            child: Icon(_getIcon(), color: iconColor, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(

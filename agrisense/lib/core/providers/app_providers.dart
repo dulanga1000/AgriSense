@@ -7,6 +7,7 @@ import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import 'package:agrisense/presentation/settings/state/setting_state.dart';
 import 'package:agrisense/presentation/weather/state/weather_state.dart';
 import 'package:agrisense/presentation/settings/state/location_state.dart';
+import 'package:agrisense/presentation/home/state/farming_tip_state.dart';
 
 class AppProviders {
   AppProviders._();
@@ -38,5 +39,6 @@ class AppProviders {
         return state;
       },
     ),
+    ChangeNotifierProvider(create: (_) => sl<FarmingTipState>()..loadTips()),
   ];
 }

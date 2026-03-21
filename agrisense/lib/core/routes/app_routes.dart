@@ -4,11 +4,11 @@ import '../../presentation/auth/screens/login_screen.dart';
 import '../../presentation/auth/screens/register_screen.dart';
 import '../../presentation/main/screens/main_screen.dart';
 import '../../presentation/home/screens/home_screen.dart';
-import '../../presentation/disease/screens/disease_scan_screen.dart';
 import '../../presentation/weather/screens/weather_screen.dart';
 import '../../presentation/profile/screens/profile_screen.dart';
 import '../../presentation/fertilizer/screens/fertilizer_screen.dart';
 import '../../presentation/crop/screens/crop_advisory_screen.dart';
+import '../../presentation/settings/screens/change_password_screen.dart';
 
 class AppRoutes {
   static const String splash = '/splash';
@@ -21,17 +21,18 @@ class AppRoutes {
   static const String profile = '/profile_screen';
   static const String fertilizer = '/fertilizer_screen';
   static const String cropAdvisory = '/crop_advisory_screen';
-
+  static const String changePassword = '/change_password_screen';
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => const SplashScreen(),
     login: (context) => LoginScreen(),
     register: (context) => RegisterScreen(),
     main: (context) => const MainScreen(),
     home: (context) => const HomeScreen(),
-    diseaseScan: (context) => const DiseaseScanScreen(),
+    diseaseScan: (context) => const MainScreen(initialIndex: 1),
     weather: (context) => const WeatherScreen(),
     profile: (context) => const ProfileScreen(),
     fertilizer: (context) => const FertilizerScreen(),
     cropAdvisory: (context) => const CropAdvisoryScreen(),
+    changePassword: (context) => const ChangePasswordScreen(),
   };
 }

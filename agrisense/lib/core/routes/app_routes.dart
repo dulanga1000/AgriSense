@@ -9,6 +9,7 @@ import '../../presentation/profile/screens/profile_screen.dart';
 import '../../presentation/fertilizer/screens/fertilizer_screen.dart';
 import '../../presentation/crop/screens/crop_advisory_screen.dart';
 import '../../presentation/settings/screens/change_password_screen.dart';
+import '../../presentation/auth/screens/forgot_password_screen.dart';
 
 class AppRoutes {
   static const String splash = '/splash';
@@ -22,6 +23,8 @@ class AppRoutes {
   static const String fertilizer = '/fertilizer_screen';
   static const String cropAdvisory = '/crop_advisory_screen';
   static const String changePassword = '/change_password_screen';
+  static const String forgotPassword = '/forgot_password_screen';
+
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => const SplashScreen(),
     login: (context) => LoginScreen(),
@@ -34,5 +37,6 @@ class AppRoutes {
     fertilizer: (context) => const FertilizerScreen(),
     cropAdvisory: (context) => const CropAdvisoryScreen(),
     changePassword: (context) => const ChangePasswordScreen(),
+    forgotPassword: (context) => const ForgotPasswordScreen(),
   };
 }

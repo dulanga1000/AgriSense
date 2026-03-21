@@ -1,11 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 class EditProfileImage extends StatefulWidget {
-  const EditProfileImage({super.key});
+  final String? initialImagePath;
+  final String avatarLetter;
+  final ValueChanged<String> onImageChanged;
+
+  const EditProfileImage({
+    super.key,
+    required this.initialImagePath,
+    required this.avatarLetter,
+    required this.onImageChanged,
+  });
 
   @override
   State<EditProfileImage> createState() => _EditProfileImageState();
@@ -14,6 +21,13 @@ class EditProfileImage extends StatefulWidget {
 class _EditProfileImageState extends State<EditProfileImage> {
   final ImagePicker _picker = ImagePicker();
   File? _image;
+  String? _selectedImagePath;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedImagePath = widget.initialImagePath;
+  }
 
   Future<void> _pickImage() async {
     final XFile? photo = await _picker.pickImage(
@@ -24,18 +38,17 @@ class _EditProfileImageState extends State<EditProfileImage> {
     if (photo != null && mounted) {
       final path = photo.path;
 
-      context.read<ProfileState>().updateProfileImage(path);
-
       setState(() {
         _image = File(path);
+        _selectedImagePath = path;
       });
+
+      widget.onImageChanged(path);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<ProfileState>().user;
-
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
@@ -68,12 +81,12 @@ class _EditProfileImageState extends State<EditProfileImage> {
                     backgroundColor: const Color(0xFF0C8F3E),
                     backgroundImage: _image != null
                         ? FileImage(_image!)
-                        : user.imagePath != null
-                        ? FileImage(File(user.imagePath!))
+                        : _selectedImagePath != null
+                        ? FileImage(File(_selectedImagePath!))
                         : null,
-                    child: (_image == null && user.imagePath == null)
+                    child: (_image == null && _selectedImagePath == null)
                         ? Text(
-                            user.avatarLetter,
+                            widget.avatarLetter,
                             style: const TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,

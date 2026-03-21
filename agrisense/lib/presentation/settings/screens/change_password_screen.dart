@@ -1,12 +1,10 @@
-// presentation/profile/screens/change_password_screen.dart
-
 import 'package:agrisense/core/constants/tips_constants.dart';
 import 'package:flutter/material.dart';
 import '../../common/widgets/app_back_button.dart';
-import '../../common/widgets/password_textfield.dart';
+import '../../common/widgets/custom_button.dart';
 import '../../common/widgets/password_strength_checker.dart';
+import '../../common/widgets/password_textfield.dart';
 import '../../common/widgets/tips_card.dart';
-import '../../common/widgets/auth_button.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -46,18 +44,26 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   void _checkMatch() {
     setState(() {
       final confirm = _confirmController.text;
-      if (confirm.isEmpty) {
-        _passwordsMatch = true;
-      } else {
-        _passwordsMatch = _newController.text == confirm;
-      }
+      _passwordsMatch = confirm.isEmpty ? true : _newController.text == confirm;
     });
+  }
+
+  void _onUpdatePassword() {
+    if (!_formKey.currentState!.validate()) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Password updated successfully'),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final canEditNewPasswordFields = _canEditNewPasswordFields;
-    final canSubmitUpdate = _canSubmitUpdate;
+    final canEdit = _canEditNewPasswordFields;
+    final canSubmit = _canSubmitUpdate;
+
     final mismatchError = _confirmTouched && !_passwordsMatch
         ? const Text(
             'Passwords do not match',
@@ -120,9 +126,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 12),
 
               Opacity(
-                opacity: canEditNewPasswordFields ? 1 : 0.45,
+                opacity: canEdit ? 1 : 0.45,
                 child: IgnorePointer(
-                  ignoring: !canEditNewPasswordFields,
+                  ignoring: !canEdit,
                   child: PasswordTextField(
                     label: 'New Password',
                     hintText: 'Enter new password',
@@ -158,9 +164,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 12),
 
               Opacity(
-                opacity: canEditNewPasswordFields ? 1 : 0.45,
+                opacity: canEdit ? 1 : 0.45,
                 child: IgnorePointer(
-                  ignoring: !canEditNewPasswordFields,
+                  ignoring: !canEdit,
                   child: PasswordTextField(
                     label: 'Confirm New Password',
                     hintText: 'Re-enter new password',
@@ -197,10 +203,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 20),
 
               Opacity(
-                opacity: canSubmitUpdate ? 1 : 0.45,
+                opacity: canSubmit ? 1 : 0.45,
                 child: IgnorePointer(
-                  ignoring: !canSubmitUpdate,
-                  child: AuthButton(
+                  ignoring: !canSubmit,
+                  child: CustomButton(
                     text: 'Update Password',
                     icon: Icons.lock_outline,
                     onPressed: _onUpdatePassword,
@@ -210,17 +216,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void _onUpdatePassword() {
-    if (!_formKey.currentState!.validate()) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Password updated successfully'),
-        backgroundColor: Colors.green,
       ),
     );
   }

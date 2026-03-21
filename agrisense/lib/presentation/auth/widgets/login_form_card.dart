@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/core/routes/app_routes.dart';
-import 'package:agrisense/presentation/common/widgets/email_textfield.dart';
-import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
-import 'package:agrisense/presentation/common/widgets/auth_button.dart';
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
-import 'package:agrisense/presentation/auth/screens/forgot_password_screen.dart';
+import 'package:agrisense/presentation/common/widgets/custom_button.dart';
+import 'package:agrisense/presentation/common/widgets/email_textfield.dart';
+import 'package:agrisense/presentation/common/widgets/google_auth_button.dart';
+import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
 
 class LoginFormCard extends StatefulWidget {
   final TextEditingController emailController;
@@ -21,7 +21,13 @@ class LoginFormCard extends StatefulWidget {
 }
 
 class _LoginFormCardState extends State<LoginFormCard> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+
+  void _onLogin() {
+    if (_formKey.currentState!.validate()) {
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,36 +39,39 @@ class _LoginFormCardState extends State<LoginFormCard> {
           children: [
             const Center(
               child: Text(
-                "Welcome Back",
+                'Welcome Back',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
 
             const SizedBox(height: 25),
 
-            const Text("Email"),
-            const SizedBox(height: 8),
             EmailTextField(controller: widget.emailController),
 
             const SizedBox(height: 20),
 
-            const Text("Password"),
-            const SizedBox(height: 8),
-            PasswordTextField(controller: widget.passwordController),
+            PasswordTextField(
+              label: 'Password',
+              controller: widget.passwordController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Password is required';
+                }
+                return null;
+              },
+            ),
 
             const SizedBox(height: 10),
 
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () => Navigator.push(
+                onPressed: () => Navigator.pushReplacementNamed(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ForgotPasswordScreen(),
-                  ),
+                  AppRoutes.forgotPassword,
                 ),
                 child: const Text(
-                  "Forgot Password?",
+                  'Forgot Password?',
                   style: TextStyle(color: Colors.green),
                 ),
               ),
@@ -70,14 +79,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 10),
 
-            AuthButton(
-              text: "Login",
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  Navigator.pushReplacementNamed(context, AppRoutes.main);
-                }
-              },
-            ),
+            CustomButton(text: 'Login', onPressed: _onLogin),
 
             const SizedBox(height: 25),
 
@@ -86,7 +88,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
                 Expanded(child: Divider()),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text("Or continue with"),
+                  child: Text('Or continue with'),
                 ),
                 Expanded(child: Divider()),
               ],
@@ -94,34 +96,10 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 20),
 
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                side: const BorderSide(color: Colors.grey),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/google_logo.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    "Sign in with Google",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
+            GoogleAuthButton(
+              text: 'Sign in with Google',
+              onSuccess: () =>
+                  Navigator.pushReplacementNamed(context, AppRoutes.main),
             ),
 
             const SizedBox(height: 20),
@@ -139,24 +117,11 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 15),
 
-            Theme(
-              data: Theme.of(context).copyWith(
-                outlinedButtonTheme: OutlinedButtonThemeData(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-              child: AuthButton(
-                text: "Continue as Guest",
-                outlined: true,
-                onPressed: () =>
-                    Navigator.pushReplacementNamed(context, AppRoutes.main),
-              ),
+            CustomButton(
+              text: 'Continue as Guest',
+              outlined: true,
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, AppRoutes.main),
             ),
           ],
         ),

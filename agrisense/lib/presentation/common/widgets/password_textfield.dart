@@ -140,7 +140,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [if (label != null) label, field],
+            children: [?label, field],
           ),
         ),
       );
@@ -148,7 +148,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [if (label != null) label, field],
+      children: [?label, field],
     );
   }
 }

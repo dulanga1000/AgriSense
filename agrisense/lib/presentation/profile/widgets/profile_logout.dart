@@ -1,43 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/core/routes/app_routes.dart';
+import 'package:agrisense/presentation/common/widgets/custom_button.dart';
 
-class ProfileLogout extends StatelessWidget {
+class ProfileLogout extends StatefulWidget {
   const ProfileLogout({super.key});
 
-  void _handleLogout(BuildContext context) {
-    Navigator.pushReplacementNamed(context, '/login');
+  @override
+  State<ProfileLogout> createState() => _ProfileLogoutState();
+}
+
+class _ProfileLogoutState extends State<ProfileLogout> {
+  bool _isLoading = false;
+
+  Future<void> _handleLogout() async {
+    setState(() => _isLoading = true);
+
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.login,
+        (route) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Logout failed: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () => _handleLogout(context),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFFF2D2D),
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 6,
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.logout, color: Colors.white, size: 20),
-            SizedBox(width: 8),
-            Text(
-              "Logout",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFFFF2D2D)),
+            )
+          : CustomButton(
+              text: 'Logout',
+              icon: Icons.logout,
+              backgroundColor: const Color(0xFFFF2D2D),
+              onPressed: _handleLogout,
             ),
-          ],
-        ),
-      ),
     );
   }
 }

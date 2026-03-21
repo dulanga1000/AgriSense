@@ -18,9 +18,58 @@ class UserModel {
     required this.phone,
     required this.email,
     required this.memberSince,
-    this.bio = "",
+    this.bio = '',
     this.imagePath,
   }) : avatarLetter = name.isNotEmpty ? name[0].toUpperCase() : '?';
+
+  factory UserModel.empty() {
+    return UserModel(
+      id: '',
+      name: '',
+      email: '',
+      role: '',
+      location: '',
+      phone: '',
+      bio: '',
+      memberSince: '',
+    );
+  }
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'] ?? '',
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      role: map['role'] ?? 'Farmer',
+      location: map['location'] ?? '',
+      phone: map['phone'] ?? '',
+      bio: map['bio'] ?? '',
+      memberSince: map['memberSince'] ?? '',
+      imagePath: map['imagePath'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'role': role,
+      'location': location,
+      'phone': phone,
+      'bio': bio,
+      'memberSince': memberSince,
+      'imagePath': imagePath,
+    };
+  }
+
+  bool get isEmpty => id.isEmpty;
+  bool get isNotEmpty => id.isNotEmpty;
+
+  static String currentDate() {
+    final now = DateTime.now();
+    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  }
 
   UserModel copyWith({
     String? name,

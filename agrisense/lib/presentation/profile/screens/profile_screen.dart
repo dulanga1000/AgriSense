@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
-import '../widgets/profile_header.dart';
 import '../widgets/profile_farm.dart';
-import '../widgets/profile_setting.dart';
+import '../widgets/profile_header.dart';
 import '../widgets/profile_logout.dart';
+import '../widgets/profile_setting.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const _ProfileScreenBody();
-  }
-}
-
-class _ProfileScreenBody extends StatelessWidget {
-  const _ProfileScreenBody();
 
   @override
   Widget build(BuildContext context) {

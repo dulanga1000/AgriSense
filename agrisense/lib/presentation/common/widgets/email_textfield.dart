@@ -1,32 +1,33 @@
+// presentation/common/widgets/email_textfield.dart
+
 import 'package:flutter/material.dart';
+import 'custom_text_field.dart';
 
 class EmailTextField extends StatelessWidget {
   final TextEditingController controller;
+  final String label;
+  final ValueChanged<String>? onChanged;
 
-  const EmailTextField({super.key, required this.controller});
+  const EmailTextField({
+    super.key,
+    required this.controller,
+    this.label = 'Email',
+    this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return CustomTextField(
       controller: controller,
+      label: label,
+      hintText: 'Enter your email',
+      prefixIcon: Icons.email_outlined,
       keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
-        hintText: "Enter your email",
-        prefixIcon: const Icon(Icons.email_outlined),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.grey),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF0E8F3E), width: 2),
-        ),
-      ),
+      onChanged: onChanged,
       validator: (value) {
-        if (value == null || value.isEmpty) return "Email is required";
+        if (value == null || value.isEmpty) return 'Email is required';
         if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-          return "Enter a valid email";
+          return 'Enter a valid email';
         }
         return null;
       },

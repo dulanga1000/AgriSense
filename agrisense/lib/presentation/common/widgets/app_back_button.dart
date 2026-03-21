@@ -5,11 +5,13 @@ import 'package:agrisense/presentation/main/screens/main_screen.dart';
 class AppBackButton extends StatelessWidget {
   final int fallbackIndex;
   final bool fallbackToSplash;
+  final String? fallbackRoute;
 
   const AppBackButton({
     super.key,
     this.fallbackIndex = 0,
     this.fallbackToSplash = false,
+    this.fallbackRoute,
   });
 
   void _handleBack(BuildContext context) {
@@ -22,6 +24,15 @@ class AppBackButton extends StatelessWidget {
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.splash,
+        (route) => false,
+      );
+      return;
+    }
+
+    if (fallbackRoute != null) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        fallbackRoute!,
         (route) => false,
       );
       return;

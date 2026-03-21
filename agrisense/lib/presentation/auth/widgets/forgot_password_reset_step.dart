@@ -1,219 +1,197 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:agrisense/presentation/auth/widgets/otp_input_box.dart';
 import 'package:agrisense/presentation/auth/widgets/step_indicator.dart';
-import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
-import 'package:agrisense/presentation/common/widgets/auth_button.dart';
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
-import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
+import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
+import 'package:agrisense/presentation/common/widgets/custom_button.dart';
 
-class ForgotPasswordResetStep extends StatefulWidget {
-  final VoidCallback onResetSuccess;
+class ForgotPasswordVerifyStep extends StatefulWidget {
+  final VoidCallback onNext;
+  final String email;
+  final TextEditingController c1;
+  final TextEditingController c2;
+  final TextEditingController c3;
+  final TextEditingController c4;
+  final TextEditingController c5;
+  final TextEditingController c6;
 
-  const ForgotPasswordResetStep({super.key, required this.onResetSuccess});
+  const ForgotPasswordVerifyStep({
+    super.key,
+    required this.onNext,
+    required this.email,
+    required this.c1,
+    required this.c2,
+    required this.c3,
+    required this.c4,
+    required this.c5,
+    required this.c6,
+  });
 
   @override
-  State<ForgotPasswordResetStep> createState() =>
-      _ForgotPasswordResetStepState();
+  State<ForgotPasswordVerifyStep> createState() =>
+      _ForgotPasswordVerifyStepState();
 }
 
-class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
+  final FocusNode f1 = FocusNode();
+  final FocusNode f2 = FocusNode();
+  final FocusNode f3 = FocusNode();
+  final FocusNode f4 = FocusNode();
+  final FocusNode f5 = FocusNode();
+  final FocusNode f6 = FocusNode();
 
-  bool hasUpper = false;
-  bool hasLower = false;
-  bool hasNumber = false;
-  bool hasSpecial = false;
-  bool hasLength = false;
-  bool passwordsMatch = false;
-
-  void validatePassword() {
-    final password = newPasswordController.text;
-    final confirm = confirmPasswordController.text;
-
-    setState(() {
-      hasLength = password.length >= 8;
-      hasUpper = password.contains(RegExp(r'[A-Z]'));
-      hasLower = password.contains(RegExp(r'[a-z]'));
-      hasNumber = password.contains(RegExp(r'[0-9]'));
-      hasSpecial = password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
-      passwordsMatch = password == confirm;
-    });
-  }
-
-  bool get passwordValid =>
-      hasUpper && hasLower && hasNumber && hasSpecial && hasLength;
+  int seconds = 58;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    newPasswordController.addListener(validatePassword);
-    confirmPasswordController.addListener(validatePassword);
+    _startTimer();
   }
 
   @override
   void dispose() {
-    newPasswordController.dispose();
-    confirmPasswordController.dispose();
+    _timer?.cancel();
+    f1.dispose();
+    f2.dispose();
+    f3.dispose();
+    f4.dispose();
+    f5.dispose();
+    f6.dispose();
     super.dispose();
   }
 
-  Widget ruleTile(String text, bool valid) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        children: [
-          Icon(
-            valid ? Icons.check_circle : Icons.radio_button_unchecked,
-            size: 16,
-            color: valid ? Colors.green : Colors.grey,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            text,
-            style: TextStyle(color: valid ? Colors.green : Colors.grey),
-          ),
-        ],
-      ),
-    );
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (seconds == 0) {
+        t.cancel();
+      } else {
+        setState(() => seconds--);
+      }
+    });
+  }
+
+  void _clearOtpBoxes() {
+    widget.c1.clear();
+    widget.c2.clear();
+    widget.c3.clear();
+    widget.c4.clear();
+    widget.c5.clear();
+    widget.c6.clear();
+    FocusScope.of(context).requestFocus(f1);
+  }
+
+  void _resendCode() {
+    setState(() => seconds = 58);
+    _clearOtpBoxes();
+    _startTimer();
+    AuthSnackBar.showSuccess(context, 'OTP resent successfully');
+  }
+
+  bool get _isOtpComplete =>
+      widget.c1.text.trim().isNotEmpty &&
+      widget.c2.text.trim().isNotEmpty &&
+      widget.c3.text.trim().isNotEmpty &&
+      widget.c4.text.trim().isNotEmpty &&
+      widget.c5.text.trim().isNotEmpty &&
+      widget.c6.text.trim().isNotEmpty;
+
+  void _onVerify() {
+    if (seconds == 0) {
+      _clearOtpBoxes();
+      AuthSnackBar.showError(context, 'OTP expired. Please resend the code.');
+      return;
+    }
+
+    if (!_isOtpComplete) {
+      AuthSnackBar.showError(context, 'Please enter complete 6-digit code');
+      return;
+    }
+
+    AuthSnackBar.showSuccess(context, 'Verification successful');
+    widget.onNext();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const StepIndicator(currentStep: 3),
-        const SizedBox(height: 20),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const StepIndicator(currentStep: 2),
+          const SizedBox(height: 20),
 
-        AuthCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
+          AuthCard(
+            child: Column(
+              children: [
+                Container(
                   width: 70,
                   height: 70,
                   decoration: BoxDecoration(
-                    color: Colors.purple.withValues(alpha: 0.1),
+                    color: const Color(0xFF0E8F3E).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.security,
-                    color: Colors.purple,
+                    Icons.key,
+                    color: Color(0xFF0E8F3E),
                     size: 32,
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              const Center(
-                child: Text(
-                  "Create New Password",
+                const Text(
+                  'Enter Verification Code',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 8),
+                const SizedBox(height: 10),
 
-              const Center(
-                child: Text(
-                  "Choose a strong password for your account",
-                  style: TextStyle(color: Colors.black54),
+                Text(
+                  'We sent a 6-digit code to ${widget.email}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
                 ),
-              ),
-              const SizedBox(height: 25),
+                const SizedBox(height: 25),
 
-              const Text("New Password"),
-              const SizedBox(height: 8),
-              PasswordTextField(
-                controller: newPasswordController,
-                hintText: "Enter new password",
-              ),
-
-              const SizedBox(height: 20),
-
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Password must contain:",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 10),
-                    ruleTile("At least 8 characters", hasLength),
-                    ruleTile("One uppercase letter", hasUpper),
-                    ruleTile("One lowercase letter", hasLower),
-                    ruleTile("One number", hasNumber),
-                    ruleTile("One special character", hasSpecial),
+                    OtpInputBox(controller: widget.c1, focusNode: f1),
+                    OtpInputBox(controller: widget.c2, focusNode: f2),
+                    OtpInputBox(controller: widget.c3, focusNode: f3),
+                    OtpInputBox(controller: widget.c4, focusNode: f4),
+                    OtpInputBox(controller: widget.c5, focusNode: f5),
+                    OtpInputBox(controller: widget.c6, focusNode: f6),
                   ],
                 ),
-              ),
+                const SizedBox(height: 30),
 
-              const SizedBox(height: 20),
-
-              const Text("Confirm Password"),
-              const SizedBox(height: 8),
-              PasswordTextField(
-                controller: confirmPasswordController,
-                hintText: "Confirm password",
-              ),
-              const SizedBox(height: 8),
-
-              if (!passwordsMatch && confirmPasswordController.text.isNotEmpty)
-                const Text(
-                  "Passwords do not match",
-                  style: TextStyle(color: Colors.red),
+                CustomButton(
+                  text: 'Verify Code',
+                  icon: Icons.verified,
+                  onPressed: _onVerify,
                 ),
+                const SizedBox(height: 15),
 
-              if (passwordsMatch && confirmPasswordController.text.isNotEmpty)
-                const Row(
-                  children: [
-                    Icon(Icons.check_circle, color: Colors.green, size: 16),
-                    SizedBox(width: 5),
-                    Text(
-                      "Passwords match",
-                      style: TextStyle(color: Colors.green),
-                    ),
-                  ],
-                ),
-
-              const SizedBox(height: 20),
-
-              AuthButton(
-                text: "Reset Password",
-                icon: Icons.lock,
-                onPressed: () async {
-                  if (!passwordValid) {
-                    AuthSnackBar.showError(
-                      context,
-                      "Password does not meet requirements",
-                    );
-                    return;
-                  }
-
-                  if (!passwordsMatch) {
-                    AuthSnackBar.showError(context, "Passwords do not match");
-                    return;
-                  }
-
-                  AuthSnackBar.showSuccess(
-                    context,
-                    "Password reset successfully!",
-                  );
-
-                  await Future.delayed(const Duration(seconds: 1));
-                  widget.onResetSuccess();
-                },
-              ),
-            ],
+                seconds > 0
+                    ? Text(
+                        'Resend code in ${seconds}s',
+                        style: const TextStyle(color: Colors.black54),
+                      )
+                    : TextButton(
+                        onPressed: _resendCode,
+                        child: const Text(
+                          'Resend Code',
+                          style: TextStyle(
+                            color: Color(0xFF0E8F3E),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

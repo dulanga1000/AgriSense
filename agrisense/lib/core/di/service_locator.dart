@@ -12,6 +12,8 @@ import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import 'package:agrisense/presentation/settings/state/setting_state.dart';
 import 'package:agrisense/presentation/weather/state/weather_state.dart';
 import 'package:agrisense/presentation/settings/state/location_state.dart';
+import 'package:agrisense/data/repositories/farming_tip_repository.dart';
+import 'package:agrisense/presentation/home/state/farming_tip_state.dart';
 
 final sl = GetIt.instance;
 
@@ -35,4 +37,9 @@ Future<void> setupLocator() async {
   sl.registerFactory<SettingState>(() => SettingState());
   sl.registerFactory<WeatherState>(() => WeatherState(sl<WeatherRepository>()));
   sl.registerFactory<LocationState>(() => LocationState());
+
+  sl.registerFactory<FarmingTipState>(
+    () => FarmingTipState(sl<FarmingTipRepository>()),
+  );
+  sl.registerLazySingleton<FarmingTipRepository>(() => FarmingTipRepository());
 }

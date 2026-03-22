@@ -1,22 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
-
+import 'package:agrisense/presentation/common/widgets/custom_button.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import '../widgets/edit_profile_image.dart';
 import '../widgets/edit_profile_form.dart';
 import '../widgets/form_details.dart';
-import '../widgets/edit_save.dart';
-import '../widgets/edit_cancel.dart';
 
-class EditProfileScreen extends StatelessWidget {
+class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
-  void _saveChanges(BuildContext context) {
-    Navigator.pop(context); // 🔥 data already saved
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  final _formKey = GlobalKey<FormState>();
+  bool _isInitialized = false;
+
+  late String _name;
+  late String _email;
+  late String _phone;
+  late String _bio;
+  late String _role;
+  String? _imagePath;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInitialized) return;
+
+    final user = context.read<ProfileState>().user;
+    _name = user.name;
+    _email = user.email;
+    _phone = user.phone;
+    _bio = user.bio;
+    _role = user.role;
+    _imagePath = user.imagePath;
+
+    _isInitialized = true;
   }
 
-  void _cancelEdit(BuildContext context) {
+  void _showSuccessSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        duration: const Duration(seconds: 2),
+        content: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0C8F3E),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Text(
+                  'Profile updated successfully!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () =>
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                child: const Icon(Icons.close, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onSave() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final profileState = context.read<ProfileState>();
+    final originalImagePath = profileState.user.imagePath;
+
+    await profileState.updateProfile(
+      name: _name,
+      email: _email,
+      phone: _phone,
+      bio: _bio,
+      role: _role,
+    );
+
+    if (_imagePath != null && _imagePath != originalImagePath) {
+      await profileState.updateProfileImage(_imagePath!);
+    }
+
+    _showSuccessSnackBar();
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -24,6 +106,7 @@ class EditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
+
       appBar: AppBar(
         elevation: 0,
         leading: const AppBackButton(fallbackIndex: 0),
@@ -35,33 +118,59 @@ class EditProfileScreen extends StatelessWidget {
           ),
         ),
         title: const Text(
-          "Edit Profile",
-          style: TextStyle(color: Colors.white),
+          'Edit Profile',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
         ),
       ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const EditProfileImage(),
+            EditProfileImage(
+              initialImagePath: _imagePath,
+              avatarLetter: _name.isNotEmpty ? _name[0].toUpperCase() : 'G',
+              onImageChanged: (path) {
+                _imagePath = path;
+              },
+            ),
             const SizedBox(height: 20),
 
-            // 🔥 FIXED FORM
             EditProfileForm(
-              onChanged: (name, email, phone, bio) {
-                context.read<ProfileState>().updateProfile(
-                  name: name,
-                  email: email,
-                  phone: phone,
-                  bio: bio,
-                );
+              formKey: _formKey,
+              onChanged: (name, email, phone, bio, role) {
+                _name = name;
+                _email = email;
+                _phone = phone;
+                _bio = bio;
+                _role = role;
               },
             ),
 
             const SizedBox(height: 20),
+
             const FormDetails(),
 
-            EditSaveButton(onPressed: () => _saveChanges(context)),
-            EditCancelButton(onPressed: () => _cancelEdit(context)),
+            const SizedBox(height: 20),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: CustomButton(text: 'Save Changes', onPressed: _onSave),
+            ),
+
+            const SizedBox(height: 10),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: CustomButton(
+                text: 'Cancel',
+                outlined: true,
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
 
             const SizedBox(height: 20),
           ],

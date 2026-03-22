@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
+import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_email_step.dart';
-import 'package:agrisense/presentation/auth/widgets/forgot_password_verify_step.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_reset_step.dart';
+import 'package:agrisense/presentation/auth/widgets/forgot_password_verify_step.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -14,7 +15,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   int currentStep = 1;
 
-  /// Controllers
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController c1 = TextEditingController();
@@ -30,7 +30,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     });
   }
 
-  /// Prevent step overflow using switch
   Widget buildStep() {
     switch (currentStep) {
       case 1:
@@ -61,7 +60,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
   }
 
-  /// Dispose controllers (IMPORTANT)
   @override
   void dispose() {
     emailController.dispose();
@@ -85,7 +83,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         backgroundColor: const Color(0xFF0E8F3E),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        leading: const AppBackButton(fallbackIndex: 0),
+        leading: const AppBackButton(fallbackRoute: AppRoutes.login),
 
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,

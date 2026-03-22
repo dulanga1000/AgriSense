@@ -18,7 +18,7 @@ class FarmingTipsSection extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             blurRadius: 10,
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             offset: const Offset(0, 4),
           ),
         ],
@@ -37,7 +37,16 @@ class FarmingTipsSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          ...tips.map((tip) => TipItem(farmingTip: tip)),
+
+          if (tips.isEmpty)
+            const Text(
+              "No tips available today. Check back later!",
+              style: TextStyle(color: Colors.grey),
+            )
+          else
+            Column(
+              children: tips.map((tip) => TipItem(farmingTip: tip)).toList(),
+            ),
         ],
       ),
     );

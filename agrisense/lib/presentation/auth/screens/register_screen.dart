@@ -8,6 +8,8 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +19,16 @@ class RegisterScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-
               const SizedBox(height: 20),
-
               const AuthFormHeader(),
-
               const SizedBox(height: 30),
-
               RegisterFormCard(
                 nameController: nameController,
                 emailController: emailController,
                 passwordController: passwordController,
+                confirmPasswordController: confirmPasswordController,
               ),
-
               const SizedBox(height: 30),
-
             ],
           ),
         ),

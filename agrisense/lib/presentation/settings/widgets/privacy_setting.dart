@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agrisense/core/routes/app_routes.dart';
+import '../screens/change_password_screen.dart';
+import '../screens/policy_screen.dart'; // ✅ ADD THIS
 
 class PrivacySetting extends StatelessWidget {
   const PrivacySetting({super.key});
@@ -25,29 +26,48 @@ class PrivacySetting extends StatelessWidget {
         children: [
           const Text(
             "Privacy & Security",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
+
           const SizedBox(height: 20),
+
+          // 🔐 Change Password
           _buildNavigationTile(
             icon: Icons.lock_outline,
             title: "Change Password",
-            onTap: () => Navigator.pushNamed(context, AppRoutes.changePassword),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChangePasswordScreen(),
+                ),
+              );
+            },
           ),
+
           const SizedBox(height: 16),
+
+          // 🔒 Privacy Policy
           _buildNavigationTile(
-            icon: Icons.lock_outline,
+            icon: Icons.privacy_tip_outlined,
             title: "Privacy Policy",
-            onTap: () => debugPrint("Privacy Policy Tapped"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PolicyScreen()),
+              );
+            },
           ),
+
           const SizedBox(height: 16),
+
+          // 📄 Terms
           _buildNavigationTile(
             icon: Icons.info_outline,
             title: "Terms of Service",
-            onTap: () => debugPrint("Terms of Service Tapped"),
+            onTap: () {
+              debugPrint("Terms Clicked");
+            },
           ),
         ],
       ),
@@ -66,7 +86,7 @@ class PrivacySetting extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           children: [
-            Icon(icon, size: 22, color: Colors.black),
+            Icon(icon, size: 22),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
@@ -74,7 +94,6 @@ class PrivacySetting extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black,
                 ),
               ),
             ),

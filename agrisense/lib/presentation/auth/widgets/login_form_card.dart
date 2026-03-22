@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:agrisense/core/routes/app_routes.dart';
+import 'package:agrisense/presentation/auth/state/auth_provider.dart';
+
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
 import 'package:agrisense/presentation/common/widgets/email_textfield.dart';
 import 'package:agrisense/presentation/common/widgets/google_auth_button.dart';
 import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
+import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
 
 class LoginFormCard extends StatefulWidget {
   final TextEditingController emailController;
@@ -23,14 +28,34 @@ class LoginFormCard extends StatefulWidget {
 class _LoginFormCardState extends State<LoginFormCard> {
   final _formKey = GlobalKey<FormState>();
 
-  void _onLogin() {
-    if (_formKey.currentState!.validate()) {
+  Future<void> _onLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final auth = context.read<AuthProvider>();
+
+    await auth.login(
+      widget.emailController.text.trim(),
+      widget.passwordController.text.trim(),
+    );
+
+    if (!mounted) return;
+
+    if (auth.user != null) {
+      AuthSnackBar.showSuccess(context, "Login successful!");
+
       Navigator.pushReplacementNamed(context, AppRoutes.main);
+    } else {
+      AuthSnackBar.showError(
+        context,
+        auth.error ?? "Login failed",
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+
     return AuthCard(
       child: Form(
         key: _formKey,
@@ -79,7 +104,10 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             const SizedBox(height: 10),
 
-            CustomButton(text: 'Login', onPressed: _onLogin),
+            CustomButton(
+              text: auth.isLoading ? 'Logging in...' : 'Login',
+              onPressed: auth.isLoading ? () {} : _onLogin,
+            ),
 
             const SizedBox(height: 25),
 
@@ -98,8 +126,24 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             GoogleAuthButton(
               text: 'Sign in with Google',
-              onSuccess: () =>
-                  Navigator.pushReplacementNamed(context, AppRoutes.main),
+              onSuccess: () async {
+                final auth = context.read<AuthProvider>();
+
+                await auth.googleSignIn();
+
+                if (!mounted) return;
+
+                if (auth.user != null) {
+                  AuthSnackBar.showSuccess(context, "Google login successful!");
+
+                  Navigator.pushReplacementNamed(context, AppRoutes.main);
+                } else {
+                  AuthSnackBar.showError(
+                    context,
+                    auth.error ?? "Google sign-in failed",
+                  );
+                }
+              },
             ),
 
             const SizedBox(height: 20),

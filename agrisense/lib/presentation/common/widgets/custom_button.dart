@@ -1,5 +1,3 @@
-// presentation/common/widgets/custom_button.dart
-
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
@@ -23,29 +21,34 @@ class CustomButton extends StatelessWidget {
     this.iconAlignment = IconAlignment.start,
     this.outlined = false,
     this.width = double.infinity,
-    this.padding = const EdgeInsets.symmetric(
-      vertical: 16,
-    ), // ← matches GoogleAuthButton
+    this.padding = const EdgeInsets.symmetric(vertical: 16),
   });
 
-  // ── shared text style — matches GoogleAuthButton ───────────────
   static const _textStyle = TextStyle(
-    fontSize: 18, // ← matches GoogleAuthButton
-    fontWeight: FontWeight.w500, // ← matches GoogleAuthButton
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
   );
+
+  static const _primaryColor = Color(0xFF0E8F3E);
 
   @override
   Widget build(BuildContext context) {
-    // ── Outlined ───────────────────────────────────────────────
     if (outlined) {
       return SizedBox(
         width: width,
         child: OutlinedButton.icon(
           onPressed: onPressed,
-          icon: icon != null ? Icon(icon) : const SizedBox.shrink(),
-          label: Text(text, style: _textStyle),
+          icon: icon != null
+              ? Icon(icon, color: _primaryColor)
+              : const SizedBox.shrink(),
+          label: Text(
+            text,
+            style: _textStyle.copyWith(color: _primaryColor),
+          ),
           iconAlignment: iconAlignment,
           style: OutlinedButton.styleFrom(
+            foregroundColor: _primaryColor,
+            side: const BorderSide(color: _primaryColor),
             padding: padding,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -55,7 +58,6 @@ class CustomButton extends StatelessWidget {
       );
     }
 
-    // ── Gradient ───────────────────────────────────────────────
     if (gradient != null) {
       return SizedBox(
         width: width,
@@ -67,9 +69,12 @@ class CustomButton extends StatelessWidget {
           child: ElevatedButton.icon(
             onPressed: onPressed,
             icon: icon != null
-                ? Icon(icon, color: Colors.white)
+                ? const Icon(Icons.check, color: Colors.white)
                 : const SizedBox.shrink(),
-            label: Text(text, style: _textStyle.copyWith(color: Colors.white)),
+            label: Text(
+              text,
+              style: _textStyle.copyWith(color: Colors.white),
+            ),
             iconAlignment: iconAlignment,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
@@ -85,7 +90,6 @@ class CustomButton extends StatelessWidget {
       );
     }
 
-    // ── Solid (default) ────────────────────────────────────────
     return SizedBox(
       width: width,
       child: ElevatedButton.icon(
@@ -93,10 +97,13 @@ class CustomButton extends StatelessWidget {
         icon: icon != null
             ? Icon(icon, color: Colors.white)
             : const SizedBox.shrink(),
-        label: Text(text, style: _textStyle.copyWith(color: Colors.white)),
+        label: Text(
+          text,
+          style: _textStyle.copyWith(color: Colors.white),
+        ),
         iconAlignment: iconAlignment,
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? const Color(0xFF0E8F3E),
+          backgroundColor: backgroundColor ?? _primaryColor,
           foregroundColor: Colors.white,
           padding: padding,
           shape: RoundedRectangleBorder(

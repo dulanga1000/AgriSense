@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:agrisense/core/routes/app_routes.dart';
+import 'package:agrisense/presentation/auth/state/auth_provider.dart';
+
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
 import 'package:agrisense/presentation/common/widgets/custom_text_field.dart';
@@ -7,6 +11,7 @@ import 'package:agrisense/presentation/common/widgets/email_textfield.dart';
 import 'package:agrisense/presentation/common/widgets/google_auth_button.dart';
 import 'package:agrisense/presentation/common/widgets/password_strength_checker.dart';
 import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
+import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
 
 class RegisterFormCard extends StatefulWidget {
   final TextEditingController nameController;
@@ -40,9 +45,31 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
     });
   }
 
-  void _onRegister() {
-    if (_formKey.currentState!.validate()) {
-      Navigator.pushReplacementNamed(context, AppRoutes.main);
+  Future<void> _onRegister() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final auth = context.read<AuthProvider>();
+
+    await auth.register(
+      widget.emailController.text.trim(),
+      widget.passwordController.text.trim(),
+    );
+
+    if (!mounted) return;
+
+    if (auth.user != null) {
+      await auth.logout();
+
+      AuthSnackBar.showSuccess(
+        context,
+        "Registration successful! Please login.",
+      );
+
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(auth.error ?? "Registration failed")),
+      );
     }
   }
 
@@ -109,18 +136,6 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
                 if (value.length < 8) {
                   return 'Password must be at least 8 characters';
                 }
-                if (!value.contains(RegExp(r'[A-Z]'))) {
-                  return 'Must contain an uppercase letter';
-                }
-                if (!value.contains(RegExp(r'[a-z]'))) {
-                  return 'Must contain a lowercase letter';
-                }
-                if (!value.contains(RegExp(r'[0-9]'))) {
-                  return 'Must contain a number';
-                }
-                if (!value.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
-                  return 'Must contain a special character';
-                }
                 return null;
               },
             ),
@@ -146,7 +161,10 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
             const SizedBox(height: 25),
 
-            CustomButton(text: 'Register', onPressed: _onRegister),
+            CustomButton(
+              text: 'Register',
+              onPressed: _onRegister,
+            ),
 
             const SizedBox(height: 25),
 
@@ -165,8 +183,21 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
             GoogleAuthButton(
               text: 'Sign up with Google',
-              onSuccess: () =>
-                  Navigator.pushReplacementNamed(context, AppRoutes.main),
+              onSuccess: () async {
+                final auth = context.read<AuthProvider>();
+
+                await auth.googleSignIn();
+
+                if (!mounted) return;
+
+                if (auth.user != null) {
+                  Navigator.pushReplacementNamed(context, AppRoutes.main);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(auth.error ?? "Google sign-in failed")),
+                  );
+                }
+              },
             ),
 
             const SizedBox(height: 20),

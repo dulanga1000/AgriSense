@@ -5,6 +5,9 @@ import '../widgets/policy_intro_widget.dart';
 import '../widgets/policy_info_widget.dart';
 import '../widgets/policy_usage_widget.dart';
 import '../widgets/policy_security_widget.dart';
+import '../widgets/policy_rights_widget.dart';
+import '../widgets/policy_thirdparty_widget.dart';
+import '../widgets/policy_retention_widget.dart';
 
 class PolicyScreen extends StatelessWidget {
   const PolicyScreen({super.key});
@@ -30,7 +33,11 @@ class PolicyScreen extends StatelessWidget {
                   PolicyIntroWidget(),
                   PolicyInfoWidget(),
                   PolicyUsageWidget(),
-                  PolicySecurityWidget(), // ✅ NEW
+                  PolicySecurityWidget(),
+                  PolicyRightsWidget(),
+                  PolicyThirdPartyWidget(),
+                  PolicyRetentionWidget(), // ✅ FINAL ADD
+                  SizedBox(height: 20),
                 ],
               ),
             ),

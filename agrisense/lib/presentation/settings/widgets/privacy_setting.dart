@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/change_password_screen.dart';
-import '../screens/policy_screen.dart'; // ✅ ADD THIS
+import '../screens/policy_screen.dart';
+import '../screens/terms_screen.dart'; // ✅ IMPORTANT
 
 class PrivacySetting extends StatelessWidget {
   const PrivacySetting({super.key});
@@ -33,57 +34,50 @@ class PrivacySetting extends StatelessWidget {
 
           // 🔐 Change Password
           _buildNavigationTile(
+            context: context,
             icon: Icons.lock_outline,
             title: "Change Password",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ChangePasswordScreen(),
-                ),
-              );
-            },
+            screen: const ChangePasswordScreen(),
           ),
 
           const SizedBox(height: 16),
 
           // 🔒 Privacy Policy
           _buildNavigationTile(
+            context: context,
             icon: Icons.privacy_tip_outlined,
             title: "Privacy Policy",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const PolicyScreen()),
-              );
-            },
+            screen: const PolicyScreen(),
           ),
 
           const SizedBox(height: 16),
 
-          // 📄 Terms
+          // 📄 Terms of Service ✅ FIXED
           _buildNavigationTile(
-            icon: Icons.info_outline,
+            context: context,
+            icon: Icons.description_outlined,
             title: "Terms of Service",
-            onTap: () {
-              debugPrint("Terms Clicked");
-            },
+            screen: const TermsScreen(),
           ),
         ],
       ),
     );
   }
 
+  // 🔁 Reusable Navigation Tile
   Widget _buildNavigationTile({
+    required BuildContext context,
     required IconData icon,
     required String title,
-    required VoidCallback onTap,
+    required Widget screen,
   }) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+      },
       borderRadius: BorderRadius.circular(8),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
             Icon(icon, size: 22),

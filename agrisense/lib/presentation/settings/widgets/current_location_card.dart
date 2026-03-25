@@ -27,7 +27,6 @@ class CurrentLocationCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Label
           const Text(
             'Current Location',
             style: TextStyle(
@@ -38,7 +37,6 @@ class CurrentLocationCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
 
-          // Location Row
           Row(
             children: [
               const Icon(
@@ -60,7 +58,6 @@ class CurrentLocationCard extends StatelessWidget {
             ],
           ),
 
-          // Error message
           if (locationState.error != null) ...[
             const SizedBox(height: 8),
             Text(
@@ -71,7 +68,6 @@ class CurrentLocationCard extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Detect My Location Button
           SizedBox(
             width: double.infinity,
             height: 48,

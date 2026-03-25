@@ -12,11 +12,11 @@ class CalendarEntryModel {
   });
 
   factory CalendarEntryModel.fromJson(Map<String, dynamic> json) {
-    return CalendarEntryModel(
-      month: json['month'],
-      crops: json['crops'],
-      label: json['label'],
-      imagePath: json['image_path'],
-    );
-  }
+  return CalendarEntryModel(
+    month: (json['month'] ?? "").toString(),
+    crops: (json['crops'] ?? "").toString(),
+    label: (json['label'] ?? "").toString(),
+    imagePath: (json['image_path'] ?? json['imagePath'] ?? "assets/images/tractor.png").toString(),
+  );
+}
 }

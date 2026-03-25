@@ -35,36 +35,65 @@ class FertilizerScreen extends StatelessWidget {
         ),
         body: Consumer<FertilizerState>(
           builder: (context, state, _) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  FertilizerForm(
-                    onSubmit: (cropType, landSize) =>
-                        state.getRecommendation(cropType, landSize),
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      // Form
+                      FertilizerForm(
+                        onSubmit: (cropType, landSize) {
+                          FocusScope.of(context).unfocus(); // close keyboard
+                          state.getRecommendation(cropType, landSize);
+                        },
+                      ),
+                      const SizedBox(height: 16),
+
+                      // ❌ Error UI
+                      if (state.error != null)
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.red[100],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            state.error!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+
+                      // ✅ Results
+                      if (state.recommendation != null) ...[
+                        FertilizerResultCard(model: state.recommendation!),
+                        const SizedBox(height: 16),
+                        UsageInstructionCard(model: state.recommendation!),
+                        const SizedBox(height: 16),
+                        ApplicationTimingCard(model: state.recommendation!),
+                        const SizedBox(height: 16),
+                        CostCard(
+                          estimatedCost:
+                              state.recommendation!.estimatedCost,
+                        ),
+                        const SizedBox(height: 16),
+                        const ImportantNotesCard(),
+                      ],
+                    ],
                   ),
-                  const SizedBox(height: 16),
+                ),
 
-                  // Loading
-                  if (state.isLoading)
-                    const Center(child: CircularProgressIndicator()),
-
-                  // Results
-                  if (!state.isLoading && state.recommendation != null) ...[
-                    FertilizerResultCard(model: state.recommendation!),
-                    const SizedBox(height: 16),
-                    UsageInstructionCard(model: state.recommendation!),
-                    const SizedBox(height: 16),
-                    ApplicationTimingCard(model: state.recommendation!),
-                    const SizedBox(height: 16),
-                    CostCard(
-                      estimatedCost: state.recommendation!.estimatedCost,
+                // 🔄 Loading Overlay (better UX)
+                if (state.isLoading)
+                  Container(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    child: const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
                     ),
-                    const SizedBox(height: 16),
-                    const ImportantNotesCard(),
-                  ],
-                ],
-              ),
+                  ),
+              ],
             );
           },
         ),
@@ -72,7 +101,8 @@ class FertilizerScreen extends StatelessWidget {
           builder: (context) => BottomNavBarWidget(
             currentIndex: 0,
             highlightSelected: false,
-            onTap: (index) => MainTabNavigator.goToTab(context, index),
+            onTap: (index) =>
+                MainTabNavigator.goToTab(context, index),
           ),
         ),
       ),

@@ -12,11 +12,11 @@ class MarketPriceModel {
   });
 
   factory MarketPriceModel.fromJson(Map<String, dynamic> json) {
-    return MarketPriceModel(
-      crop: json['crop'],
-      price: json['price'],
-      demand: json['demand'],
-      demandType: json['demand_type'],
-    );
-  }
+  return MarketPriceModel(
+    crop: (json['crop'] ?? "Unknown").toString(),
+    price: (json['price'] ?? "N/A").toString(),
+    demand: (json['demand'] ?? "Medium").toString(),
+    demandType: (json['demandType'] ?? json['demand_type'] ?? "medium").toString(),
+  );
+}
 }

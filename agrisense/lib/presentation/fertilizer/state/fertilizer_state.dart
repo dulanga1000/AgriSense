@@ -7,16 +7,34 @@ class FertilizerState extends ChangeNotifier {
 
   FertilizerState(this._repository);
 
-  FertilizerModel? recommendation;
-  bool isLoading = false;
+  FertilizerModel? _recommendation;
+  bool _isLoading = false;
+  String? _error;
+
+  FertilizerModel? get recommendation => _recommendation;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
 
   Future<void> getRecommendation(String cropType, double landSize) async {
-    isLoading = true;
+    _isLoading = true;
+    _error = null;
     notifyListeners();
 
-    recommendation = await _repository.getRecommendation(cropType, landSize);
+    try {
+      final result = await _repository.getRecommendation(cropType, landSize);
+      _recommendation = result;
+    } catch (e) {
+      _error = "Failed to load recommendation";
+      _recommendation = null;
+    }
 
-    isLoading = false;
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void clear() {
+    _recommendation = null;
+    _error = null;
     notifyListeners();
   }
 }

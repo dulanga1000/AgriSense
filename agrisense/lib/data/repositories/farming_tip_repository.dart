@@ -1,9 +1,13 @@
-import '../models/farming_tip_model.dart';
+import 'dart:async';
+import 'package:agrisense/data/models/farming_tip_model.dart';
 
 class FarmingTipRepository {
+  
   Future<List<FarmingTip>> getTips() async {
-    await Future.delayed(const Duration(seconds: 1));
+    
+    await Future.delayed(const Duration(milliseconds: 800));
 
+    
     return const [
       FarmingTip(
         id: 1,

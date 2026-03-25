@@ -42,7 +42,8 @@ dependencies:
   get_it: ^9.2.1
   geolocator: ^14.0.2
   geocoding: ^4.0.0
-  
+  google_generative_ai: ^0.4.0
+  http: ^1.1.0
   
 
 dev_dependencies:
@@ -86,7 +87,7 @@ flutter:
     - assets/models/
     - assets/translations/
     - assets/fonts/
-    - assets/animations/
+    #- assets/animations/
 flutter_native_splash:
   color: "#2E7D32"
   image: assets/images/logo_color_bg.png

@@ -8,29 +8,24 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final crops = context.watch<CropAdvisoryState>().crops;
+    final state = context.watch<CropAdvisoryState>();
+    final crops = state.crops;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Recommended Crops for Yala Season",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          Text(
+            "Recommended Crops for ${state.selectedSeason.name}", 
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          const SizedBox(height: 4),
-          const Text(
-            "Based on your location and current climate",
-            style: TextStyle(fontSize: 12, color: Colors.grey),
-          ),
+          const Text("Based on your location and current climate", style: TextStyle(fontSize: 12, color: Colors.grey)),
           const SizedBox(height: 16),
-          ...crops.map((crop) => CropItemCardWidget(crop: crop)),
+          if (crops.isEmpty && !state.isLoading)
+            const Padding(padding: EdgeInsets.all(20), child: Center(child: Text("No data found for this selection.")))
+          else
+            ...crops.map((crop) => CropItemCardWidget(crop: crop)),
         ],
       ),
     );

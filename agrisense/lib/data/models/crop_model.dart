@@ -18,14 +18,15 @@ class CropModel {
   });
 
   factory CropModel.fromJson(Map<String, dynamic> json) {
-    return CropModel(
-      cropName: json['crop_name'],
-      duration: json['duration'],
-      water: json['water'],
-      profit: json['profit'],
-      tag: json['tag'],
-      imagePath: json['image_path'],
-      suited: json['suited'],
-    );
-  }
+  return CropModel(
+    cropName: (json['crop_name'] ?? json['cropName'] ?? "Unknown Crop").toString(),
+    duration: (json['duration'] ?? "N/A").toString(),
+    water: (json['water'] ?? "Medium").toString(),
+    profit: (json['profit'] ?? "Medium").toString(),
+    tag: (json['tag'] ?? "Recommended").toString(),
+    imagePath: (json['image_path'] ?? json['imagePath'] ?? "assets/images/rice.png").toString(),
+    suited: (json['suited'] ?? "Various regions").toString(),
+  );
 }
+}
+

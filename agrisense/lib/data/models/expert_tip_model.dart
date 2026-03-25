@@ -10,10 +10,10 @@ class ExpertTipModel {
   });
 
   factory ExpertTipModel.fromJson(Map<String, dynamic> json) {
-    return ExpertTipModel(
-      title: json['title'],
-      description: json['description'],
-      type: json['type'],
-    );
-  }
+  return ExpertTipModel(
+    title: (json['title'] ?? "Expert Tip").toString(),
+    description: (json['description'] ?? "No description available").toString(),
+    type: (json['type'] ?? "general").toString(),
+  );
+}
 }

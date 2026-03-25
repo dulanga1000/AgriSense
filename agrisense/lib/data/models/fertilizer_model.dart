@@ -1,3 +1,4 @@
+// lib/data/models/fertilizer_model.dart
 class FertilizerModel {
   final String cropType;
   final String fertilizerName;
@@ -17,15 +18,16 @@ class FertilizerModel {
     required this.applicationTiming,
   });
 
-  factory FertilizerModel.fromJson(Map<String, dynamic> json) {
+  // JSON Map එකක් Model එකකට හරවන ආකාරය
+  factory FertilizerModel.fromMap(Map<String, dynamic> map, String crop) {
     return FertilizerModel(
-      cropType: json['crop_type'],
-      fertilizerName: json['fertilizer_name'],
-      npkRatio: json['npk_ratio'],
-      totalQuantity: json['total_quantity'].toDouble(),
-      estimatedCost: json['estimated_cost'].toDouble(),
-      usageSteps: List<String>.from(json['usage_steps']),
-      applicationTiming: json['application_timing'],
+      cropType: crop,
+      fertilizerName: map['fertilizerName'] ?? "AI Fertilizer",
+      npkRatio: map['npkRatio'] ?? "N/A",
+      totalQuantity: (map['totalQuantity'] as num?)?.toDouble() ?? 0,
+      estimatedCost: (map['estimatedCost'] as num?)?.toDouble() ?? 0,
+      usageSteps: List<String>.from(map['usageSteps'] ?? []),
+      applicationTiming: map['applicationTiming'] ?? "Follow standard guidelines",
     );
   }
 }

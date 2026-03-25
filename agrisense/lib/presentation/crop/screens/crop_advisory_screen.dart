@@ -17,35 +17,19 @@ class CropAdvisoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => CropAdvisoryState(),
+      create: (_) => CropAdvisoryState()..fetchAdvisory(),
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
           backgroundColor: const Color(0xFF16A34A),
           elevation: 0,
           leading: const AppBackButton(fallbackIndex: 0),
-          title: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Crop Advisory",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                "Smart farming recommendations",
-                style: TextStyle(fontSize: 12, color: Colors.white),
-              ),
-            ],
-          ),
+          title: const Text("Crop Advisory", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         ),
-        body: _CropAdvisoryBody(),
+        body: const _CropAdvisoryBody(),
         bottomNavigationBar: Builder(
           builder: (context) => BottomNavBarWidget(
             currentIndex: 0,
-            highlightSelected: false,
             onTap: (index) => MainTabNavigator.goToTab(context, index),
           ),
         ),
@@ -55,23 +39,23 @@ class CropAdvisoryScreen extends StatelessWidget {
 }
 
 class _CropAdvisoryBody extends StatelessWidget {
+  const _CropAdvisoryBody();
+
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CropAdvisoryState>();
-    final screenWidth = MediaQuery.of(context).size.width;
-    final dropdownWidth = (screenWidth - 48) / 2;
+    final dropdownWidth = (MediaQuery.of(context).size.width - 48) / 2;
 
     return Stack(
       children: [
-        SingleChildScrollView(
+        const SingleChildScrollView(
           child: Column(
-            children: const [
+            children: [
               HeaderSectionWidget(),
               SizedBox(height: 16),
               FilterSectionWidget(),
               SizedBox(height: 16),
-              RecommendedCropsSectionWidget(),
-              SizedBox(height: 20),
+              RecommendedCropsSectionWidget(), 
               AgriculturalCalendarCard(),
               SizedBox(height: 20),
               MarketPriceCard(),
@@ -81,39 +65,18 @@ class _CropAdvisoryBody extends StatelessWidget {
             ],
           ),
         ),
-        if (state.isSeasonOpen)
-          Positioned(
-            top: _getFilterTop(context),
-            left: 12,
-            width: dropdownWidth,
-            child: Material(
-              elevation: 12,
-              shadowColor: Colors.black38,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(12),
-              ),
-              child: SeasonDropdownContent(state: state),
-            ),
-          ),
-        if (state.isLocationOpen)
-          Positioned(
-            top: _getFilterTop(context),
-            right: 12,
-            width: dropdownWidth,
-            child: Material(
-              elevation: 12,
-              shadowColor: Colors.black38,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(12),
-              ),
-              child: LocationDropdownContent(state: state),
-            ),
+
+        
+        if (state.isSeasonOpen) Positioned(top: 146, left: 12, width: dropdownWidth, child: Material(elevation: 8, child: SeasonDropdownContent(state: state))),
+        if (state.isLocationOpen) Positioned(top: 146, right: 12, width: dropdownWidth, child: Material(elevation: 8, child: LocationDropdownContent(state: state))),
+
+        
+        if (state.isLoading)
+          Container(
+            color: Colors.black.withValues(alpha: 0.3),
+            child: const Center(child: CircularProgressIndicator(color: Colors.white)),
           ),
       ],
     );
-  }
-
-  double _getFilterTop(BuildContext context) {
-    return 130 + 16 + 62;
   }
 }

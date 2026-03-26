@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
+import 'package:agrisense/presentation/weather/state/weather_state.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -9,6 +11,7 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<ProfileState>().user;
+    final weatherLocation = context.watch<WeatherState>().selectedLocation;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -24,47 +27,23 @@ class ProfileHeader extends StatelessWidget {
               bottomRight: Radius.circular(28),
             ),
           ),
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  SizedBox(width: 40),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, top: 6),
-                    child: Text(
-                      "Profile",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
 
-        Positioned(
+        const Positioned(
           top: 0,
           left: 0,
           child: SafeArea(
-            bottom: false,
             child: Padding(
-              padding: const EdgeInsets.only(left: 16, top: 6),
-              child: const AppBackButton(fallbackIndex: 0),
+              padding: EdgeInsets.only(left: 16, top: 6),
+              child: AppBackButton(fallbackIndex: 0),
             ),
           ),
         ),
 
         Positioned(
           top: 95,
-          left: 40,
-          right: 40,
+          left: 20,
+          right: 20,
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
@@ -84,44 +63,68 @@ class ProfileHeader extends StatelessWidget {
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 28,
+                      radius: 30,
                       backgroundColor: const Color(0xFF4CAF50),
-                      child: Text(
-                        user.avatarLetter,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      backgroundImage: user.imagePath != null
+                          ? FileImage(File(user.imagePath!))
+                          : null,
+                      child: user.imagePath == null
+                          ? Text(
+                              user.avatarLetter,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : null,
                     ),
+
                     const SizedBox(width: 14),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          user.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          user.role,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
+
+                          const SizedBox(height: 4),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFF4CAF50,
+                              ).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              user.role.isNotEmpty ? user.role : "No Role",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF0C8F3E),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 14),
 
-                _infoRow(Icons.location_on, user.location),
+                _infoRow(Icons.location_on, weatherLocation),
                 const SizedBox(height: 8),
                 _infoRow(Icons.phone, user.phone),
                 const SizedBox(height: 8),
@@ -144,7 +147,12 @@ class ProfileHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 18, color: const Color(0xFF0C8F3E)),
         const SizedBox(width: 8),
-        Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
+        Expanded(
+          child: Text(
+            text.isNotEmpty ? text : "-",
+            style: const TextStyle(fontSize: 13),
+          ),
+        ),
       ],
     );
   }

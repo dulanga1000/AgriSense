@@ -11,9 +11,11 @@ class FarmingTip {
 
   factory FarmingTip.fromJson(Map<String, dynamic> json) {
     return FarmingTip(
-      id: json['id'],
-      description: json['description'],
-      type: json['type'],
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id'].toString()) ?? 0,
+      description: json['description']?.toString() ?? '',
+      type: json['type']?.toString() ?? 'default',
     );
   }
 }

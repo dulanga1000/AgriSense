@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/data/models/user_model.dart';
 import 'package:agrisense/data/models/farm_stats_model.dart';
+import 'package:agrisense/data/repositories/profile_repository.dart';
 
 class ProfileState extends ChangeNotifier {
+  final ProfileRepository _repository;
+
+  ProfileState(this._repository);
+
   UserModel user = UserModel(
     id: '1',
     name: "Guest",
     role: "Farmer",
-    location: "Western Province, Sri Lanka",
-    phone: "+91 98765 43210",
+    location: "Sri Lanka",
+    phone: "+94 000 000 000",
     email: "guest@email.com",
     memberSince: "Jan 2024",
-    bio: "Experienced farmer specializing in rice and wheat cultivation",
   );
 
   FarmStatsModel farmStats = FarmStatsModel(
@@ -21,13 +25,34 @@ class ProfileState extends ChangeNotifier {
     experience: 10,
   );
 
-  void updateUser(UserModel updatedUser) {
-    user = updatedUser;
+  Future<void> loadUser() async {
+    user = await _repository.loadUser();
     notifyListeners();
   }
 
-  void updateFarmStats(FarmStatsModel updatedStats) {
-    farmStats = updatedStats;
+  Future<void> updateProfile({
+    String? name,
+    String? phone,
+    String? email,
+    String? bio,
+    String? role,
+  }) async {
+    user = user.copyWith(
+      name: name ?? user.name,
+      phone: phone ?? user.phone,
+      email: email ?? user.email,
+      bio: bio ?? user.bio,
+      role: role ?? user.role,
+    );
+
+    await _repository.saveUser(user);
+    notifyListeners();
+  }
+
+  Future<void> updateProfileImage(String path) async {
+    user = user.copyWith(imagePath: path);
+
+    await _repository.saveUser(user);
     notifyListeners();
   }
 }

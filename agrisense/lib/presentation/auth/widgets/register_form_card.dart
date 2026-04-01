@@ -45,7 +45,6 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
     });
   }
 
-  /// 🔥 REGISTER FUNCTION (FIXED)
   Future<void> _onRegister() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -77,7 +76,6 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
     }
   }
 
-  /// 🔥 GOOGLE REGISTER (FIXED)
   Future<void> _onGoogleRegister() async {
     final auth = context.read<AuthProvider>();
 

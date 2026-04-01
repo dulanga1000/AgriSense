@@ -28,18 +28,15 @@ class LoginFormCard extends StatefulWidget {
 class _LoginFormCardState extends State<LoginFormCard> {
   final _formKey = GlobalKey<FormState>();
 
-  /// 🔥 LOGIN FUNCTION (FIXED)
   Future<void> _onLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    /// ✅ STORE BEFORE AWAIT
     final auth = context.read<AuthProvider>();
     final email = widget.emailController.text.trim();
     final password = widget.passwordController.text.trim();
 
     await auth.login(email, password);
 
-    /// ✅ SAFE CHECK
     if (!mounted) return;
 
     if (auth.user != null) {
@@ -53,7 +50,6 @@ class _LoginFormCardState extends State<LoginFormCard> {
     }
   }
 
-  /// 🔥 GOOGLE LOGIN (FIXED)
   Future<void> _onGoogleLogin() async {
     final auth = context.read<AuthProvider>();
 

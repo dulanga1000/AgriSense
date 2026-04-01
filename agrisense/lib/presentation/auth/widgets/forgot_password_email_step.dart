@@ -8,7 +8,6 @@ class ForgotPasswordEmailStep extends StatelessWidget {
   final VoidCallback onNext;
   final bool isLoading;
 
-  /// ✅ NEW
   final bool isEmailSent;
   final String sentEmail;
   final VoidCallback onBack;
@@ -26,15 +25,13 @@ class ForgotPasswordEmailStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    /// ✅ SHOW SUCCESS UI
     if (isEmailSent) {
       return ResetLinkSentWidget(
         email: sentEmail,
         onBack: onBack,
       );
     }
-
-    /// ✅ DEFAULT EMAIL FORM
+    
     return Column(
       children: [
         const SizedBox(height: 20),

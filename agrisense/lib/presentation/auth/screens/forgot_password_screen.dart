@@ -27,7 +27,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   bool isEmailSent = false;
   String sentEmail = "";
 
-  /// 🔥 BACKEND CALL (FIREBASE)
   Future<void> sendResetEmail() async {
     final email = emailController.text.trim();
 
@@ -74,7 +73,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
   }
 
-  /// 🔹 STEP BUILDER
   Widget buildStepContent() {
     if (currentStep == 1) {
       return ForgotPasswordEmailStep(

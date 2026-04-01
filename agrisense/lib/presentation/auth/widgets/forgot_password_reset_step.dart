@@ -7,7 +7,6 @@ import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
 class ForgotPasswordResetStep extends StatefulWidget {
   final VoidCallback onResetSuccess;
 
-  /// Optional (for future deep linking)
   final String? oobCode;
 
   const ForgotPasswordResetStep({
@@ -38,7 +37,6 @@ class _ForgotPasswordResetStepState
       return;
     }
 
-    /// ❗ Without deep linking this will not work
     if (widget.oobCode == null) {
       AuthSnackBar.showError(
         context,

@@ -1,76 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:agrisense/core/routes/app_routes.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
+import 'package:agrisense/presentation/common/widgets/auth_card.dart';
+import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_email_step.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_reset_step.dart';
-import 'package:agrisense/presentation/auth/widgets/forgot_password_verify_step.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
+import 'package:agrisense/presentation/auth/widgets/step_indicator.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+
   int currentStep = 1;
 
   final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController c1 = TextEditingController();
-  final TextEditingController c2 = TextEditingController();
-  final TextEditingController c3 = TextEditingController();
-  final TextEditingController c4 = TextEditingController();
-  final TextEditingController c5 = TextEditingController();
-  final TextEditingController c6 = TextEditingController();
+  bool isLoading = false;
 
-  void goToStep(int step) {
-    setState(() {
-      currentStep = step;
-    });
+  bool isEmailSent = false;
+  String sentEmail = "";
+
+  /// 🔥 BACKEND CALL (FIREBASE)
+  Future<void> sendResetEmail() async {
+    final email = emailController.text.trim();
+
+    if (email.isEmpty) {
+      AuthSnackBar.showError(context, "Please enter your email");
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      if (!mounted) return;
+
+      setState(() {
+        isEmailSent = true;
+        sentEmail = email;
+      });
+
+      AuthSnackBar.showSuccess(
+        context,
+        "Reset link sent to $email",
+      );
+
+    } on FirebaseAuthException catch (e) {
+
+      if (!mounted) return;
+
+      String message = "Something went wrong";
+
+      if (e.code == 'user-not-found') {
+        message = "No user found with this email";
+      } else if (e.code == 'invalid-email') {
+        message = "Invalid email address";
+      }
+
+      AuthSnackBar.showError(context, message);
+
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
   }
 
-  Widget buildStep() {
-    switch (currentStep) {
-      case 1:
-        return ForgotPasswordEmailStep(
-          emailController: emailController,
-          onNext: () => goToStep(2),
-        );
-
-      case 2:
-        return ForgotPasswordVerifyStep(
-          email: emailController.text,
-          onNext: () => goToStep(3),
-          c1: c1,
-          c2: c2,
-          c3: c3,
-          c4: c4,
-          c5: c5,
-          c6: c6,
-        );
-
-      case 3:
-      default:
-        return ForgotPasswordResetStep(
-          onResetSuccess: () {
-            Navigator.pop(context);
-          },
-        );
+  /// 🔹 STEP BUILDER
+  Widget buildStepContent() {
+    if (currentStep == 1) {
+      return ForgotPasswordEmailStep(
+        emailController: emailController,
+        onNext: sendResetEmail,
+        isLoading: isLoading,
+        isEmailSent: isEmailSent,
+        sentEmail: sentEmail,
+        onBack: () {
+          setState(() {
+            isEmailSent = false;
+          });
+        },
+      );
+    } else {
+      return ForgotPasswordResetStep(
+        onResetSuccess: () {
+          Navigator.pop(context);
+        },
+      );
     }
   }
 
   @override
   void dispose() {
     emailController.dispose();
-
-    c1.dispose();
-    c2.dispose();
-    c3.dispose();
-    c4.dispose();
-    c5.dispose();
-    c6.dispose();
-
     super.dispose();
   }
 
@@ -84,7 +114,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         leading: const AppBackButton(fallbackRoute: AppRoutes.login),
-
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -104,13 +133,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: buildStep(),
+      body: Column(
+        children: [
+          StepIndicator(currentStep: currentStep),
+
+          Expanded(
+            child: Center(
+              child: AuthCard(
+                child: buildStepContent(),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

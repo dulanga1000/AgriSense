@@ -1,17 +1,15 @@
+import 'package:agrisense/presentation/common/widgets/info_section_widget.dart';
+import 'package:agrisense/presentation/settings/constants/terms_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
-import '../widgets/terms_date_widget.dart';
-import '../widgets/terms_agreement_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_date_section_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_card_widget.dart';
 import '../widgets/terms_acceptance_widget.dart';
-import '../widgets/terms_description_widget.dart';
-import '../widgets/terms_responsibility_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_bullet_section_widget.dart';
 import '../widgets/terms_disclaimer_widget.dart';
-import '../widgets/terms_ip_widget.dart';
-import '../widgets/terms_liability_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_text_section_widget.dart';
 import '../widgets/terms_termination_widget.dart';
-import '../widgets/terms_modification_widget.dart';
-import '../widgets/terms_governing_widget.dart';
-import '../widgets/terms_contact_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_contact_section_widget.dart';
 import '../widgets/terms_notice_widget.dart';
 
 class TermsScreen extends StatelessWidget {
@@ -53,24 +51,66 @@ class TermsScreen extends StatelessWidget {
         ),
       ),
       body: Column(
-        children: const [
-          TermsDateWidget(),
+        children: [
+          InfoDateSectionWidget(
+            label: TermsConstants.effectiveDateLabel,
+            date: DateTime.now(),
+          ),
 
-          Expanded(
+          const Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  TermsAgreementWidget(),
+                  InfoCardWidget(
+                    icon: TermsConstants.icon,
+                    iconColor: TermsConstants.color,
+                    title: TermsConstants.title,
+                    description: TermsConstants.description,
+                  ),
                   TermsAcceptanceWidget(),
-                  TermsDescriptionWidget(),
-                  TermsResponsibilityWidget(),
+                  InfoSectionWidget(
+                    mainIcon: TermsConstants.serviceIcon,
+                    mainColor: TermsConstants.serviceColor,
+                    title: TermsConstants.serviceTitle,
+                    description: TermsConstants.serviceDescription,
+                    items: TermsConstants.serviceItems,
+                  ),
+                  InfoBulletSectionWidget(
+                    icon: TermsConstants.responsibilityIcon,
+                    iconColor: TermsConstants.responsibilityColor,
+                    title: TermsConstants.responsibilityTitle,
+                    description: TermsConstants.responsibilityDescription,
+                    items: TermsConstants.responsibilityItems,
+                  ),
                   TermsDisclaimerWidget(),
-                  TermsIPWidget(),
-                  TermsLiabilityWidget(),
+                  InfoTextSectionWidget(
+                    title: TermsConstants.ipTitle,
+                    paragraphs: TermsConstants.ipContent,
+                  ),
+                  InfoBulletSectionWidget(
+                    icon: TermsConstants.liabilityIcon,
+                    iconColor: TermsConstants.liabilityColor,
+                    title: TermsConstants.liabilityTitle,
+                    description: TermsConstants.liabilityDescription,
+                    items: TermsConstants.liabilityItems,
+                    footerText: TermsConstants.liabilityFooter,
+                  ),
                   TermsTerminationWidget(),
-                  TermsModificationWidget(),
-                  TermsGoverningWidget(),
-                  TermsContactWidget(),
+                  InfoTextSectionWidget(
+                    title: TermsConstants.modificationTitle,
+                    paragraphs: TermsConstants.modificationContent,
+                  ),
+                  InfoTextSectionWidget(
+                    title: TermsConstants.governingTitle,
+                    paragraphs: TermsConstants.governingContent,
+                  ),
+                  InfoContactSectionWidget(
+                    titleIcon: TermsConstants.contactIcon,
+                    title: TermsConstants.contactTitle,
+                    description: TermsConstants.contactDescription,
+                    items: TermsConstants.contactItems,
+                    gradient: TermsConstants.contactGradient,
+                  ),
                   TermsNoticeWidget(),
                   SizedBox(height: 20),
                 ],

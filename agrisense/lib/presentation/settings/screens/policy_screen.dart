@@ -1,16 +1,15 @@
+import 'package:agrisense/presentation/common/widgets/info_section_widget.dart';
+import 'package:agrisense/presentation/settings/constants/policy_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
-import '../widgets/policy_update_widget.dart';
-import '../widgets/policy_intro_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_date_section_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_card_widget.dart';
 import '../widgets/policy_info_widget.dart';
 import '../widgets/policy_usage_widget.dart';
-import '../widgets/policy_security_widget.dart';
-import '../widgets/policy_rights_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_bullet_section_widget.dart';
 import '../widgets/policy_thirdparty_widget.dart';
-import '../widgets/policy_retention_widget.dart';
-import '../widgets/policy_children_widget.dart';
-import '../widgets/policy_changes_widget.dart';
-import '../widgets/policy_contact_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_text_section_widget.dart';
+import 'package:agrisense/presentation/common/widgets/info_contact_section_widget.dart';
 
 class PolicyScreen extends StatelessWidget {
   const PolicyScreen({super.key});
@@ -53,18 +52,53 @@ class PolicyScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            PolicyUpdateWidget(lastUpdated: DateTime.now()),
-            const PolicyIntroWidget(),
-            const PolicyInfoWidget(),
-            const PolicyUsageWidget(),
-            const PolicySecurityWidget(),
-            const PolicyRightsWidget(),
-            const PolicyThirdPartyWidget(),
-            const PolicyRetentionWidget(),
-            const PolicyChildrenWidget(),
-            const PolicyChangesWidget(),
-            const PolicyContactWidget(),
-            const SizedBox(height: 20),
+            InfoDateSectionWidget(
+              label: PolicyConstants.lastUpdatedLabel,
+              date: DateTime(2026, 4, 3), // or from backend
+            ),
+            InfoCardWidget(
+              icon: PolicyConstants.introIcon,
+              iconColor: PolicyConstants.introColor,
+              title: PolicyConstants.introTitle,
+              description: PolicyConstants.introDescription,
+            ),
+            PolicyInfoWidget(),
+            PolicyUsageWidget(),
+            InfoSectionWidget(
+              mainIcon: PolicyConstants.securityIcon,
+              mainColor: PolicyConstants.securityColor,
+              title: PolicyConstants.securityTitle,
+              description: PolicyConstants.securityDescription,
+              items: PolicyConstants.securityItems,
+            ),
+            InfoBulletSectionWidget(
+              icon: PolicyConstants.rightsIcon,
+              iconColor: PolicyConstants.rightsColor,
+              title: PolicyConstants.rightsTitle,
+              description: PolicyConstants.rightsDescription,
+              items: PolicyConstants.rightsItems,
+            ),
+            PolicyThirdPartyWidget(),
+            InfoTextSectionWidget(
+              title: PolicyConstants.retentionTitle,
+              paragraphs: PolicyConstants.retentionContent,
+            ),
+            InfoTextSectionWidget(
+              title: PolicyConstants.childrenTitle,
+              paragraphs: PolicyConstants.childrenContent,
+            ),
+            InfoTextSectionWidget(
+              title: PolicyConstants.changesTitle,
+              paragraphs: PolicyConstants.changesContent,
+            ),
+            InfoContactSectionWidget(
+              titleIcon: PolicyConstants.contactIcon,
+              title: PolicyConstants.contactTitle,
+              description: PolicyConstants.contactDescription,
+              items: PolicyConstants.contactItems,
+              backgroundColor: PolicyConstants.contactBgColor,
+            ),
+            SizedBox(height: 20),
           ],
         ),
       ),

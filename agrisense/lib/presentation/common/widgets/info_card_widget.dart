@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 
-class TermsAgreementWidget extends StatelessWidget {
-  const TermsAgreementWidget({super.key});
+class InfoCardWidget extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String description;
+
+  const InfoCardWidget({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,33 +27,34 @@ class TermsAgreementWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 📄 Icon Box
+          // Icon Box
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.blue.shade100,
+              color: iconColor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.description_outlined, color: Colors.blue),
+            child: Icon(icon, color: iconColor),
           ),
 
           const SizedBox(width: 12),
 
-          // 📄 Content
-          const Expanded(
+          // Content
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Agreement to Terms",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-
-                SizedBox(height: 6),
-
+                const SizedBox(height: 6),
                 Text(
-                  "Welcome to AgriSense! By accessing or using our mobile farming application, you agree to be bound by these Terms of Service. Please read them carefully before using the app. If you disagree with any part of these terms, you may not access the service.",
-                  style: TextStyle(
+                  description,
+                  style: const TextStyle(
                     fontSize: 13,
                     color: Colors.black54,
                     height: 1.5,

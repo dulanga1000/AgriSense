@@ -3,7 +3,7 @@ import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_email_step.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_reset_step.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_verify_step.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -37,7 +37,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           emailController: emailController,
           onNext: () => goToStep(2),
         );
-
       case 2:
         return ForgotPasswordVerifyStep(
           email: emailController.text,
@@ -49,12 +48,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           c5: c5,
           c6: c6,
         );
-
       case 3:
       default:
         return ForgotPasswordResetStep(
           onResetSuccess: () {
-            Navigator.pop(context);
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil(AppRoutes.login, (route) => false);
           },
         );
     }
@@ -63,14 +63,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   void dispose() {
     emailController.dispose();
-
     c1.dispose();
     c2.dispose();
     c3.dispose();
     c4.dispose();
     c5.dispose();
     c6.dispose();
-
     super.dispose();
   }
 
@@ -78,32 +76,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFD9F5E1),
-
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF0E8F3E),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        leading: const AppBackButton(fallbackRoute: AppRoutes.login),
-
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Forgot Password",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Reset your account password",
-              style: TextStyle(color: Colors.white70, fontSize: 12),
-            ),
-          ],
+      appBar: GradientAppBar(
+        title: "Forgot Password",
+        subtitle: "Reset your account password",
+        colors: const [Color(0xFF0E8F3E), Color(0xFF087F35)],
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).pushNamedAndRemoveUntil(AppRoutes.login, (route) => false);
+            },
+          ),
         ),
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

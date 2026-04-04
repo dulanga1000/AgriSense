@@ -1,7 +1,7 @@
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/core/di/service_locator.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/common/widgets/bottom_nav_bar.dart';
 import 'package:agrisense/presentation/common/navigation/main_tab_navigator.dart';
 import 'package:agrisense/presentation/fertilizer/state/fertilizer_state.dart';
@@ -21,17 +21,10 @@ class FertilizerScreen extends StatelessWidget {
       create: (_) => sl<FertilizerState>(),
       child: Scaffold(
         backgroundColor: Colors.grey[100],
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
-          leading: const AppBackButton(fallbackIndex: 0),
-          title: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Fertilizer Guide"),
-              Text("Smart recommendations", style: TextStyle(fontSize: 12)),
-            ],
-          ),
+        appBar: const GradientAppBar(
+          title: "Fertilizer Guide",
+          subtitle: "Smart recommendations",
+          colors: [Color(0xFF00A63E), Color(0xFF008236)],
         ),
         body: Consumer<FertilizerState>(
           builder: (context, state, _) {

@@ -1,7 +1,7 @@
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:agrisense/presentation/common/widgets/info_section_widget.dart';
 import 'package:agrisense/presentation/settings/constants/terms_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/common/widgets/info_date_section_widget.dart';
 import 'package:agrisense/presentation/common/widgets/info_card_widget.dart';
 import '../widgets/terms_acceptance_widget.dart';
@@ -19,36 +19,10 @@ class TermsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        elevation: 0,
-        leading: const AppBackButton(fallbackIndex: 0),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF2E6CF6), Color(0xFF1C3FDB)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Terms of Service",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 2),
-            Text(
-              "Your agreement with our services",
-              style: TextStyle(color: Colors.white70, fontSize: 12),
-            ),
-          ],
-        ),
+      appBar: const GradientAppBar(
+        title: "Terms of Service",
+        subtitle: "Your agreement with our services",
+        colors: [Color(0xFF2E6CF6), Color(0xFF1C3FDB)],
       ),
       body: Column(
         children: [

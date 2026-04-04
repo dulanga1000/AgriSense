@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/policy_constants.dart';
 
 class PolicyUsageWidget extends StatelessWidget {
   const PolicyUsageWidget({super.key});
@@ -39,16 +40,16 @@ class PolicyUsageWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 👁️ Icon Box
+          // 👁️ Icon
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.purple.shade100,
+              color: PolicyConstants.usageColor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
-              Icons.remove_red_eye_outlined,
-              color: Colors.purple,
+            child: Icon(
+              PolicyConstants.usageIcon,
+              color: PolicyConstants.usageColor,
             ),
           ),
 
@@ -59,29 +60,19 @@ class PolicyUsageWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "How We Use Your Information",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  PolicyConstants.usageTitle,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
 
                 const SizedBox(height: 10),
 
-                _buildItem(
-                  "Provide personalized farming recommendations and crop advice",
-                ),
-                _buildItem(
-                  "Detect and identify plant diseases using AI technology",
-                ),
-                _buildItem(
-                  "Deliver weather updates and farming alerts specific to your location",
-                ),
-                _buildItem("Improve our services and develop new features"),
-                _buildItem(
-                  "Send you important notifications about your crops and farm",
-                ),
-                _buildItem(
-                  "Ensure app security and prevent fraudulent activity",
-                ),
+                ...PolicyConstants.usageItems
+                    .map((e) => _buildItem(e))
+                    .toList(),
               ],
             ),
           ),

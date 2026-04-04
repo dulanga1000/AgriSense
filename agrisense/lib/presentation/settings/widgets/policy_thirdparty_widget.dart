@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/policy_constants.dart';
 
 class PolicyThirdPartyWidget extends StatelessWidget {
   const PolicyThirdPartyWidget({super.key});
@@ -38,30 +39,31 @@ class PolicyThirdPartyWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Third-Party Services",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Text(
+            PolicyConstants.thirdPartyTitle,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 6),
 
-          const Text(
-            "AgriSense may use third-party services for:",
-            style: TextStyle(fontSize: 13, color: Colors.black54),
+          Text(
+            PolicyConstants.thirdPartyDescription,
+            style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
 
           const SizedBox(height: 10),
 
-          _buildItem("Weather data and forecasts"),
-          _buildItem("AI-powered disease detection"),
-          _buildItem("Cloud storage and analytics"),
-          _buildItem("Payment processing (if applicable)"),
+          ...PolicyConstants.thirdPartyItems.map((e) => _buildItem(e)).toList(),
 
           const SizedBox(height: 10),
 
-          const Text(
-            "These services have their own privacy policies and we ensure they meet our security standards.",
-            style: TextStyle(fontSize: 13, color: Colors.black54, height: 1.4),
+          Text(
+            PolicyConstants.thirdPartyFooter,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Colors.black54,
+              height: 1.4,
+            ),
           ),
         ],
       ),

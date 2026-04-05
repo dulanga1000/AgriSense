@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/terms_constants.dart';
 
 class TermsAcceptanceWidget extends StatelessWidget {
   const TermsAcceptanceWidget({super.key});
@@ -43,10 +44,13 @@ class TermsAcceptanceWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.green.shade100,
+              color: TermsConstants.acceptanceColor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.check_circle_outline, color: Colors.green),
+            child: Icon(
+              TermsConstants.acceptanceIcon,
+              color: TermsConstants.acceptanceColor,
+            ),
           ),
 
           const SizedBox(width: 12),
@@ -56,16 +60,19 @@ class TermsAcceptanceWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Acceptance of Terms",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  TermsConstants.acceptanceTitle,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
 
                 const SizedBox(height: 6),
 
-                const Text(
-                  "By creating an account and using AgriSense, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and our Privacy Policy.",
-                  style: TextStyle(
+                Text(
+                  TermsConstants.acceptanceDescription,
+                  style: const TextStyle(
                     fontSize: 13,
                     color: Colors.black54,
                     height: 1.5,
@@ -85,7 +92,7 @@ class TermsAcceptanceWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "You confirm that:",
+                        TermsConstants.acceptanceBoxTitle,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
@@ -93,13 +100,9 @@ class TermsAcceptanceWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
 
-                      _buildCheckItem("You are at least 13 years of age"),
-                      _buildCheckItem(
-                        "You have the legal capacity to enter into this agreement",
-                      ),
-                      _buildCheckItem(
-                        "You will provide accurate and complete information",
-                      ),
+                      ...TermsConstants.acceptanceItems
+                          .map((e) => _buildCheckItem(e))
+                          .toList(),
                     ],
                   ),
                 ),

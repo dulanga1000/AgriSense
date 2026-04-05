@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/terms_constants.dart';
 
 class TermsTerminationWidget extends StatelessWidget {
   const TermsTerminationWidget({super.key});
@@ -39,30 +40,31 @@ class TermsTerminationWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Account Termination",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Text(
+            TermsConstants.terminationTitle,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 6),
 
-          const Text(
-            "We reserve the right to suspend or terminate your account at any time if:",
-            style: TextStyle(fontSize: 13, color: Colors.black54),
+          Text(
+            TermsConstants.terminationDescription,
+            style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
 
           const SizedBox(height: 10),
 
-          _buildItem("You violate these Terms of Service"),
-          _buildItem("You engage in fraudulent or illegal activities"),
-          _buildItem("Your account has been inactive for an extended period"),
-          _buildItem("We are required to do so by law"),
+          ...TermsConstants.terminationItems.map((e) => _buildItem(e)).toList(),
 
           const SizedBox(height: 10),
 
-          const Text(
-            "You may also delete your account at any time through the app settings.",
-            style: TextStyle(fontSize: 13, color: Colors.black54, height: 1.4),
+          Text(
+            TermsConstants.terminationFooter,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Colors.black54,
+              height: 1.4,
+            ),
           ),
         ],
       ),

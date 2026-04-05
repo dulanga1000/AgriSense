@@ -1,6 +1,6 @@
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
 import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import '../widgets/edit_profile_image.dart';
@@ -107,24 +107,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
 
-      appBar: AppBar(
-        elevation: 0,
-        leading: const AppBackButton(fallbackIndex: 0),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF00A63E), Color(0xFF008236)],
-            ),
-          ),
-        ),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-          ),
-        ),
+      appBar: const GradientAppBar(
+        title: "Edit Profile",
+        colors: [Color(0xFF00A63E), Color(0xFF008236)],
       ),
 
       body: SingleChildScrollView(

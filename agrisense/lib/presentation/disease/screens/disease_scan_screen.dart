@@ -1,7 +1,7 @@
 import 'package:agrisense/core/constants/tips_constants.dart';
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/disease/widgets/upload_plant_image_card.dart';
 import 'package:agrisense/presentation/common/widgets/tips_card.dart';
 import 'package:agrisense/presentation/disease/widgets/image_preview_card.dart';
@@ -91,36 +91,10 @@ class _DiseaseScanScreenState extends State<DiseaseScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        toolbarHeight: 60,
-        leading: const AppBackButton(fallbackIndex: 0),
-        title: const Column(
-          children: [
-            Text(
-              "Disease Detection",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: 2),
-            Text(
-              "AI-Powered Plant Analysis",
-              style: TextStyle(fontSize: 12, color: Colors.white),
-            ),
-          ],
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFFB2C36), Color(0xFFFF6900)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
+      appBar: const GradientAppBar(
+        title: "Disease Detection",
+        subtitle: "AI-Powered Plant Analysis",
+        colors: [Color(0xFFFB2C36), Color(0xFFFF6900)],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

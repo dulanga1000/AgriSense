@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
-class PolicyUpdateWidget extends StatelessWidget {
-  final DateTime lastUpdated;
+class InfoDateSectionWidget extends StatelessWidget {
+  final String label;
+  final DateTime date;
+  final Color accentColor;
 
-  const PolicyUpdateWidget({super.key, required this.lastUpdated});
+  const InfoDateSectionWidget({
+    super.key,
+    required this.label,
+    required this.date,
+    this.accentColor = Colors.blue,
+  });
 
   String formatDate(DateTime date) {
-    return "${_getMonth(date.month)} ${date.day.toString().padLeft(2, '0')}, ${date.year}";
-  }
-
-  String _getMonth(int month) {
     const months = [
       "January",
       "February",
@@ -24,13 +27,13 @@ class PolicyUpdateWidget extends StatelessWidget {
       "November",
       "December",
     ];
-    return months[month - 1];
+    return "${months[date.month - 1]} ${date.day.toString().padLeft(2, '0')}, ${date.year}";
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
@@ -38,12 +41,12 @@ class PolicyUpdateWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // 🔵 Left Blue Line
+          // 🔵 Accent Line
           Container(
             width: 4,
-            height: 30,
+            height: 28,
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: accentColor,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -53,7 +56,7 @@ class PolicyUpdateWidget extends StatelessWidget {
           // 📅 Text
           Expanded(
             child: Text(
-              "Last Updated: ${formatDate(lastUpdated)}",
+              "$label: ${formatDate(date)}",
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
             ),
           ),

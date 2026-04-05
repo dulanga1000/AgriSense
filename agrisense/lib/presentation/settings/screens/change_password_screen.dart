@@ -1,6 +1,6 @@
 import 'package:agrisense/core/constants/tips_constants.dart';
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:flutter/material.dart';
-import '../../common/widgets/app_back_button.dart';
 import '../../common/widgets/custom_button.dart';
 import '../../common/widgets/password_strength_checker.dart';
 import '../../common/widgets/password_textfield.dart';
@@ -74,33 +74,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
 
-      appBar: AppBar(
-        elevation: 0,
-        leading: const AppBackButton(fallbackIndex: 0),
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Change Password',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-              ),
-            ),
-            Text(
-              'Update your account password',
-              style: TextStyle(color: Colors.white70, fontSize: 12),
-            ),
-          ],
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF155DFC), Color(0xFF1447E6)],
-            ),
-          ),
-        ),
+      appBar: const GradientAppBar(
+        title: "Change Password",
+        subtitle: "Update your account password",
+        colors: [Color(0xFF155DFC), Color(0xFF1447E6)],
       ),
 
       body: SingleChildScrollView(

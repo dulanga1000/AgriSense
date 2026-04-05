@@ -45,9 +45,7 @@ class StepIndicator extends StatelessWidget {
         children: [
           _buildStep(1, "Email"),
           _buildLine(currentStep >= 2),
-          _buildStep(2, "Verify"),
-          _buildLine(currentStep >= 3),
-          _buildStep(3, "Reset"),
+          _buildStep(2, "Reset"),
         ],
       ),
     );

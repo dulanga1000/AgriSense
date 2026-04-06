@@ -36,7 +36,7 @@ class ForgotPasswordEmailStep extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const StepIndicator(currentStep: 1),
+          const StepIndicator(currentStep: 0),
           const SizedBox(height: 20),
 
           AuthCard(

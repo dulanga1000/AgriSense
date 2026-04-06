@@ -112,7 +112,7 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const StepIndicator(currentStep: 2),
+        const StepIndicator(currentStep: 1),
         const SizedBox(height: 20),
 
         AuthCard(

@@ -32,22 +32,38 @@ class _LoginFormCardState extends State<LoginFormCard> {
     if (!_formKey.currentState!.validate()) return;
 
     final auth = context.read<AuthProvider>();
+    final email = widget.emailController.text.trim();
+    final password = widget.passwordController.text.trim();
 
-    await auth.login(
-      widget.emailController.text.trim(),
-      widget.passwordController.text.trim(),
-    );
+    await auth.login(email, password);
 
     if (!mounted) return;
 
     if (auth.user != null) {
       AuthSnackBar.showSuccess(context, "Login successful!");
-
       Navigator.pushReplacementNamed(context, AppRoutes.main);
     } else {
       AuthSnackBar.showError(
         context,
         auth.error ?? "Login failed",
+      );
+    }
+  }
+
+  Future<void> _onGoogleLogin() async {
+    final auth = context.read<AuthProvider>();
+
+    await auth.googleSignIn();
+
+    if (!mounted) return;
+
+    if (auth.user != null) {
+      AuthSnackBar.showSuccess(context, "Google login successful!");
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
+    } else {
+      AuthSnackBar.showError(
+        context,
+        auth.error ?? "Google sign-in failed",
       );
     }
   }
@@ -126,24 +142,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             GoogleAuthButton(
               text: 'Sign in with Google',
-              onSuccess: () async {
-                final auth = context.read<AuthProvider>();
-
-                await auth.googleSignIn();
-
-                if (!mounted) return;
-
-                if (auth.user != null) {
-                  AuthSnackBar.showSuccess(context, "Google login successful!");
-
-                  Navigator.pushReplacementNamed(context, AppRoutes.main);
-                } else {
-                  AuthSnackBar.showError(
-                    context,
-                    auth.error ?? "Google sign-in failed",
-                  );
-                }
-              },
+              onSuccess: _onGoogleLogin, // ✅ CLEAN
             ),
 
             const SizedBox(height: 20),

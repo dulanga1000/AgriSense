@@ -4,31 +4,35 @@ import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
 import 'package:agrisense/presentation/common/widgets/email_textfield.dart';
+import 'package:agrisense/core/services/auth_api_service.dart';
 
 class ForgotPasswordEmailStep extends StatelessWidget {
   final VoidCallback onNext;
   final TextEditingController emailController;
 
-  const ForgotPasswordEmailStep({
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  ForgotPasswordEmailStep({
     super.key,
     required this.onNext,
     required this.emailController,
   });
 
+  void onSend(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
+
+    try {
+      await AuthApiService.sendOtp(emailController.text);
+
+      AuthSnackBar.showSuccess(context, 'OTP sent to your email!');
+      onNext();
+    } catch (e) {
+      AuthSnackBar.showError(context, e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-
-    void onSend() {
-      if (!formKey.currentState!.validate()) return;
-
-      AuthSnackBar.showSuccess(
-        context,
-        'Verification code sent to your email!',
-      );
-      onNext();
-    }
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -78,7 +82,7 @@ class ForgotPasswordEmailStep extends StatelessWidget {
                   CustomButton(
                     text: 'Send Verification Code',
                     icon: Icons.mail_outline,
-                    onPressed: onSend,
+                    onPressed: () => onSend(context), // ✅ FIX
                   ),
                 ],
               ),

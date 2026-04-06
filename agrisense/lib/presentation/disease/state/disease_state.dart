@@ -46,7 +46,8 @@ class DiseaseState extends ChangeNotifier {
     try {
       _result = await _repository.analyzeImage(_selectedImage!);
     } catch (e, st) {
-      _errorMessage = 'Failed to analyze image. Please try again.';
+      _errorMessage =
+          'Failed to analyze image. Ensure model and labels are loaded.';
       FlutterError.reportError(
         FlutterErrorDetails(
           exception: e,

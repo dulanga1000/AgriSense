@@ -3,6 +3,7 @@ import 'package:agrisense/presentation/auth/widgets/forgot_password_email_step.d
 import 'package:agrisense/presentation/auth/widgets/forgot_password_verify_step.dart';
 import 'package:agrisense/presentation/auth/widgets/forgot_password_reset_step.dart';
 import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
+import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -52,10 +53,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Forgot Password',
         subtitle: 'Reset your account password',
-        colors: [Color(0xFF1DB954), Color(0xFF1ED760)],
+        colors: const [Color(0xFF1DB954), Color(0xFF1ED760)],
+        leading: const AppBackButton(fallbackRoute: '/login'),
       ),
       body: Center(child: buildStep()),
     );

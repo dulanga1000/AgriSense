@@ -104,7 +104,7 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
 
     return Column(
       children: [
-        const StepIndicator(currentStep: 3),
+        const StepIndicator(currentStep: 2),
         const SizedBox(height: 20),
 
         AuthCard(

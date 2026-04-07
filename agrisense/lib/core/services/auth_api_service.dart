@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class AuthApiService {
   static const String baseUrl =
-      "http://192.168.0.157:3000/api/auth"; // CHANGE IP
+      "http://10.16.142.96:3000/api/auth"; // CHANGE IP
 
   static Future<void> sendOtp(String email) async {
     final response = await http.post(

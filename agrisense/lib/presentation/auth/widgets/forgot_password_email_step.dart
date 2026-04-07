@@ -27,7 +27,7 @@ class ForgotPasswordEmailStep extends StatelessWidget {
       AuthSnackBar.showSuccess(context, 'OTP sent to your email!');
       onNext();
     } catch (e) {
-      AuthSnackBar.showError(context, e.toString());
+      AuthSnackBar.showError(context, 'Email not registered');
     }
   }
 

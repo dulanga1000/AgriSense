@@ -14,7 +14,6 @@ import {
 export const sendOtp = async (req: Request, res: Response) => {
   const { email } = req.body;
 
-  // ✅ Basic validation
   if (!email) {
     return res.status(400).json({ error: "Email is required" });
   }
@@ -22,24 +21,23 @@ export const sendOtp = async (req: Request, res: Response) => {
   try {
     console.log("📩 Sending OTP to:", email);
 
-    // ✅ Check ENV (debug)
     console.log("ENV CHECK:", {
-      EMAIL_USER: process.env.EMAIL_USER,
-      EMAIL_PASS: process.env.EMAIL_PASS ? "SET" : "NOT SET",
+      SMTP_USER: process.env.SMTP_USER,
+      SMTP_PASS: process.env.SMTP_PASS ? "SET" : "NOT SET",
     });
 
-    // ✅ Check if user exists in Firebase
+    // ✅ Check Firebase user
     await admin.auth().getUserByEmail(email);
 
-    // ✅ Generate & store OTP
+    // ✅ Generate OTP
     const otp = generateOtp();
     saveOtp(email, otp);
 
-    console.log("🔢 Generated OTP:", otp);
+    console.log("🔢 OTP:", otp);
 
-    // ✅ Send Email
+    // ✅ Send Email (FIXED)
     const info = await transporter.sendMail({
-      from: `"AgriSense" <${process.env.EMAIL_USER}>`,
+      from: `"AgriSense" <${process.env.SMTP_USER}>`, // ✅ FIXED
       to: email,
       subject: "AgriSense OTP Code",
       text: `Your OTP is: ${otp}`,
@@ -55,17 +53,9 @@ export const sendOtp = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error("❌ SEND OTP ERROR:", error);
 
-    // 🔴 Firebase user not found
     if (error.code === "auth/user-not-found") {
       return res.status(400).json({
         error: "Email is not registered",
-      });
-    }
-
-    // 🔴 Nodemailer auth error
-    if (error.responseCode === 535) {
-      return res.status(500).json({
-        error: "Email authentication failed (check app password)",
       });
     }
 
@@ -122,7 +112,6 @@ export const resetPassword = async (req: Request, res: Response) => {
       password: newPassword,
     });
 
-    // ✅ Remove OTP after success
     deleteOtp(email);
 
     console.log("✅ Password updated");

@@ -1,14 +1,17 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes";
-
-dotenv.config();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// 🔥 DEBUG ENV
+console.log("🚀 ENV TEST:", {
+  EMAIL_USER: process.env.EMAIL_USER,
+  EMAIL_PASS: process.env.EMAIL_PASS ? "SET" : "NOT SET",
+});
 
 app.use("/api/auth", authRoutes);
 

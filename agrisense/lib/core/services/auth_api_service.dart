@@ -3,41 +3,95 @@ import 'package:http/http.dart' as http;
 
 class AuthApiService {
   static const String baseUrl =
-      "https://observant-balance-production.up.railway.app:8080/api/auth"; // CHANGE IP
+      "https://observant-balance-production.up.railway.app/api/auth";
 
+  // ==========================
+  // 📩 SEND OTP
+  // ==========================
   static Future<void> sendOtp(String email) async {
-    final response = await http.post(
-      Uri.parse("$baseUrl/send-otp"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"email": email}),
-    );
+    try {
+      final url = Uri.parse("$baseUrl/send-otp");
 
-    if (response.statusCode != 200) {
-      throw Exception("Failed to send OTP");
+      print("➡️ Sending OTP request to: $url");
+      print("📧 Email: $email");
+
+      final response = await http
+          .post(
+            url,
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({"email": email}),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      print("✅ STATUS: ${response.statusCode}");
+      print("📦 BODY: ${response.body}");
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode != 200) {
+        throw Exception(data["error"] ?? "Failed to send OTP");
+      }
+    } catch (e) {
+      print("❌ SEND OTP ERROR: $e");
+      rethrow;
     }
   }
 
+  // ==========================
+  // 🔐 VERIFY OTP
+  // ==========================
   static Future<void> verifyOtp(String email, String otp) async {
-    final response = await http.post(
-      Uri.parse("$baseUrl/verify-otp"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"email": email, "otp": otp}),
-    );
+    try {
+      final url = Uri.parse("$baseUrl/verify-otp");
 
-    if (response.statusCode != 200) {
-      throw Exception("Invalid OTP");
+      print("➡️ Verifying OTP for: $email");
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email, "otp": otp}),
+      );
+
+      print("✅ STATUS: ${response.statusCode}");
+      print("📦 BODY: ${response.body}");
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode != 200) {
+        throw Exception(data["error"] ?? "Invalid OTP");
+      }
+    } catch (e) {
+      print("❌ VERIFY OTP ERROR: $e");
+      rethrow;
     }
   }
 
+  // ==========================
+  // 🔄 RESET PASSWORD
+  // ==========================
   static Future<void> resetPassword(String email, String newPassword) async {
-    final response = await http.post(
-      Uri.parse("$baseUrl/reset-password"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"email": email, "newPassword": newPassword}),
-    );
+    try {
+      final url = Uri.parse("$baseUrl/reset-password");
 
-    if (response.statusCode != 200) {
-      throw Exception("Password reset failed");
+      print("➡️ Resetting password for: $email");
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email, "newPassword": newPassword}),
+      );
+
+      print("✅ STATUS: ${response.statusCode}");
+      print("📦 BODY: ${response.body}");
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode != 200) {
+        throw Exception(data["error"] ?? "Password reset failed");
+      }
+    } catch (e) {
+      print("❌ RESET ERROR: $e");
+      rethrow;
     }
   }
 }

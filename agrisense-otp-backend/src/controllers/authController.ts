@@ -13,10 +13,14 @@ export const sendOtp = async (req: Request, res: Response) => {
   const { email } = req.body;
 
   try {
+    console.log("📩 Sending OTP to:", email);
+
+    console.log("ENV CHECK:", {
+      EMAIL_USER: process.env.EMAIL_USER,
+      EMAIL_PASS: process.env.EMAIL_PASS ? "SET" : "NOT SET",
+    });
 
     await admin.auth().getUserByEmail(email);
-
-    // 👉 If no error → user exists
 
     const otp = generateOtp();
     saveOtp(email, otp);
@@ -28,9 +32,11 @@ export const sendOtp = async (req: Request, res: Response) => {
       text: `Your OTP is: ${otp}`,
     });
 
-    res.json({ message: "OTP sent successfully" });
+    console.log("✅ Email sent");
 
+    res.json({ message: "OTP sent successfully" });
   } catch (error: any) {
+    console.error("❌ ERROR:", error);
 
     if (error.code === "auth/user-not-found") {
       return res.status(400).json({
@@ -70,6 +76,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     res.json({ message: "Password updated successfully" });
   } catch (error: any) {
+    console.error("❌ RESET ERROR:", error);
     res.status(500).json({ error: error.message });
   }
 };

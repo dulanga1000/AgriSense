@@ -12,7 +12,7 @@ export const generateOtp = (): string => {
 export const saveOtp = (email: string, otp: string) => {
   otpStore.set(email, {
     otp,
-    expires: Date.now() + 5 * 60 * 1000, // 5 minutes
+    expires: Date.now() + 5 * 60 * 1000,
   });
 };
 

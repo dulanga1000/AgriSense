@@ -44,7 +44,7 @@ class TermsAcceptanceWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: TermsConstants.acceptanceColor.withOpacity(0.15),
+              color: TermsConstants.acceptanceColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -100,9 +100,9 @@ class TermsAcceptanceWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
 
-                      ...TermsConstants.acceptanceItems
-                          .map((e) => _buildCheckItem(e))
-                          .toList(),
+                      ...TermsConstants.acceptanceItems.map(
+                        (e) => _buildCheckItem(e),
+                      ),
                     ],
                   ),
                 ),

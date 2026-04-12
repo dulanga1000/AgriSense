@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/presentation/auth/state/auth_provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
@@ -40,13 +41,13 @@ class _LoginFormCardState extends State<LoginFormCard> {
     if (!mounted) return;
 
     if (auth.user != null) {
+      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+
+      if (!mounted) return;
       AuthSnackBar.showSuccess(context, "Login successful!");
       Navigator.pushReplacementNamed(context, AppRoutes.main);
     } else {
-      AuthSnackBar.showError(
-        context,
-        auth.error ?? "Login failed",
-      );
+      AuthSnackBar.showError(context, auth.error ?? "Login failed");
     }
   }
 
@@ -58,13 +59,13 @@ class _LoginFormCardState extends State<LoginFormCard> {
     if (!mounted) return;
 
     if (auth.user != null) {
+      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+
+      if (!mounted) return;
       AuthSnackBar.showSuccess(context, "Google login successful!");
       Navigator.pushReplacementNamed(context, AppRoutes.main);
     } else {
-      AuthSnackBar.showError(
-        context,
-        auth.error ?? "Google sign-in failed",
-      );
+      AuthSnackBar.showError(context, auth.error ?? "Google sign-in failed");
     }
   }
 

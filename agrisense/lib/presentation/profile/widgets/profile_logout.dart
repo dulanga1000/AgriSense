@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:agrisense/core/routes/app_routes.dart';
+import 'package:agrisense/presentation/auth/state/auth_provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
+import 'package:agrisense/presentation/disease/state/disease_state.dart';
+import 'package:agrisense/presentation/home/state/farming_tip_state.dart';
+import 'package:agrisense/presentation/settings/state/location_state.dart';
+import 'package:agrisense/presentation/weather/state/weather_state.dart';
+import 'package:agrisense/presentation/notification/state/notification_state.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
 
 class ProfileLogout extends StatefulWidget {
@@ -14,9 +22,22 @@ class _ProfileLogoutState extends State<ProfileLogout> {
 
   Future<void> _handleLogout() async {
     setState(() => _isLoading = true);
+    final auth = context.read<AuthProvider>();
+    final profile = context.read<ProfileState>();
+    final disease = context.read<DiseaseState>();
+    final tips = context.read<FarmingTipState>();
+    final location = context.read<LocationState>();
+    final weather = context.read<WeatherState>();
+    final notifications = context.read<NotificationState>();
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      await auth.logout();
+      await profile.resetToGuest();
+      disease.reset();
+      tips.resetForLogout();
+      location.resetForLogout();
+      weather.resetForLogout();
+      notifications.resetForLogout();
 
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(

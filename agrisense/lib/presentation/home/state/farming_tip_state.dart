@@ -25,4 +25,11 @@ class FarmingTipState extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void resetForLogout() {
+    tips = [];
+    isLoading = false;
+    error = null;
+    notifyListeners();
+  }
 }

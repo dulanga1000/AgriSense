@@ -9,59 +9,38 @@ import {
 } from "../services/otpService";
 
 // ==========================
-// 📩 SEND OTP
+// 📩 SEND OTP (FIXED)
 // ==========================
 export const sendOtp = async (req: Request, res: Response) => {
   const { email } = req.body;
 
-  if (!email) {
-    return res.status(400).json({ error: "Email is required" });
-  }
-
   try {
-    console.log("📩 Sending OTP to:", email);
-
-    console.log("ENV CHECK:", {
-      SMTP_USER: process.env.SMTP_USER,
-      SMTP_PASS: process.env.SMTP_PASS ? "SET" : "NOT SET",
-    });
-
-    // ✅ Check Firebase user
+    // ✅ CHECK IF USER EXISTS IN FIREBASE
     await admin.auth().getUserByEmail(email);
 
-    // ✅ Generate OTP
+    // 👉 user exists → send OTP
     const otp = generateOtp();
     saveOtp(email, otp);
 
-    console.log("🔢 OTP:", otp);
-
-    // ✅ Send Email (FIXED)
-    const info = await transporter.sendMail({
-      from: `"AgriSense" <${process.env.SMTP_USER}>`, // ✅ FIXED
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
       to: email,
       subject: "AgriSense OTP Code",
       text: `Your OTP is: ${otp}`,
     });
 
-    console.log("✅ Email sent:", info.messageId);
-
-    return res.json({
-      success: true,
-      message: "OTP sent successfully",
-    });
+    res.json({ message: "OTP sent successfully" });
 
   } catch (error: any) {
-    console.error("❌ SEND OTP ERROR:", error);
 
+    // ❌ USER NOT FOUND
     if (error.code === "auth/user-not-found") {
       return res.status(400).json({
         error: "Email is not registered",
       });
     }
 
-    return res.status(500).json({
-      error: error.message || "Something went wrong",
-    });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -71,12 +50,6 @@ export const sendOtp = async (req: Request, res: Response) => {
 export const verifyOtpController = (req: Request, res: Response) => {
   const { email, otp } = req.body;
 
-  if (!email || !otp) {
-    return res.status(400).json({
-      error: "Email and OTP are required",
-    });
-  }
-
   const valid = verifyOtp(email, otp);
 
   if (!valid) {
@@ -85,27 +58,16 @@ export const verifyOtpController = (req: Request, res: Response) => {
     });
   }
 
-  return res.json({
-    success: true,
-    message: "OTP verified successfully",
-  });
+  res.json({ message: "OTP verified" });
 };
 
 // ==========================
-// 🔄 RESET PASSWORD
+// 🔑 RESET PASSWORD
 // ==========================
 export const resetPassword = async (req: Request, res: Response) => {
   const { email, newPassword } = req.body;
 
-  if (!email || !newPassword) {
-    return res.status(400).json({
-      error: "Email and new password are required",
-    });
-  }
-
   try {
-    console.log("🔄 Resetting password for:", email);
-
     const user = await admin.auth().getUserByEmail(email);
 
     await admin.auth().updateUser(user.uid, {
@@ -114,18 +76,9 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     deleteOtp(email);
 
-    console.log("✅ Password updated");
-
-    return res.json({
-      success: true,
-      message: "Password updated successfully",
-    });
+    res.json({ message: "Password updated successfully" });
 
   } catch (error: any) {
-    console.error("❌ RESET ERROR:", error);
-
-    return res.status(500).json({
-      error: error.message || "Password reset failed",
-    });
+    res.status(500).json({ error: error.message });
   }
 };

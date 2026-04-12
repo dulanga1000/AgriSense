@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthApiService {
-  static const String baseUrl =
-      "https://observant-balance-production.up.railway.app/api/auth";
+  static const String baseUrl = "http://192.168.8.180:3000/api/auth";
 
   // ==========================
   // 📩 SEND OTP

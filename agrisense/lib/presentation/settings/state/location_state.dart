@@ -88,4 +88,11 @@ class LocationState extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  void resetForLogout() {
+    _currentLocation = '';
+    _isLoading = false;
+    _error = null;
+    notifyListeners();
+  }
 }

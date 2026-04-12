@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthApiService {
-  static const String baseUrl = "http://192.168.8.180:3000/api/auth";
+  static const String baseUrl = "https://agrisense-qnpv.onrender.com/api/auth";
 
   // ==========================
   // 📩 SEND OTP

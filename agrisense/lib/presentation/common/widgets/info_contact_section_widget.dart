@@ -71,7 +71,7 @@ class InfoContactSectionWidget extends StatelessWidget {
           const SizedBox(height: 10),
 
           // 🔁 Contact Items
-          ...items.map((e) => _buildItem(e)).toList(),
+          ...items.map((e) => _buildItem(e)),
         ],
       ),
     );

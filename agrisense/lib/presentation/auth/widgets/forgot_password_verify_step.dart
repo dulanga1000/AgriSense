@@ -73,18 +73,20 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
     });
   }
 
-  void _resendCode() async {
+  Future<void> _resendCode() async {
     try {
       await AuthApiService.sendOtp(widget.email);
+      if (!mounted) return;
       setState(() => seconds = 60);
       _startTimer();
       AuthSnackBar.showSuccess(context, 'OTP resent');
     } catch (e) {
+      if (!mounted) return;
       AuthSnackBar.showError(context, 'Failed to resend');
     }
   }
 
-  void _onVerify() async {
+  Future<void> _onVerify() async {
     final otp =
         widget.c1.text +
         widget.c2.text +
@@ -101,9 +103,11 @@ class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
     try {
       await AuthApiService.verifyOtp(widget.email, otp);
 
+      if (!mounted) return;
       AuthSnackBar.showSuccess(context, 'OTP verified!');
       widget.onNext();
     } catch (e) {
+      if (!mounted) return;
       AuthSnackBar.showError(context, 'Invalid OTP');
     }
   }

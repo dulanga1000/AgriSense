@@ -47,7 +47,7 @@ class InfoSectionWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: mainColor.withOpacity(0.15),
+              color: mainColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(mainIcon, color: mainColor),
@@ -80,7 +80,7 @@ class InfoSectionWidget extends StatelessWidget {
                 ),
 
                 // 🔁 Dynamic Items
-                ...items.map((item) => _buildItem(item)).toList(),
+                ...items.map((item) => _buildItem(item)),
               ],
             ),
           ),

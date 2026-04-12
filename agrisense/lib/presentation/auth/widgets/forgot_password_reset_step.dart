@@ -64,6 +64,7 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
         _newPasswordController.text,
       );
 
+      if (!mounted) return;
       AuthSnackBar.showSuccess(context, 'Password reset successful!');
       // Redirect to login page after a short delay
       await Future.delayed(const Duration(milliseconds: 800));
@@ -74,10 +75,13 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
         );
       }
     } catch (e) {
+      if (!mounted) return;
       AuthSnackBar.showError(context, 'Reset failed');
     }
 
-    setState(() => _loading = false);
+    if (mounted) {
+      setState(() => _loading = false);
+    }
   }
 
   @override
@@ -117,7 +121,7 @@ class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
                   width: 70,
                   height: 70,
                   decoration: BoxDecoration(
-                    color: Colors.purple.withOpacity(0.1),
+                    color: Colors.purple.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(

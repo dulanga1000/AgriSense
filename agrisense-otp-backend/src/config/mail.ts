@@ -1,18 +1,22 @@
-import nodemailer from "nodemailer";
+import SibApiV3Sdk from "sib-api-v3-sdk";
 
-export const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER || "",
-    pass: process.env.EMAIL_PASS || "",
-  },
-});
+const client = SibApiV3Sdk.ApiClient.instance;
 
-// 🔍 DEBUG (very important)
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ Mail error:", error);
-  } else {
-    console.log("✅ Mail server ready");
-  }
-});
+const apiKey = client.authentications["api-key"];
+apiKey.apiKey = process.env.BREVO_API_KEY!;
+
+const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+
+export const sendEmail = async (to: string, otp: string) => {
+  await emailApi.sendTransacEmail({
+    sender: {
+      email: process.env.EMAIL_USER!,
+      name: "AgriSense",
+    },
+    to: [{ email: to }],
+    subject: "AgriSense OTP Code",
+    textContent: `Your OTP is: ${otp}`,
+  });
+
+  console.log("✅ Email sent via Brevo");
+};

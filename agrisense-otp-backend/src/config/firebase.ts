@@ -1,13 +1,21 @@
 import admin from "firebase-admin";
 
-const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
+const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
 
-if (!serviceAccount) {
-  throw new Error("FIREBASE_SERVICE_ACCOUNT is missing");
+if (!serviceAccountString) {
+  console.error("❌ FIREBASE_SERVICE_ACCOUNT missing");
+  throw new Error("Firebase config missing");
 }
 
-admin.initializeApp({
-  credential: admin.credential.cert(JSON.parse(serviceAccount)),
-});
+const serviceAccount = JSON.parse(serviceAccountString);
+
+// 🔥 VERY IMPORTANT FIX (prevents timeout)
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
 export default admin;

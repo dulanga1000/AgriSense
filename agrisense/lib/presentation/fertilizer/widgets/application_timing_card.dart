@@ -13,13 +13,17 @@ class ApplicationTimingCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset("assets/images/timer.png", width: 30, height: 30),
+            const Icon(Icons.schedule, size: 30, color: Colors.green),
             const SizedBox(width: 10),
 
-            Text(
-              "Application Timing\n${model.applicationTiming}",
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Expanded(
+              child: Text(
+                "Application Timing\n${model.applicationTiming}",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                softWrap: true,
+              ),
             ),
           ],
         ),

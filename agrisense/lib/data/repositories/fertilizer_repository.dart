@@ -1,60 +1,80 @@
+import 'dart:convert';
+
 import 'package:agrisense/data/models/fertilizer_model.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 
 class FertilizerRepository {
+  static const String _androidEmulatorEndpoint =
+      "http://10.0.2.2:8000/fertilizer";
+  static const String _localhostEndpoint = "http://127.0.0.1:8000/fertilizer";
+  static const String _geminiModel = "gemini-2.0-flash";
+
+  String get _fertilizerEndpoint {
+    final envEndpoint = dotenv.env['FERTILIZER_API_URL'];
+    if (envEndpoint != null && envEndpoint.trim().isNotEmpty) {
+      final trimmed = envEndpoint.trim();
+
+      // Android emulators cannot reach host machine services via localhost.
+      if (defaultTargetPlatform == TargetPlatform.android &&
+          (trimmed.contains('127.0.0.1') || trimmed.contains('localhost'))) {
+        return trimmed
+            .replaceAll('127.0.0.1', '10.0.2.2')
+            .replaceAll('localhost', '10.0.2.2');
+      }
+
+      return trimmed;
+    }
+
+    return defaultTargetPlatform == TargetPlatform.android
+        ? _androidEmulatorEndpoint
+        : _localhostEndpoint;
+  }
+
   Future<FertilizerModel> getRecommendation(
     String cropType,
     double landSize,
   ) async {
-    return _getDummyRecommendation(cropType, landSize);
-  }
+    final response = await http.post(
+      Uri.parse(_fertilizerEndpoint),
+      headers: const {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "crop_type": cropType,
+        "land_size": landSize,
+        "model": _geminiModel,
+      }),
+    );
 
-  FertilizerModel _getDummyRecommendation(String cropType, double landSize) {
-    switch (cropType) {
-      case "Rice":
-        return FertilizerModel(
-          cropType: cropType,
-          fertilizerName: "NPK Complex Fertilizer + Urea",
-          npkRatio: "20:10:10",
-          totalQuantity: landSize * 120,
-          estimatedCost: landSize * 120 * 85,
-          usageSteps: const [
-            "Apply 40% as basal dose during land preparation",
-            "Apply 30% at tillering stage (20–25 days after planting)",
-            "Apply 30% at panicle initiation stage (40–45 days)",
-            "Mix thoroughly with soil and irrigate immediately",
-          ],
-          applicationTiming: "Split application in 3 stages",
-        );
-      case "Corn":
-        return FertilizerModel(
-          cropType: cropType,
-          fertilizerName: "Urea + Potassium Mix",
-          npkRatio: "18:12:8",
-          totalQuantity: landSize * 100,
-          estimatedCost: landSize * 100 * 75,
-          usageSteps: const [
-            "Apply 50% as basal dose before planting",
-            "Apply 25% at knee-high stage (30 days after planting)",
-            "Apply 25% at tasseling stage (50–55 days)",
-            "Ensure adequate moisture after each application",
-          ],
-          applicationTiming: "Split application in 3 stages",
-        );
-      default:
-        return FertilizerModel(
-          cropType: cropType,
-          fertilizerName: "Balanced Fertilizer Mix",
-          npkRatio: "15:15:15",
-          totalQuantity: landSize * 90,
-          estimatedCost: landSize * 90 * 80,
-          usageSteps: const [
-            "Apply 40% as basal dose during land preparation",
-            "Apply 30% at early growth stage",
-            "Apply 30% at flowering stage",
-            "Mix thoroughly with soil and irrigate immediately",
-          ],
-          applicationTiming: "Split application in 3 stages",
-        );
+    final decoded = jsonDecode(response.body);
+
+    if (response.statusCode != 200) {
+      if (decoded is Map<String, dynamic>) {
+        final detail = decoded['detail'];
+        final error = decoded['error'];
+        final message = detail is String
+            ? detail
+            : error is String
+            ? error
+            : "Fertilizer API Error (${response.statusCode})";
+        throw Exception(message);
+      }
+
+      throw Exception(
+        "Fertilizer API Error (${response.statusCode}): ${response.body}",
+      );
     }
+
+    if (decoded is! Map<String, dynamic>) {
+      throw Exception("Invalid fertilizer API response format");
+    }
+
+    final apiError = decoded['error'];
+    if (apiError is String && apiError.isNotEmpty) {
+      throw Exception(apiError);
+    }
+
+    final jsonBody = decoded;
+    return FertilizerModel.fromJson(jsonBody);
   }
 }

@@ -13,7 +13,7 @@ class CostCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Image.asset("assets/images/money.png", width: 30, height: 30),
+            const Icon(Icons.payments_outlined, size: 30, color: Colors.green),
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

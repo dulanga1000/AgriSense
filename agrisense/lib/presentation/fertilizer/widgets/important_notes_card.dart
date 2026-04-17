@@ -23,7 +23,7 @@ class ImportantNotesCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.asset("assets/images/warning.png", height: 20),
+                const Icon(Icons.warning_amber_rounded, color: Colors.orange),
                 const SizedBox(width: 8),
                 const Text(
                   "Important Notes",

@@ -17,7 +17,7 @@ class FertilizerResultCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.asset("assets/images/cube.png", height: 20),
+                const Icon(Icons.science_outlined, color: Colors.green),
                 const SizedBox(width: 8),
                 const Text(
                   "Recommended Fertilizer",
@@ -36,27 +36,34 @@ class FertilizerResultCard extends StatelessWidget {
             ),
             const Divider(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Total Quantity"),
-                    Text(
-                      "${model.totalQuantity.toStringAsFixed(0)} kg",
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Total Quantity"),
+                      Text(
+                        "${model.totalQuantity.toStringAsFixed(0)} kg",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        softWrap: true,
+                      ),
+                    ],
+                  ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("NPK Ratio"),
-                    Text(
-                      model.npkRatio,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("NPK Ratio"),
+                      Text(
+                        model.npkRatio,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        softWrap: true,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

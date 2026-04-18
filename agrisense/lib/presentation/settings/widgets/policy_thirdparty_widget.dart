@@ -53,7 +53,7 @@ class PolicyThirdPartyWidget extends StatelessWidget {
 
           const SizedBox(height: 10),
 
-          ...PolicyConstants.thirdPartyItems.map((e) => _buildItem(e)).toList(),
+          ...PolicyConstants.thirdPartyItems.map((e) => _buildItem(e)),
 
           const SizedBox(height: 10),
 

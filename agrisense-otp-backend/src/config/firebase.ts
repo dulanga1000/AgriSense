@@ -1,11 +1,22 @@
 import admin from "firebase-admin";
 
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-  }),
-});
+const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
+
+if (!serviceAccountString) {
+  throw new Error("Firebase config missing");
+}
+
+const serviceAccount = JSON.parse(serviceAccountString);
+
+// 🔥 FIX private key
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
+
+console.log("🔥 Firebase initialized");
 
 export default admin;

@@ -54,7 +54,7 @@ class TermsTerminationWidget extends StatelessWidget {
 
           const SizedBox(height: 10),
 
-          ...TermsConstants.terminationItems.map((e) => _buildItem(e)).toList(),
+          ...TermsConstants.terminationItems.map((e) => _buildItem(e)),
 
           const SizedBox(height: 10),
 

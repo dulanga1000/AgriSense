@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/presentation/auth/state/auth_provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
@@ -58,6 +59,12 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
     if (!mounted) return;
 
     if (auth.user != null) {
+      await context.read<ProfileState>().updateProfile(
+        name: widget.nameController.text.trim(),
+        email: email,
+      );
+
+      if (!mounted) return;
       await auth.logout();
 
       if (!mounted) return;
@@ -69,10 +76,7 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
       Navigator.pushReplacementNamed(context, AppRoutes.login);
     } else {
-      AuthSnackBar.showError(
-        context,
-        auth.error ?? "Registration failed",
-      );
+      AuthSnackBar.showError(context, auth.error ?? "Registration failed");
     }
   }
 
@@ -84,12 +88,12 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
     if (!mounted) return;
 
     if (auth.user != null) {
+      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, AppRoutes.main);
     } else {
-      AuthSnackBar.showError(
-        context,
-        auth.error ?? "Google sign-in failed",
-      );
+      AuthSnackBar.showError(context, auth.error ?? "Google sign-in failed");
     }
   }
 
@@ -181,10 +185,7 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
             const SizedBox(height: 25),
 
-            CustomButton(
-              text: 'Register',
-              onPressed: _onRegister,
-            ),
+            CustomButton(text: 'Register', onPressed: _onRegister),
 
             const SizedBox(height: 25),
 

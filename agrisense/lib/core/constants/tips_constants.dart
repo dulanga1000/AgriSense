@@ -11,7 +11,7 @@ class TipsConstants {
     "Get local disease alerts and warnings",
     "Access relevant farming tips",
   ];
-  static const List<String> SecurityTips = [
+  static const List<String> securityTips = [
     "Use a unique password for AgriSense",
     "Don't share your password with anyone",
     "Change your password regularly",

@@ -44,7 +44,7 @@ class PolicyUsageWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: PolicyConstants.usageColor.withOpacity(0.15),
+              color: PolicyConstants.usageColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -70,9 +70,7 @@ class PolicyUsageWidget extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                ...PolicyConstants.usageItems
-                    .map((e) => _buildItem(e))
-                    .toList(),
+                ...PolicyConstants.usageItems.map((e) => _buildItem(e)),
               ],
             ),
           ),

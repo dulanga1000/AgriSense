@@ -173,7 +173,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
               const TipsCard(
                 title: 'Password Tips',
-                tips: TipsConstants.SecurityTips,
+                tips: TipsConstants.securityTips,
                 icon: Icons.security_outlined,
               ),
 

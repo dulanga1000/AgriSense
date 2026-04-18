@@ -10,6 +10,8 @@ class WeatherHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTime = TimeOfDay.now().format(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 45, 20, 25),
@@ -49,6 +51,12 @@ class WeatherHeader extends StatelessWidget {
                 ],
               ),
             ],
+          ),
+
+          const SizedBox(height: 6),
+          Text(
+            currentTime,
+            style: const TextStyle(color: Colors.white70, fontSize: 12),
           ),
 
           const SizedBox(height: 20),

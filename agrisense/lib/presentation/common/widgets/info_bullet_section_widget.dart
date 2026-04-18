@@ -37,7 +37,7 @@ class InfoBulletSectionWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.15),
+              color: iconColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: iconColor),
@@ -68,7 +68,7 @@ class InfoBulletSectionWidget extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 // 🔁 Bullet Items
-                ...items.map((e) => _buildItem(e)).toList(),
+                ...items.map((e) => _buildItem(e)),
 
                 // Optional footer
                 if (footerText != null) ...[

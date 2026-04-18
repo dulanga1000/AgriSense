@@ -59,7 +59,7 @@ class PolicyInfoWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: PolicyConstants.infoColor.withOpacity(0.15),
+              color: PolicyConstants.infoColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -83,9 +83,7 @@ class PolicyInfoWidget extends StatelessWidget {
                   ),
                 ),
 
-                ...PolicyConstants.infoSections
-                    .map((e) => _buildSection(e))
-                    .toList(),
+                ...PolicyConstants.infoSections.map((e) => _buildSection(e)),
               ],
             ),
           ),

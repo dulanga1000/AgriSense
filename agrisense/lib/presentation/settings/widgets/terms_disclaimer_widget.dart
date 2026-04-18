@@ -45,7 +45,7 @@ class TermsDisclaimerWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: TermsConstants.disclaimerColor.withOpacity(0.15),
+              color: TermsConstants.disclaimerColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -88,9 +88,9 @@ class TermsDisclaimerWidget extends StatelessWidget {
                 ),
 
                 // 🔁 Sections
-                ...TermsConstants.disclaimerSections
-                    .map((e) => _buildSection(e))
-                    .toList(),
+                ...TermsConstants.disclaimerSections.map(
+                  (e) => _buildSection(e),
+                ),
               ],
             ),
           ),

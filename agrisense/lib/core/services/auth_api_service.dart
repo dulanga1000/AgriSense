@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthApiService {
-  static const String baseUrl =
-      "https://observant-balance-production.up.railway.app/api/auth";
+  static const String baseUrl = "https://agrisense-qnpv.onrender.com/api/auth";
 
   // ==========================
   // 📩 SEND OTP
@@ -11,9 +10,6 @@ class AuthApiService {
   static Future<void> sendOtp(String email) async {
     try {
       final url = Uri.parse("$baseUrl/send-otp");
-
-      print("➡️ Sending OTP request to: $url");
-      print("📧 Email: $email");
 
       final response = await http
           .post(
@@ -23,16 +19,12 @@ class AuthApiService {
           )
           .timeout(const Duration(seconds: 10));
 
-      print("✅ STATUS: ${response.statusCode}");
-      print("📦 BODY: ${response.body}");
-
       final data = jsonDecode(response.body);
 
       if (response.statusCode != 200) {
         throw Exception(data["error"] ?? "Failed to send OTP");
       }
     } catch (e) {
-      print("❌ SEND OTP ERROR: $e");
       rethrow;
     }
   }
@@ -44,16 +36,11 @@ class AuthApiService {
     try {
       final url = Uri.parse("$baseUrl/verify-otp");
 
-      print("➡️ Verifying OTP for: $email");
-
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"email": email, "otp": otp}),
       );
-
-      print("✅ STATUS: ${response.statusCode}");
-      print("📦 BODY: ${response.body}");
 
       final data = jsonDecode(response.body);
 
@@ -61,7 +48,6 @@ class AuthApiService {
         throw Exception(data["error"] ?? "Invalid OTP");
       }
     } catch (e) {
-      print("❌ VERIFY OTP ERROR: $e");
       rethrow;
     }
   }
@@ -73,16 +59,11 @@ class AuthApiService {
     try {
       final url = Uri.parse("$baseUrl/reset-password");
 
-      print("➡️ Resetting password for: $email");
-
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"email": email, "newPassword": newPassword}),
       );
-
-      print("✅ STATUS: ${response.statusCode}");
-      print("📦 BODY: ${response.body}");
 
       final data = jsonDecode(response.body);
 
@@ -90,7 +71,6 @@ class AuthApiService {
         throw Exception(data["error"] ?? "Password reset failed");
       }
     } catch (e) {
-      print("❌ RESET ERROR: $e");
       rethrow;
     }
   }

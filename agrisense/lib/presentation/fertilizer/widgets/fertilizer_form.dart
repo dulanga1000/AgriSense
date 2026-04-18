@@ -20,8 +20,67 @@ class _FertilizerFormState extends State<FertilizerForm> {
   static const List<String> _cropTypes = [
     _defaultCropOption,
     "Rice",
-    "Corn",
-    "Wheat",
+    "Maize",
+    "Finger Millet",
+    "Green Gram",
+    "Cowpea",
+    "Soybean",
+    "Sesame",
+    "Groundnut",
+    "Cassava",
+    "Sweet Potato",
+    "Tea",
+    "Rubber",
+    "Coconut",
+    "Cinnamon",
+    "Pepper",
+    "Clove",
+    "Cardamom",
+    "Nutmeg",
+    "Coffee",
+    "Cocoa",
+    "Arecanut",
+    "Banana",
+    "Mango",
+    "Papaya",
+    "Pineapple",
+    "Avocado",
+    "Guava",
+    "Rambutan",
+    "Mangosteen",
+    "Orange",
+    "Lime",
+    "Lemon",
+    "Passion Fruit",
+    "Wood Apple",
+    "Tomato",
+    "Chili",
+    "Capsicum",
+    "Brinjal",
+    "Okra",
+    "Onion",
+    "Big Onion",
+    "Garlic",
+    "Potato",
+    "Cabbage",
+    "Carrot",
+    "Leeks",
+    "Beetroot",
+    "Radish",
+    "Cauliflower",
+    "Broccoli",
+    "Lettuce",
+    "Beans",
+    "Peas",
+    "Cucumber",
+    "Watermelon",
+    "Pumpkin",
+    "Bitter Gourd",
+    "Snake Gourd",
+    "Ridge Gourd",
+    "Ash Plantain",
+    "Long Bean",
+    "Winged Bean",
   ];
 
   @override
@@ -59,7 +118,7 @@ class _FertilizerFormState extends State<FertilizerForm> {
           children: [
             Row(
               children: [
-                Image.asset("assets/images/leaf.png", height: 20),
+                const Icon(Icons.eco, color: Colors.green),
                 const SizedBox(width: 8),
                 const Text(
                   "Enter Crop Details",
@@ -84,12 +143,10 @@ class _FertilizerFormState extends State<FertilizerForm> {
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
 
-                
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
                 ),
 
-                
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.green, width: 2),
                 ),
@@ -113,15 +170,12 @@ class _FertilizerFormState extends State<FertilizerForm> {
               decoration: InputDecoration(
                 hintText: "Enter land size",
 
-            
                 border: const OutlineInputBorder(),
 
-                
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
                 ),
 
-                
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.green, width: 2),
                 ),

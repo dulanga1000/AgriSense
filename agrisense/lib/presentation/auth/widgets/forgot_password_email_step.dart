@@ -18,15 +18,17 @@ class ForgotPasswordEmailStep extends StatelessWidget {
     required this.emailController,
   });
 
-  void onSend(BuildContext context) async {
+  Future<void> onSend(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
     try {
       await AuthApiService.sendOtp(emailController.text);
 
+      if (!context.mounted) return;
       AuthSnackBar.showSuccess(context, 'OTP sent to your email!');
       onNext();
     } catch (e) {
+      if (!context.mounted) return;
       AuthSnackBar.showError(context, 'Email not registered');
     }
   }

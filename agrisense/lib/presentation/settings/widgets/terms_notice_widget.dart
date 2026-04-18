@@ -10,7 +10,7 @@ class TermsNoticeWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: TermsConstants.noticeColor.withOpacity(0.1),
+        color: TermsConstants.noticeColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border(
           left: BorderSide(color: TermsConstants.noticeColor, width: 4),

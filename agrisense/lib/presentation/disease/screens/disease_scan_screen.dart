@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:agrisense/core/constants/feature_constants.dart';
 import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:agrisense/presentation/common/widgets/tips_card.dart';
 
@@ -40,7 +39,7 @@ class DiseaseScanScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.1),
+                        color: Colors.red.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.red),
                       ),

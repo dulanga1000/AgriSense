@@ -23,7 +23,7 @@ class FertilizerScreen extends StatelessWidget {
         backgroundColor: Colors.grey[100],
         appBar: const GradientAppBar(
           title: "Fertilizer Guide",
-          subtitle: "Smart recommendations",
+          subtitle: "AI-powered recommendations",
           colors: [Color(0xFF00A63E), Color(0xFF008236)],
         ),
         body: Consumer<FertilizerState>(
@@ -32,6 +32,27 @@ class FertilizerScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
+                  if (state.hasError)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.red),
+                        ),
+                        child: Text(
+                          state.errorMessage!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+
                   FertilizerForm(
                     onSubmit: (cropType, landSize) =>
                         state.getRecommendation(cropType, landSize),

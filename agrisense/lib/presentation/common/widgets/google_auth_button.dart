@@ -22,7 +22,6 @@ class _GoogleAuthButtonState extends State<GoogleAuthButton> {
 
     try {
       // ── Step 1: Google Sign In SDK ─────────────────────────────
-      // TODO: uncomment when google_sign_in package is added
       // final googleUser = await GoogleSignIn().signIn();
       // if (googleUser == null) return;
 
@@ -30,7 +29,6 @@ class _GoogleAuthButtonState extends State<GoogleAuthButton> {
       // final googleAuth = await googleUser.authentication;
 
       // ── Step 3: Send to your backend ───────────────────────────
-      // TODO: replace with your actual AuthRepository call
       // await AuthRepository().googleAuth(
       //   idToken: googleAuth.idToken,
       //   accessToken: googleAuth.accessToken,

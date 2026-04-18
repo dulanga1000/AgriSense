@@ -15,6 +15,7 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTime = TimeOfDay.now().format(context);
     final unreadCount = context.select<NotificationState, int>(
       (state) => state.notifications.where((n) => n.isUnread).length,
     );
@@ -59,6 +60,11 @@ class HomeHeader extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    currentTime,
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
                   ),
                 ],
               ),

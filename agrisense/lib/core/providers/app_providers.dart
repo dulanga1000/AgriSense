@@ -51,7 +51,14 @@ class AppProviders {
       },
     ),
 
-    ChangeNotifierProvider(create: (_) => sl<FarmingTipState>()..loadTips()),
+    ChangeNotifierProxyProvider<WeatherState, FarmingTipState>(
+      create: (_) => sl<FarmingTipState>(),
+      update: (_, weatherState, farmingTipState) {
+        final state = farmingTipState ?? sl<FarmingTipState>();
+        state.loadTips(location: weatherState.selectedLocation);
+        return state;
+      },
+    ),
 
     // ADDED: The provider for your Disease Scanner
     ChangeNotifierProvider(create: (_) => sl<DiseaseState>()),

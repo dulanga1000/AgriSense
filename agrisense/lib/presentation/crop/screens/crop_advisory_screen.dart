@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:agrisense/data/repositories/crop_advisory_repository.dart';
 import 'package:agrisense/presentation/common/navigation/main_tab_navigator.dart';
 import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/common/widgets/bottom_nav_bar.dart';
@@ -17,7 +18,8 @@ class CropAdvisoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => CropAdvisoryState(),
+      create: (_) =>
+          CropAdvisoryState(CropAdvisoryRepository())..loadAdvisoryData(),
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(

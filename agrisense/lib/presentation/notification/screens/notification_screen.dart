@@ -1,9 +1,9 @@
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/notification/state/notification_state.dart';
 import 'package:agrisense/presentation/notification/widgets/notification_card.dart';
 import 'package:agrisense/presentation/common/widgets/notification_setting.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -66,6 +66,32 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
+  void _openSettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            title: const Text('Notification Settings'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          body: SingleChildScrollView(child: NotificationSetting()),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _markAllRead() async {
+    await context.read<NotificationState>().markAllAsRead();
+    if (!mounted) return;
+    _showReadAlert(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = context.watch<NotificationState>();
@@ -73,34 +99,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F6FA),
-      appBar: _NotificationAppBar(
-        unreadCount: unreadCount,
-        onSettingsTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => Scaffold(
-                appBar: AppBar(
-                  backgroundColor: Colors.white,
-                  elevation: 0,
-                  title: const Text('Notification Settings'),
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-                body: SingleChildScrollView(child: NotificationSetting()),
+      appBar: GradientAppBar(
+        title: "Notifications",
+        subtitle: unreadCount > 0 ? "$unreadCount unread messages" : null,
+        colors: const [Color(0xFF9810FA), Color(0xFF6A00C8)],
+        actions: [
+          if (unreadCount > 0)
+            TextButton(
+              onPressed: _markAllRead,
+              child: const Text(
+                'Mark all',
+                style: TextStyle(color: Colors.white),
               ),
             ),
-          );
-        },
-        onMarkAllRead: unreadCount > 0
-            ? () async {
-                await context.read<NotificationState>().markAllAsRead();
-                if (!context.mounted) return;
-                _showReadAlert(context);
-              }
-            : null,
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
+            onPressed: _openSettings,
+          ),
+        ],
       ),
       body: _buildBody(context, state),
     );
@@ -136,125 +152,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           onTap: () async {
             await context.read<NotificationState>().markAsRead(notification.id);
             if (!context.mounted) return;
-
             _showReadAlert(context);
           },
         );
       },
-    );
-  }
-}
-
-class _NotificationAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
-  final int unreadCount;
-  final VoidCallback onSettingsTap;
-  final VoidCallback? onMarkAllRead;
-
-  const _NotificationAppBar({
-    required this.unreadCount,
-    required this.onSettingsTap,
-    this.onMarkAllRead,
-  });
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF9810FA), Color(0xFF6A00C8)],
-          ),
-        ),
-      ),
-      leading: const AppBackButton(fallbackIndex: 0),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'Notifications',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-            ),
-          ),
-          if (unreadCount > 0)
-            Text(
-              '$unreadCount unread message${unreadCount > 1 ? 's' : ''}',
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-        ],
-      ),
-      actions: [
-        if (onMarkAllRead != null)
-          TextButton(
-            onPressed: onMarkAllRead,
-            child: const Text(
-              'Mark all',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_outlined,
-                color: Colors.white,
-              ),
-              onPressed: () {},
-            ),
-            if (unreadCount > 0)
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFF3B30),
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 16,
-                    minHeight: 16,
-                  ),
-                  child: Text(
-                    unreadCount > 9 ? '9+' : '$unreadCount',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-          ],
-        ),
-
-        IconButton(
-          icon: const Icon(Icons.settings_outlined, color: Colors.white),
-          onPressed: onSettingsTap,
-        ),
-      ],
     );
   }
 }

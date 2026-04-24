@@ -142,6 +142,13 @@ class NotificationState extends ChangeNotifier {
     await _repository.markAllAsRead();
   }
 
+  void resetForLogout() {
+    _notifications = [];
+    _isLoading = false;
+    _errorMessage = null;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _pollingTimer?.cancel();

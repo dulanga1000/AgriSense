@@ -1,7 +1,8 @@
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:agrisense/presentation/settings/state/setting_state.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
+
 import '../widgets/general_setting.dart';
 import '../../common/widgets/notification_setting.dart';
 import '../widgets/storage_setting.dart';
@@ -16,20 +17,9 @@ class AppSettingScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
 
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2D6CDF),
-        elevation: 0,
-
-        leading: const AppBackButton(fallbackIndex: 0),
-
-        title: const Text(
-          "App Settings",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-          ),
-        ),
+      appBar: const GradientAppBar(
+        title: "App Settings",
+        colors: [Color(0xFF2D6CDF), Color(0xFF214EBF)],
       ),
 
       body: Consumer<SettingState>(

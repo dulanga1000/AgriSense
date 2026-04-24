@@ -129,4 +129,7 @@ This project is developed for academic purposes only.
 
 Developed for SE303.3 – Mobile Application Development
 
+-GEMINI_API_KEY=AIzaSyCI7o2ZkxbZxyPUoDyDM9x_NxX27pAUKn0
+-FERTILIZER_API_URL=http://10.0.2.2:8000/fertilizer
+
 ====================================================================

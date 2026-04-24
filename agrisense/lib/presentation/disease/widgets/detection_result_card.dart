@@ -55,6 +55,23 @@ class DetectionResultCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
+          Row(
+            children: [
+              const Icon(Icons.local_florist, size: 18, color: Colors.green),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  "Plant: ${result.plantName}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
           Text(
             result.diseaseName,
             style: const TextStyle(

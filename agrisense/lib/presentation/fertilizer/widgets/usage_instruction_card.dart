@@ -38,7 +38,7 @@ class UsageInstructionCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.asset("assets/images/document.png", height: 20),
+                const Icon(Icons.menu_book_outlined, color: Colors.green),
                 const SizedBox(width: 8),
                 const Text(
                   "Usage Instructions",

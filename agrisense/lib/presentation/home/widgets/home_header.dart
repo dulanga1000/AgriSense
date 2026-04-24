@@ -15,6 +15,7 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTime = TimeOfDay.now().format(context);
     final unreadCount = context.select<NotificationState, int>(
       (state) => state.notifications.where((n) => n.isUnread).length,
     );
@@ -59,6 +60,11 @@ class HomeHeader extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    currentTime,
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
                   ),
                 ],
               ),
@@ -128,79 +134,83 @@ class HomeHeader extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Today's Weather",
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                    const SizedBox(height: 6),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Today's Weather",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      const SizedBox(height: 6),
 
-                    if (weatherState.isLoading)
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
+                      if (weatherState.isLoading)
+                        const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      else
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              color: Colors.white70,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                weather?.city ?? "Location unavailable",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      )
-                    else
+
+                      const SizedBox(height: 4),
+
                       Row(
                         children: [
-                          const Icon(
-                            Icons.location_on,
-                            color: Colors.white70,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 4),
                           Text(
-                            weather?.city ?? "Location unavailable",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            weather != null
+                                ? "${weather.temperature.toStringAsFixed(0)}°C"
+                                : "--°C",
                             style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
+                          ),
+                          const SizedBox(width: 10),
+                          const Icon(
+                            CupertinoIcons.cloud_sun,
+                            color: Colors.white,
+                            size: 28,
                           ),
                         ],
                       ),
 
-                    const SizedBox(height: 4),
+                      const SizedBox(height: 4),
 
-                    Row(
-                      children: [
-                        Text(
-                          weather != null
-                              ? "${weather.temperature.toStringAsFixed(0)}°C"
-                              : "--°C",
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        const Icon(
-                          CupertinoIcons.cloud_sun,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    Text(
-                      weather != null
-                          ? "${weather.condition} • ${weather.humidity}% Humidity"
-                          : weatherState.errorMessage != null
-                          ? "Failed to load weather"
-                          : "Loading...",
-                      style: const TextStyle(color: Colors.white70),
-                    ),
-                  ],
+                      Text(
+                        weather != null
+                            ? "${weather.condition} • ${weather.humidity}% Humidity"
+                            : weatherState.errorMessage != null
+                            ? "Failed to load weather"
+                            : "Loading...",
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ],
+                  ),
                 ),
 
                 ElevatedButton(

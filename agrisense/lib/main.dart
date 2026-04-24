@@ -7,10 +7,11 @@ import 'core/providers/app_providers.dart';
 import 'core/routes/app_routes.dart';
 import 'presentation/auth/screens/login_screen.dart';
 import 'presentation/splash/splash_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Future.wait([dotenv.load(fileName: ".env"), Firebase.initializeApp()]);
   await setupLocator();
   runApp(const MyApp());
 }
@@ -44,7 +45,7 @@ class _AppStartupScreenState extends State<AppStartupScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       if (!mounted) return;
       setState(() => _showSplash = false);
     });

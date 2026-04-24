@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/presentation/auth/state/auth_provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
@@ -50,15 +51,23 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
     final auth = context.read<AuthProvider>();
 
-    await auth.register(
-      widget.emailController.text.trim(),
-      widget.passwordController.text.trim(),
-    );
+    final email = widget.emailController.text.trim();
+    final password = widget.passwordController.text.trim();
+
+    await auth.register(email, password);
 
     if (!mounted) return;
 
     if (auth.user != null) {
+      await context.read<ProfileState>().updateProfile(
+        name: widget.nameController.text.trim(),
+        email: email,
+      );
+
+      if (!mounted) return;
       await auth.logout();
+
+      if (!mounted) return;
 
       AuthSnackBar.showSuccess(
         context,
@@ -67,9 +76,24 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
       Navigator.pushReplacementNamed(context, AppRoutes.login);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(auth.error ?? "Registration failed")),
-      );
+      AuthSnackBar.showError(context, auth.error ?? "Registration failed");
+    }
+  }
+
+  Future<void> _onGoogleRegister() async {
+    final auth = context.read<AuthProvider>();
+
+    await auth.googleSignIn();
+
+    if (!mounted) return;
+
+    if (auth.user != null) {
+      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
+    } else {
+      AuthSnackBar.showError(context, auth.error ?? "Google sign-in failed");
     }
   }
 
@@ -161,10 +185,7 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
             const SizedBox(height: 25),
 
-            CustomButton(
-              text: 'Register',
-              onPressed: _onRegister,
-            ),
+            CustomButton(text: 'Register', onPressed: _onRegister),
 
             const SizedBox(height: 25),
 
@@ -183,21 +204,7 @@ class _RegisterFormCardState extends State<RegisterFormCard> {
 
             GoogleAuthButton(
               text: 'Sign up with Google',
-              onSuccess: () async {
-                final auth = context.read<AuthProvider>();
-
-                await auth.googleSignIn();
-
-                if (!mounted) return;
-
-                if (auth.user != null) {
-                  Navigator.pushReplacementNamed(context, AppRoutes.main);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(auth.error ?? "Google sign-in failed")),
-                  );
-                }
-              },
+              onSuccess: _onGoogleRegister, // ✅ FIXED
             ),
 
             const SizedBox(height: 20),

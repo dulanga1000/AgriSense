@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/crop/constants/season_constants.dart';
 import 'package:agrisense/core/constants/location_constants.dart';
+import 'package:agrisense/data/repositories/crop_advisory_repository.dart';
 import 'package:agrisense/data/models/season_model.dart';
 import 'package:agrisense/data/models/district_model.dart';
 import 'package:agrisense/data/models/crop_model.dart';
@@ -9,6 +10,10 @@ import 'package:agrisense/data/models/market_price_model.dart';
 import 'package:agrisense/data/models/expert_tip_model.dart';
 
 class CropAdvisoryState extends ChangeNotifier {
+  CropAdvisoryState(this._repository);
+
+  final CropAdvisoryRepository _repository;
+
   SeasonModel selectedSeason = SeasonConstants.seasons.first;
   DistrictModel selectedDistrict = LocationConstants.districts.first;
 
@@ -37,112 +42,38 @@ class CropAdvisoryState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<CropModel> crops = [
-    const CropModel(
-      cropName: "Rice (Paddy)",
-      duration: "3-4 months",
-      water: "High",
-      profit: "High",
-      tag: "Prime Time",
-      imagePath: "assets/images/rice.png",
-      suited: "Western, Central, North Central Province",
-    ),
-    const CropModel(
-      cropName: "Vegetables",
-      duration: "2-3 months",
-      water: "Medium",
-      profit: "Very High",
-      tag: "Prime Time",
-      imagePath: "assets/images/vegetables.png",
-      suited: "Uva, Central, Sabaragamuwa Province",
-    ),
-    const CropModel(
-      cropName: "Maize (Corn)",
-      duration: "3 months",
-      water: "Medium",
-      profit: "Medium",
-      tag: "Good Time",
-      imagePath: "assets/images/maize.png",
-      suited: "North Central, Eastern, Northern Province",
-    ),
-    const CropModel(
-      cropName: "Cowpea (Mē)",
-      duration: "2-3 months",
-      water: "Low",
-      profit: "Medium",
-      tag: "Good Time",
-      imagePath: "assets/images/cowpea.png",
-      suited: "Dry Zone Areas",
-    ),
-  ];
+  List<CropModel> crops = [];
+  List<CalendarEntryModel> calendarEntries = [];
+  List<MarketPriceModel> marketPrices = [];
+  List<ExpertTipModel> expertTips = [];
 
-  List<CalendarEntryModel> calendarEntries = [
-    const CalendarEntryModel(
-      month: "February",
-      crops: "Rice (Yala)",
-      label: "Land Preparation",
-      imagePath: "assets/images/tractor.png",
-    ),
-    const CalendarEntryModel(
-      month: "March-April",
-      crops: "Rice, Vegetables, Maize",
-      label: "Planting",
-      imagePath: "assets/images/plant.png",
-    ),
-    const CalendarEntryModel(
-      month: "June-July",
-      crops: "Vegetables, Cowpea",
-      label: "Harvesting",
-      imagePath: "assets/images/basket.png",
-    ),
-    const CalendarEntryModel(
-      month: "July-August",
-      crops: "Rice (Yala Season)",
-      label: "Harvesting",
-      imagePath: "assets/images/rice.png",
-    ),
-  ];
+  bool isLoading = false;
+  String? error;
 
-  List<MarketPriceModel> marketPrices = [
-    const MarketPriceModel(
-      crop: "Tomato",
-      price: "Rs. 150-200/kg",
-      demand: "↑ High Demand",
-      demandType: "high",
-    ),
-    const MarketPriceModel(
-      crop: "Cabbage",
-      price: "Rs. 80-120/kg",
-      demand: "→ Medium Demand",
-      demandType: "medium",
-    ),
-    const MarketPriceModel(
-      crop: "Green Chili",
-      price: "Rs. 300-400/kg",
-      demand: "↑ Very High Demand",
-      demandType: "very_high",
-    ),
-  ];
+  Future<void> loadAdvisoryData() async {
+    isLoading = true;
+    error = null;
+    notifyListeners();
 
-  List<ExpertTipModel> expertTips = [
-    const ExpertTipModel(
-      title: "Water Management",
-      description:
-          "Monitor rainfall patterns and adjust irrigation schedules accordingly",
-      type: "water",
-    ),
-    const ExpertTipModel(
-      title: "Soil Preparation",
-      description: "Test soil pH and add organic matter before planting",
-      type: "soil",
-    ),
-    const ExpertTipModel(
-      title: "Pest Control",
-      description:
-          "Regular monitoring helps prevent major outbreaks during this season",
-      type: "pest",
-    ),
-  ];
+    try {
+      final results = await Future.wait([
+        _repository.getRecommendedCrops(),
+        _repository.getCalendarEntries(),
+        _repository.getMarketPrices(),
+        _repository.getExpertTips(),
+      ]);
+
+      crops = results[0] as List<CropModel>;
+      calendarEntries = results[1] as List<CalendarEntryModel>;
+      marketPrices = results[2] as List<MarketPriceModel>;
+      expertTips = results[3] as List<ExpertTipModel>;
+    } catch (_) {
+      error = 'Failed to load crop advisory data';
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 
   void setCrops(List<CropModel> data) {
     crops = data;

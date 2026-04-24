@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:agrisense/data/models/user_model.dart';
 import 'package:agrisense/data/models/farm_stats_model.dart';
 import 'package:agrisense/data/repositories/profile_repository.dart';
@@ -27,7 +28,40 @@ class ProfileState extends ChangeNotifier {
 
   Future<void> loadUser() async {
     user = await _repository.loadUser();
+
+    final authUser = FirebaseAuth.instance.currentUser;
+    if (authUser != null) {
+      final resolvedName = _resolveName(authUser.displayName, authUser.email);
+      final resolvedEmail = authUser.email ?? user.email;
+
+      user = user.copyWith(name: resolvedName, email: resolvedEmail);
+      await _repository.saveUser(user);
+    }
+
     notifyListeners();
+  }
+
+  Future<void> syncFromAuthUser(User authUser) async {
+    final resolvedName = _resolveName(authUser.displayName, authUser.email);
+    final resolvedEmail = authUser.email ?? user.email;
+
+    user = user.copyWith(name: resolvedName, email: resolvedEmail);
+
+    await _repository.saveUser(user);
+    notifyListeners();
+  }
+
+  String _resolveName(String? displayName, String? email) {
+    final trimmedName = (displayName ?? '').trim();
+    if (trimmedName.isNotEmpty) return trimmedName;
+
+    final rawEmail = (email ?? '').trim();
+    if (rawEmail.contains('@')) {
+      final local = rawEmail.split('@').first.trim();
+      if (local.isNotEmpty) return local;
+    }
+
+    return user.name;
   }
 
   Future<void> updateProfile({
@@ -53,6 +87,21 @@ class ProfileState extends ChangeNotifier {
     user = user.copyWith(imagePath: path);
 
     await _repository.saveUser(user);
+    notifyListeners();
+  }
+
+  Future<void> resetToGuest() async {
+    user = UserModel(
+      id: '1',
+      name: 'Guest',
+      role: 'Farmer',
+      location: 'Sri Lanka',
+      phone: '+94 000 000 000',
+      email: 'guest@email.com',
+      memberSince: 'Jan 2024',
+    );
+
+    await _repository.clearUser();
     notifyListeners();
   }
 }

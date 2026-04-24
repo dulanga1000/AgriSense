@@ -1,197 +1,201 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/auth/widgets/otp_input_box.dart';
+import 'package:agrisense/core/services/auth_api_service.dart';
 import 'package:agrisense/presentation/auth/widgets/step_indicator.dart';
+import 'package:agrisense/presentation/auth/screens/login_screen.dart';
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
+import 'package:agrisense/presentation/common/widgets/password_strength_checker.dart';
+import 'package:agrisense/presentation/common/widgets/password_textfield.dart';
 
-class ForgotPasswordVerifyStep extends StatefulWidget {
-  final VoidCallback onNext;
+class ForgotPasswordResetStep extends StatefulWidget {
+  final VoidCallback onResetSuccess;
   final String email;
-  final TextEditingController c1;
-  final TextEditingController c2;
-  final TextEditingController c3;
-  final TextEditingController c4;
-  final TextEditingController c5;
-  final TextEditingController c6;
 
-  const ForgotPasswordVerifyStep({
+  const ForgotPasswordResetStep({
     super.key,
-    required this.onNext,
+    required this.onResetSuccess,
     required this.email,
-    required this.c1,
-    required this.c2,
-    required this.c3,
-    required this.c4,
-    required this.c5,
-    required this.c6,
   });
 
   @override
-  State<ForgotPasswordVerifyStep> createState() =>
-      _ForgotPasswordVerifyStepState();
+  State<ForgotPasswordResetStep> createState() =>
+      _ForgotPasswordResetStepState();
 }
 
-class _ForgotPasswordVerifyStepState extends State<ForgotPasswordVerifyStep> {
-  final FocusNode f1 = FocusNode();
-  final FocusNode f2 = FocusNode();
-  final FocusNode f3 = FocusNode();
-  final FocusNode f4 = FocusNode();
-  final FocusNode f5 = FocusNode();
-  final FocusNode f6 = FocusNode();
+class _ForgotPasswordResetStepState extends State<ForgotPasswordResetStep> {
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  int seconds = 58;
-  Timer? _timer;
+  String _password = '';
+  bool _passwordsMatch = true;
+  bool _loading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _startTimer();
-  }
+  bool get _passwordValid =>
+      _password.length >= 8 &&
+      _password.contains(RegExp(r'[A-Z]')) &&
+      _password.contains(RegExp(r'[a-z]')) &&
+      _password.contains(RegExp(r'[0-9]')) &&
+      _password.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    f1.dispose();
-    f2.dispose();
-    f3.dispose();
-    f4.dispose();
-    f5.dispose();
-    f6.dispose();
-    super.dispose();
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (seconds == 0) {
-        t.cancel();
-      } else {
-        setState(() => seconds--);
-      }
+  void _checkMatch() {
+    setState(() {
+      _passwordsMatch =
+          _newPasswordController.text == _confirmPasswordController.text;
     });
   }
 
-  void _clearOtpBoxes() {
-    widget.c1.clear();
-    widget.c2.clear();
-    widget.c3.clear();
-    widget.c4.clear();
-    widget.c5.clear();
-    widget.c6.clear();
-    FocusScope.of(context).requestFocus(f1);
-  }
-
-  void _resendCode() {
-    setState(() => seconds = 58);
-    _clearOtpBoxes();
-    _startTimer();
-    AuthSnackBar.showSuccess(context, 'OTP resent successfully');
-  }
-
-  bool get _isOtpComplete =>
-      widget.c1.text.trim().isNotEmpty &&
-      widget.c2.text.trim().isNotEmpty &&
-      widget.c3.text.trim().isNotEmpty &&
-      widget.c4.text.trim().isNotEmpty &&
-      widget.c5.text.trim().isNotEmpty &&
-      widget.c6.text.trim().isNotEmpty;
-
-  void _onVerify() {
-    if (seconds == 0) {
-      _clearOtpBoxes();
-      AuthSnackBar.showError(context, 'OTP expired. Please resend the code.');
+  Future<void> _onReset() async {
+    if (!_passwordValid) {
+      AuthSnackBar.showError(context, 'Password does not meet requirements');
       return;
     }
 
-    if (!_isOtpComplete) {
-      AuthSnackBar.showError(context, 'Please enter complete 6-digit code');
+    if (!_passwordsMatch || _confirmPasswordController.text.isEmpty) {
+      AuthSnackBar.showError(context, 'Passwords do not match');
       return;
     }
 
-    AuthSnackBar.showSuccess(context, 'Verification successful');
-    widget.onNext();
+    setState(() => _loading = true);
+
+    try {
+      await AuthApiService.resetPassword(
+        widget.email,
+        _newPasswordController.text,
+      );
+
+      if (!mounted) return;
+      AuthSnackBar.showSuccess(context, 'Password reset successful!');
+      // Redirect to login page after a short delay
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      AuthSnackBar.showError(context, 'Reset failed');
+    }
+
+    if (mounted) {
+      setState(() => _loading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const StepIndicator(currentStep: 2),
-          const SizedBox(height: 20),
+    final matchFeedback = _confirmPasswordController.text.isNotEmpty
+        ? Row(
+            children: [
+              Icon(
+                _passwordsMatch ? Icons.check_circle : Icons.cancel,
+                color: _passwordsMatch ? Colors.green : Colors.red,
+                size: 16,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                _passwordsMatch ? 'Passwords match' : 'Passwords do not match',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: _passwordsMatch ? Colors.green : Colors.red,
+                ),
+              ),
+            ],
+          )
+        : null;
 
-          AuthCard(
-            child: Column(
-              children: [
-                Container(
+    return Column(
+      children: [
+        const StepIndicator(currentStep: 2),
+        const SizedBox(height: 20),
+
+        AuthCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 🔥 ICON
+              Center(
+                child: Container(
                   width: 70,
                   height: 70,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0E8F3E).withValues(alpha: 0.1),
+                    color: Colors.purple.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.key,
-                    color: Color(0xFF0E8F3E),
+                    Icons.security,
+                    color: Colors.purple,
                     size: 32,
                   ),
                 ),
-                const SizedBox(height: 20),
+              ),
 
-                const Text(
-                  'Enter Verification Code',
+              const SizedBox(height: 20),
+
+              // 🔥 TITLE
+              const Center(
+                child: Text(
+                  'Create New Password',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 10),
+              ),
 
-                Text(
-                  'We sent a 6-digit code to ${widget.email}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+              const SizedBox(height: 8),
+
+              const Center(
+                child: Text(
+                  'Choose a strong password for your account',
+                  style: TextStyle(color: Colors.black54),
                 ),
-                const SizedBox(height: 25),
+              ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    OtpInputBox(controller: widget.c1, focusNode: f1),
-                    OtpInputBox(controller: widget.c2, focusNode: f2),
-                    OtpInputBox(controller: widget.c3, focusNode: f3),
-                    OtpInputBox(controller: widget.c4, focusNode: f4),
-                    OtpInputBox(controller: widget.c5, focusNode: f5),
-                    OtpInputBox(controller: widget.c6, focusNode: f6),
-                  ],
-                ),
-                const SizedBox(height: 30),
+              const SizedBox(height: 25),
 
-                CustomButton(
-                  text: 'Verify Code',
-                  icon: Icons.verified,
-                  onPressed: _onVerify,
-                ),
-                const SizedBox(height: 15),
+              // 🔐 NEW PASSWORD
+              const Text('New Password'),
+              const SizedBox(height: 8),
 
-                seconds > 0
-                    ? Text(
-                        'Resend code in ${seconds}s',
-                        style: const TextStyle(color: Colors.black54),
-                      )
-                    : TextButton(
-                        onPressed: _resendCode,
-                        child: const Text(
-                          'Resend Code',
-                          style: TextStyle(
-                            color: Color(0xFF0E8F3E),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-              ],
-            ),
+              PasswordTextField(
+                controller: _newPasswordController,
+                hintText: 'Enter new password',
+                showExtraContentOnFocusAndText: true,
+                onChanged: (value) {
+                  setState(() => _password = value);
+                  _checkMatch();
+                },
+                extraContent: PasswordStrengthChecker(password: _password),
+              ),
+
+              const SizedBox(height: 20),
+
+              // 🔐 CONFIRM PASSWORD
+              const Text('Confirm Password'),
+              const SizedBox(height: 8),
+
+              PasswordTextField(
+                controller: _confirmPasswordController,
+                hintText: 'Confirm password',
+                onChanged: (_) => _checkMatch(),
+                extraContent: matchFeedback,
+              ),
+
+              const SizedBox(height: 20),
+
+              // 🔘 BUTTON
+              CustomButton(
+                text: _loading ? 'Please wait...' : 'Reset Password',
+                icon: Icons.lock,
+                onPressed: _loading ? () {} : _onReset,
+                backgroundColor: _passwordValid && _passwordsMatch
+                    ? const Color(0xFF0E8F3E)
+                    : Colors.green.shade200,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -37,4 +37,14 @@ class ProfileRepository {
     }
     await prefs.setString(_roleKey, user.role);
   }
+
+  Future<void> clearUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_nameKey);
+    await prefs.remove(_emailKey);
+    await prefs.remove(_phoneKey);
+    await prefs.remove(_bioKey);
+    await prefs.remove(_imageKey);
+    await prefs.remove(_roleKey);
+  }
 }

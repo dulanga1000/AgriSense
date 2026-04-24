@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import '../constants/policy_constants.dart';
 
 class PolicyInfoWidget extends StatelessWidget {
   const PolicyInfoWidget({super.key});
 
-  Widget _buildSection(String title, List<String> items) {
+  Widget _buildSection(InfoSectionData section) {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            section.title,
             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
           ),
           const SizedBox(height: 6),
-          ...items.map(
+
+          ...section.items.map(
             (item) => Padding(
               padding: const EdgeInsets.only(bottom: 4, left: 8),
               child: Row(
@@ -53,14 +55,17 @@ class PolicyInfoWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 📦 Icon Box
+          // 📦 Icon
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.blue.shade100,
+              color: PolicyConstants.infoColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.storage_outlined, color: Colors.blue),
+            child: Icon(
+              PolicyConstants.infoIcon,
+              color: PolicyConstants.infoColor,
+            ),
           ),
 
           const SizedBox(width: 12),
@@ -70,30 +75,15 @@ class PolicyInfoWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Information We Collect",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  PolicyConstants.infoTitle,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
 
-                _buildSection("Personal Information:", [
-                  "Name and contact details",
-                  "Farm location and size",
-                  "Profile information",
-                  "Login credentials (encrypted)",
-                ]),
-
-                _buildSection("Usage Data:", [
-                  "Crop detection images",
-                  "Disease scanning history",
-                  "Weather preferences",
-                  "App usage patterns",
-                ]),
-
-                _buildSection("Location Data:", [
-                  "GPS coordinates for weather data",
-                  "Regional farming information",
-                  "Climate-specific recommendations",
-                ]),
+                ...PolicyConstants.infoSections.map((e) => _buildSection(e)),
               ],
             ),
           ),

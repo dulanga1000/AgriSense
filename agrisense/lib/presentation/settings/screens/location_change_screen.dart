@@ -1,6 +1,6 @@
 import 'package:agrisense/core/constants/tips_constants.dart';
+import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:agrisense/presentation/common/widgets/app_back_button.dart';
 import 'package:agrisense/presentation/settings/widgets/current_location_card.dart';
 import 'package:agrisense/presentation/common/widgets/location_selector.dart';
 import 'package:agrisense/presentation/common/widgets/tips_card.dart';
@@ -12,24 +12,9 @@ class LocationChangeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        elevation: 0,
-        leading: const AppBackButton(fallbackIndex: 0),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF9810FA), Color(0xFF8200DB)],
-            ),
-          ),
-        ),
-        title: const Text(
-          "Change Location",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-          ),
-        ),
+      appBar: const GradientAppBar(
+        title: "Change Location",
+        colors: [Color(0xFF9810FA), Color(0xFF8200DB)],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

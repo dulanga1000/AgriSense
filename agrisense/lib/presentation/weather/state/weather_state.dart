@@ -81,4 +81,18 @@ class WeatherState extends ChangeNotifier {
   Future<void> retry() async {
     await loadWeatherData();
   }
+
+  void resetForLogout() {
+    _selectedLocation = 'Colombo, Western Province';
+    _isLoading = false;
+    _errorMessage = null;
+    _weather = null;
+    _rainPrediction = null;
+    _forecast = [];
+    _trends = [];
+    _alerts = [];
+    _activities = null;
+    _irrigationAdvice = null;
+    notifyListeners();
+  }
 }

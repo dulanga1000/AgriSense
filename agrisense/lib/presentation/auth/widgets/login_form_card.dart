@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:agrisense/core/routes/app_routes.dart';
 import 'package:agrisense/presentation/auth/state/auth_provider.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
@@ -32,23 +33,39 @@ class _LoginFormCardState extends State<LoginFormCard> {
     if (!_formKey.currentState!.validate()) return;
 
     final auth = context.read<AuthProvider>();
+    final email = widget.emailController.text.trim();
+    final password = widget.passwordController.text.trim();
 
-    await auth.login(
-      widget.emailController.text.trim(),
-      widget.passwordController.text.trim(),
-    );
+    await auth.login(email, password);
 
     if (!mounted) return;
 
     if (auth.user != null) {
-      AuthSnackBar.showSuccess(context, "Login successful!");
+      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
 
+      if (!mounted) return;
+      AuthSnackBar.showSuccess(context, "Login successful!");
       Navigator.pushReplacementNamed(context, AppRoutes.main);
     } else {
-      AuthSnackBar.showError(
-        context,
-        auth.error ?? "Login failed",
-      );
+      AuthSnackBar.showError(context, auth.error ?? "Login failed");
+    }
+  }
+
+  Future<void> _onGoogleLogin() async {
+    final auth = context.read<AuthProvider>();
+
+    await auth.googleSignIn();
+
+    if (!mounted) return;
+
+    if (auth.user != null) {
+      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+
+      if (!mounted) return;
+      AuthSnackBar.showSuccess(context, "Google login successful!");
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
+    } else {
+      AuthSnackBar.showError(context, auth.error ?? "Google sign-in failed");
     }
   }
 
@@ -126,24 +143,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             GoogleAuthButton(
               text: 'Sign in with Google',
-              onSuccess: () async {
-                final auth = context.read<AuthProvider>();
-
-                await auth.googleSignIn();
-
-                if (!mounted) return;
-
-                if (auth.user != null) {
-                  AuthSnackBar.showSuccess(context, "Google login successful!");
-
-                  Navigator.pushReplacementNamed(context, AppRoutes.main);
-                } else {
-                  AuthSnackBar.showError(
-                    context,
-                    auth.error ?? "Google sign-in failed",
-                  );
-                }
-              },
+              onSuccess: _onGoogleLogin, // ✅ CLEAN
             ),
 
             const SizedBox(height: 20),

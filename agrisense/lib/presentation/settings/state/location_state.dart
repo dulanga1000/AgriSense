@@ -56,7 +56,9 @@ class LocationState extends ChangeNotifier {
       }
 
       final Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
       );
 
       final List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -84,6 +86,13 @@ class LocationState extends ChangeNotifier {
     }
 
     _isLoading = false;
+    notifyListeners();
+  }
+
+  void resetForLogout() {
+    _currentLocation = '';
+    _isLoading = false;
+    _error = null;
     notifyListeners();
   }
 }

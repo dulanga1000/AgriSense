@@ -129,7 +129,9 @@ This project is developed for academic purposes only.
 
 Developed for SE303.3 – Mobile Application Development
 
+## .env
+
 -GEMINI_API_KEY=AIzaSyCI7o2ZkxbZxyPUoDyDM9x_NxX27pAUKn0
--FERTILIZER_API_URL=http://10.0.2.2:8000/fertilizer
+-OPENWEATHER_API_KEY=00987b3eb10e67bc4d51f1227428b027
 
 ====================================================================

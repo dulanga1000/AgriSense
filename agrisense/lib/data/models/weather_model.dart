@@ -17,12 +17,16 @@ class WeatherModel {
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
     return WeatherModel(
-      city: json['name'] ?? "",
-      temperature: (json['main']['temp'] ?? 0).toDouble(),
-      humidity: (json['main']['humidity'] ?? 0).toInt(),
-      condition: json['weather'][0]['main'] ?? "",
-      windSpeed: (json['wind']['speed'] ?? 0).toDouble(),
-      visibility: (json['visibility'] ?? 0).toDouble() / 1000,
+      city: json['name']?.toString() ?? "",
+      temperature:
+          num.tryParse(json['main']['temp'].toString())?.toDouble() ?? 0.0,
+      humidity: num.tryParse(json['main']['humidity'].toString())?.toInt() ?? 0,
+      condition: json['weather'][0]['main']?.toString() ?? "",
+      windSpeed:
+          num.tryParse(json['wind']['speed'].toString())?.toDouble() ?? 0.0,
+      visibility:
+          (num.tryParse(json['visibility'].toString())?.toDouble() ?? 0.0) /
+          1000,
     );
   }
 }
@@ -61,6 +65,17 @@ class RainPredictionModel {
       description: description,
     );
   }
+
+  // ✅ Ultra-safe AI Parsing
+  factory RainPredictionModel.fromJson(Map<String, dynamic> json) {
+    return RainPredictionModel(
+      title: json['title']?.toString() ?? "Rain Prediction",
+      todayPrediction: json['todayPrediction']?.toString() ?? "",
+      rainChance:
+          num.tryParse(json['rainChance'].toString())?.toDouble() ?? 0.0,
+      description: json['description']?.toString() ?? "",
+    );
+  }
 }
 
 class ForecastModel {
@@ -78,10 +93,10 @@ class ForecastModel {
 
   factory ForecastModel.fromJson(Map<String, dynamic> json) {
     return ForecastModel(
-      day: json['day'],
-      temp: json['temp'],
-      rain: json['rain'],
-      condition: json['condition'],
+      day: json['day']?.toString() ?? "N/A",
+      temp: json['temp']?.toString() ?? "0°",
+      rain: json['rain']?.toString() ?? "0%",
+      condition: json['condition']?.toString() ?? "Clear",
     );
   }
 }
@@ -99,12 +114,13 @@ class WeatherTrendModel {
     required this.humidity,
   });
 
+  // ✅ Ultra-safe AI Parsing (handles ints, doubles, and strings safely)
   factory WeatherTrendModel.fromJson(Map<String, dynamic> json) {
     return WeatherTrendModel(
-      day: json['day'],
-      temperature: json['temperature'],
-      rainfall: json['rainfall'],
-      humidity: json['humidity'],
+      day: json['day']?.toString() ?? "N/A",
+      temperature: num.tryParse(json['temperature'].toString())?.toInt() ?? 0,
+      rainfall: num.tryParse(json['rainfall'].toString())?.toInt() ?? 0,
+      humidity: num.tryParse(json['humidity'].toString())?.toInt() ?? 0,
     );
   }
 }
@@ -112,7 +128,7 @@ class WeatherTrendModel {
 class WeatherAlertModel {
   final String title;
   final String message;
-  final String type; // "clear", "humidity", "rain", "wind"
+  final String type;
 
   const WeatherAlertModel({
     required this.title,
@@ -120,11 +136,12 @@ class WeatherAlertModel {
     required this.type,
   });
 
+  // ✅ Ultra-safe AI Parsing
   factory WeatherAlertModel.fromJson(Map<String, dynamic> json) {
     return WeatherAlertModel(
-      title: json['title'],
-      message: json['message'],
-      type: json['type'],
+      title: json['title']?.toString() ?? "Notice",
+      message: json['message']?.toString() ?? "",
+      type: json['type']?.toString() ?? "clear",
     );
   }
 }
@@ -138,10 +155,19 @@ class RecommendedActivitiesModel {
     required this.avoidActivities,
   });
 
+  // ✅ Ultra-safe AI Parsing
   factory RecommendedActivitiesModel.fromJson(Map<String, dynamic> json) {
     return RecommendedActivitiesModel(
-      bestActivities: List<String>.from(json['best_activities']),
-      avoidActivities: List<String>.from(json['avoid_activities']),
+      bestActivities:
+          (json['best_activities'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      avoidActivities:
+          (json['avoid_activities'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
     );
   }
 }
@@ -159,12 +185,15 @@ class IrrigationAdviceModel {
     required this.tips,
   });
 
+  // ✅ Ultra-safe AI Parsing
   factory IrrigationAdviceModel.fromJson(Map<String, dynamic> json) {
     return IrrigationAdviceModel(
-      title: json['title'],
-      subtitle: json['subtitle'],
-      basedOn: json['based_on'],
-      tips: List<String>.from(json['tips']),
+      title: json['title']?.toString() ?? "Irrigation Info",
+      subtitle: json['subtitle']?.toString() ?? "",
+      basedOn: json['based_on']?.toString() ?? "",
+      tips:
+          (json['tips'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
+          [],
     );
   }
 }

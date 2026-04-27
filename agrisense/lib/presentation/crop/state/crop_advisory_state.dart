@@ -33,13 +33,21 @@ class CropAdvisoryState extends ChangeNotifier {
   }
 
   void updateSeason(SeasonModel season) {
+    if (selectedSeason == season) return; // Ignore if it's the same season
     selectedSeason = season;
+    isSeasonOpen = false; // Close the dropdown
     notifyListeners();
+    loadAdvisoryData(); // ✅ Automatically fetch new AI data for the new season
   }
 
   void updateDistrict(DistrictModel district) {
+    if (selectedDistrict == district) {
+      return; // Ignore if it's the same district
+    }
     selectedDistrict = district;
+    isLocationOpen = false; // Close the dropdown
     notifyListeners();
+    loadAdvisoryData(); // ✅ Automatically fetch new AI data for the new location
   }
 
   List<CropModel> crops = [];
@@ -49,32 +57,55 @@ class CropAdvisoryState extends ChangeNotifier {
 
   bool isLoading = false;
   String? error;
+  int _loadRequestId = 0;
 
   Future<void> loadAdvisoryData() async {
+    final requestId = ++_loadRequestId;
+    final locationName = selectedDistrict.district;
+    final seasonName = selectedSeason.name;
+
     isLoading = true;
     error = null;
     notifyListeners();
 
     try {
       final results = await Future.wait([
-        _repository.getRecommendedCrops(),
-        _repository.getCalendarEntries(),
-        _repository.getMarketPrices(),
-        _repository.getExpertTips(),
+        _repository.getRecommendedCrops(locationName, seasonName),
+        _repository.getCalendarEntries(locationName, seasonName),
+        _repository.getMarketPrices(locationName, seasonName),
+        _repository.getExpertTips(locationName, seasonName),
       ]);
+
+      // Ignore stale results if user changed season/location while this request was running.
+      if (requestId != _loadRequestId ||
+          locationName != selectedDistrict.district ||
+          seasonName != selectedSeason.name) {
+        return;
+      }
 
       crops = results[0] as List<CropModel>;
       calendarEntries = results[1] as List<CalendarEntryModel>;
       marketPrices = results[2] as List<MarketPriceModel>;
       expertTips = results[3] as List<ExpertTipModel>;
-    } catch (_) {
-      error = 'Failed to load crop advisory data';
+    } catch (e) {
+      if (requestId != _loadRequestId) {
+        return;
+      }
+
+      error =
+          'Failed to load crop advisory data. Please check your connection.';
+      debugPrint(
+        "Crop Advisory Error: $e",
+      ); // Helpful for debugging if Gemini fails
     } finally {
-      isLoading = false;
-      notifyListeners();
+      if (requestId == _loadRequestId) {
+        isLoading = false;
+        notifyListeners();
+      }
     }
   }
 
+  // --- Manual Setters ---
   void setCrops(List<CropModel> data) {
     crops = data;
     notifyListeners();

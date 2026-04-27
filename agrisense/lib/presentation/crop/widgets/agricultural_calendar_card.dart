@@ -6,6 +6,32 @@ import 'package:agrisense/presentation/crop/state/crop_advisory_state.dart';
 class AgriculturalCalendarCard extends StatelessWidget {
   const AgriculturalCalendarCard({super.key});
 
+  IconData _iconForCalendarItem(String iconName) {
+    final lower = iconName.toLowerCase();
+    if (lower.contains('tractor')) {
+      return Icons.agriculture;
+    }
+    if (lower.contains('basket')) {
+      return Icons.shopping_basket;
+    }
+    if (lower.contains('water')) {
+      return Icons.water_drop;
+    }
+    if (lower.contains('bug') || lower.contains('pest')) {
+      return Icons.bug_report;
+    }
+    if (lower.contains('rice')) {
+      return Icons.rice_bowl;
+    }
+    if (lower.contains('maize') || lower.contains('corn')) {
+      return Icons.grass;
+    }
+    if (lower.contains('vegetable')) {
+      return Icons.local_florist;
+    }
+    return Icons.eco;
+  }
+
   @override
   Widget build(BuildContext context) {
     final entries = context.watch<CropAdvisoryState>().calendarEntries;
@@ -54,7 +80,19 @@ class AgriculturalCalendarCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(entry.imagePath, width: 32, height: 32),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: Colors.green.shade50,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              _iconForCalendarItem(entry.iconName),
+              color: Colors.green.shade700,
+              size: 20,
+            ),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

@@ -4,6 +4,7 @@ import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import '../screens/edit_profile_screen.dart';
 import '../../settings/screens/app_setting_screen.dart';
 import '../../settings/screens/location_change_screen.dart';
+import '../../settings/screens/change_password_screen.dart';
 
 class ProfileSetting extends StatelessWidget {
   const ProfileSetting({super.key});
@@ -82,6 +83,20 @@ class ProfileSetting extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const LocationChangeScreen()),
+              );
+            },
+          ),
+
+          const SizedBox(height: 12),
+
+          _buildSettingTile(
+            context,
+            icon: Icons.lock_outlined,
+            title: "Change Password",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
               );
             },
           ),

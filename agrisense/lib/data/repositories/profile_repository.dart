@@ -42,7 +42,7 @@ class ProfileRepository {
           return firestoreUser;
         }
       } catch (e) {
-        print("Error loading user: $e");
+        // Silent error - fallback to local cache
       }
     }
 
@@ -73,7 +73,7 @@ class ProfileRepository {
             .doc(currentUser.uid)
             .set(userToSave.toMap(), SetOptions(merge: true));
       } catch (e) {
-        print("Error saving user: $e");
+        // Silent error - local data saved, cloud sync failed
       }
     }
   }
@@ -83,8 +83,9 @@ class ProfileRepository {
     await prefs.setString(_emailKey, user.email);
     await prefs.setString(_phoneKey, user.phone);
     await prefs.setString(_bioKey, user.bio);
-    if (user.imagePath != null)
+    if (user.imagePath != null) {
       await prefs.setString(_imageKey, user.imagePath!);
+    }
     await prefs.setString(_roleKey, user.role);
   }
 
@@ -112,7 +113,7 @@ class ProfileRepository {
           return stats;
         }
       } catch (e) {
-        print("Error loading stats: $e");
+        // Silent error - fallback to local cache
       }
     }
 
@@ -139,7 +140,7 @@ class ProfileRepository {
           'stats': stats.toMap(), // Save stats as a nested map
         }, SetOptions(merge: true));
       } catch (e) {
-        print("Error saving stats: $e");
+        // Silent error - local data saved, cloud sync failed
       }
     }
   }

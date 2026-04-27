@@ -33,13 +33,26 @@ class ProfileState extends ChangeNotifier {
 
     final authUser = FirebaseAuth.instance.currentUser;
     if (authUser != null) {
-      final resolvedName = _resolveName(authUser.displayName, authUser.email);
-      final resolvedEmail = authUser.email ?? user.email;
+      // ✅ ONLY update name/email if they're still defaults (first login)
+      // Otherwise, preserve the user's edited profile data from Firestore
+      final isNameDefault = user.name.isEmpty || user.name == 'Guest';
+      final isEmailDefault =
+          user.email.isEmpty || user.email == 'guest@email.com';
+
+      // Only resolve name from Auth if it's default
+      final finalName = isNameDefault
+          ? _resolveName(authUser.displayName, authUser.email)
+          : user.name;
+
+      // Only use Auth email if default
+      final finalEmail = isEmailDefault
+          ? (authUser.email ?? user.email)
+          : user.email;
 
       user = user.copyWith(
         id: authUser.uid,
-        name: resolvedName,
-        email: resolvedEmail,
+        name: finalName,
+        email: finalEmail,
       );
       await _repository.saveUser(user);
     }
@@ -57,14 +70,24 @@ class ProfileState extends ChangeNotifier {
   }
 
   Future<void> syncFromAuthUser(User authUser) async {
-    final resolvedName = _resolveName(authUser.displayName, authUser.email);
-    final resolvedEmail = authUser.email ?? user.email;
+    // ✅ Load existing Firestore data first to preserve edits
+    user = await _repository.loadUser();
+    farmStats = await _repository.loadFarmStats();
 
-    user = user.copyWith(
-      id: authUser.uid,
-      name: resolvedName,
-      email: resolvedEmail,
-    );
+    // ✅ ONLY update name/email if they're still defaults
+    final isNameDefault = user.name.isEmpty || user.name == 'Guest';
+    final isEmailDefault =
+        user.email.isEmpty || user.email == 'guest@email.com';
+
+    final finalName = isNameDefault
+        ? _resolveName(authUser.displayName, authUser.email)
+        : user.name;
+
+    final finalEmail = isEmailDefault
+        ? (authUser.email ?? user.email)
+        : user.email;
+
+    user = user.copyWith(id: authUser.uid, name: finalName, email: finalEmail);
 
     await _repository.saveUser(user);
     notifyListeners();

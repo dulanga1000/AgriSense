@@ -50,8 +50,7 @@ class FirebaseAuthService {
         idToken: googleAuth.idToken,
       );
 
-      final userCredential =
-          await _auth.signInWithCredential(credential);
+      final userCredential = await _auth.signInWithCredential(credential);
 
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
@@ -63,9 +62,32 @@ class FirebaseAuthService {
 
   Future<void> sendPasswordResetEmail(String email) async {
     try {
-      await _auth.sendPasswordResetEmail(
-        email: email.trim(),
+      await _auth.sendPasswordResetEmail(email: email.trim());
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_handleError(e));
+    }
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('No user logged in');
+      }
+
+      // Reauthenticate user to verify current password
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword.trim(),
       );
+
+      await user.reauthenticateWithCredential(credential);
+
+      // Update to new password
+      await user.updatePassword(newPassword.trim());
     } on FirebaseAuthException catch (e) {
       throw Exception(_handleError(e));
     }

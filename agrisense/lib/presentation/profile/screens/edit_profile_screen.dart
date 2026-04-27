@@ -17,6 +17,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isInitialized = false;
+  bool _isSaving = false;
 
   late String _name;
   late String _email;
@@ -79,27 +80,83 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        duration: const Duration(seconds: 3),
+        content: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: Colors.red[700],
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.white),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () =>
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+                child: const Icon(Icons.close, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _onSave() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final profileState = context.read<ProfileState>();
-    final originalImagePath = profileState.user.imagePath;
+    setState(() => _isSaving = true);
 
-    await profileState.updateProfile(
-      name: _name,
-      email: _email,
-      phone: _phone,
-      bio: _bio,
-      role: _role,
-    );
+    try {
+      final profileState = context.read<ProfileState>();
+      final originalImagePath = profileState.user.imagePath;
 
-    if (_imagePath != null && _imagePath != originalImagePath) {
-      await profileState.updateProfileImage(_imagePath!);
+      print('📝 Updating profile data...');
+      await profileState.updateProfile(
+        name: _name,
+        email: _email,
+        phone: _phone,
+        bio: _bio,
+        role: _role,
+      );
+      print('✅ Profile data updated');
+
+      if (_imagePath != null && _imagePath != originalImagePath) {
+        print('🖼️ Updating profile image...');
+        await profileState.updateProfileImage(_imagePath!);
+        print('✅ Profile image updated');
+      }
+
+      if (!mounted) return;
+
+      _showSuccessSnackBar();
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted) Navigator.pop(context);
+      });
+    } catch (e) {
+      if (!mounted) return;
+      print('❌ Error saving profile: $e');
+      final errorMsg = e.toString().replaceAll('Exception: ', '');
+      _showErrorSnackBar('Error: $errorMsg');
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
-
-    _showSuccessSnackBar();
-    if (!mounted) return;
-    Navigator.pop(context);
   }
 
   @override
@@ -143,7 +200,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CustomButton(text: 'Save Changes', onPressed: _onSave),
+              child: Opacity(
+                opacity: _isSaving ? 0.5 : 1.0,
+                child: IgnorePointer(
+                  ignoring: _isSaving,
+                  child: CustomButton(
+                    text: _isSaving ? 'Saving...' : 'Save Changes',
+                    onPressed: _onSave,
+                  ),
+                ),
+              ),
             ),
 
             const SizedBox(height: 10),

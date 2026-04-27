@@ -98,11 +98,12 @@ class WeatherRepository {
     WeatherModel current,
     List<ForecastModel> forecast,
   ) async {
-    // Use a currently supported Gemini model for generateContent.
-    final model = GenerativeModel(
-      model: 'gemini-2.5-flash',
-      apiKey: geminiApiKey,
-    );
+    // Fallback models for handling high demand (503 errors)
+    final models = [
+      "gemini-2.5-flash",
+      "gemini-2.0-flash",
+      "gemini-2.0-flash-lite",
+    ];
 
     String forecastSummary = forecast
         .map((f) => "${f.day}: ${f.temp}, ${f.condition}, Rain: ${f.rain}")
@@ -142,25 +143,60 @@ class WeatherRepository {
     }
     ''';
 
-    final response = await model.generateContent([Content.text(prompt)]);
+    Exception? lastException;
 
-    final responseText = response.text;
-    if (responseText == null || responseText.trim().isEmpty) {
-      throw Exception('Empty response from Gemini API');
+    for (final modelName in models) {
+      for (var attempt = 0; attempt < 3; attempt++) {
+        try {
+          final model = GenerativeModel(model: modelName, apiKey: geminiApiKey);
+
+          final response = await model.generateContent([Content.text(prompt)]);
+
+          final responseText = response.text;
+          if (responseText == null || responseText.trim().isEmpty) {
+            throw Exception('Empty response from Gemini API');
+          }
+
+          // ✅ JSON Cleaner: Safely removes markdown blocks if Gemini accidentally adds them
+          String cleanText = responseText.trim();
+          if (cleanText.startsWith('```json')) {
+            cleanText = cleanText.substring(7);
+          } else if (cleanText.startsWith('```')) {
+            cleanText = cleanText.substring(3);
+          }
+          if (cleanText.endsWith('```')) {
+            cleanText = cleanText.substring(0, cleanText.length - 3);
+          }
+
+          return json.decode(cleanText.trim());
+        } catch (e) {
+          lastException = Exception(e.toString());
+
+          // Check if error is retryable (503 Service Unavailable, rate limit 429, etc.)
+          final isRetryable =
+              e.toString().contains('503') ||
+              e.toString().contains('429') ||
+              e.toString().contains('unavailable') ||
+              e.toString().contains('UNAVAILABLE');
+
+          if (isRetryable && attempt < 2) {
+            // Exponential backoff: 800ms, 1600ms, 2400ms
+            await Future.delayed(Duration(milliseconds: 800 * (attempt + 1)));
+            continue;
+          }
+
+          if (!isRetryable) {
+            // Non-retryable error, skip to next model immediately
+            break;
+          }
+        }
+      }
     }
 
-    // ✅ JSON Cleaner: Safely removes markdown blocks if Gemini accidentally adds them
-    String cleanText = responseText.trim();
-    if (cleanText.startsWith('```json')) {
-      cleanText = cleanText.substring(7);
-    } else if (cleanText.startsWith('```')) {
-      cleanText = cleanText.substring(3);
-    }
-    if (cleanText.endsWith('```')) {
-      cleanText = cleanText.substring(0, cleanText.length - 3);
-    }
-
-    return json.decode(cleanText.trim());
+    // All models exhausted, throw the last exception
+    throw Exception(
+      "Failed to generate Gemini insights after trying all models: ${lastException?.toString()}",
+    );
   }
 
   // =======================================================================

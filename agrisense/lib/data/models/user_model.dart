@@ -72,6 +72,7 @@ class UserModel {
   }
 
   UserModel copyWith({
+    String? id,
     String? name,
     String? phone,
     String? email,
@@ -80,7 +81,7 @@ class UserModel {
     String? role,
   }) {
     return UserModel(
-      id: id,
+      id: id ?? this.id,
       name: name ?? this.name,
       role: role ?? this.role,
       location: location,

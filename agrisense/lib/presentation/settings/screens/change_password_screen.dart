@@ -1,12 +1,11 @@
 import 'package:agrisense/core/constants/tips_constants.dart';
 import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
+import 'package:agrisense/core/services/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Ensure this is imported
 import '../../common/widgets/custom_button.dart';
 import '../../common/widgets/password_strength_checker.dart';
 import '../../common/widgets/password_textfield.dart';
 import '../../common/widgets/tips_card.dart';
-import '../../auth/state/auth_provider.dart'; // Ensure this is imported
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -17,6 +16,7 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _authService = FirebaseAuthService();
 
   final _currentController = TextEditingController();
   final _newController = TextEditingController();
@@ -25,6 +25,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   String _newPassword = '';
   bool _passwordsMatch = true;
   bool _confirmTouched = false;
+  bool _isLoading = false;
 
   bool get _canEditNewPasswordFields =>
       _currentController.text.trim().isNotEmpty;
@@ -50,47 +51,53 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
   }
 
-  // ✅ UPDATED THIS METHOD TO CALL FIREBASE
-  Future<void> _onUpdatePassword() async {
+  void _onUpdatePassword() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final authProvider = context.read<AuthProvider>();
+    setState(() => _isLoading = true);
 
-    // Call the provider to update the password in Firebase
-    final success = await authProvider.changePassword(
-      _currentController.text,
-      _newController.text,
-    );
+    try {
+      await _authService.changePassword(
+        currentPassword: _currentController.text,
+        newPassword: _newController.text,
+      );
 
-    if (!mounted) return;
-
-    if (success) {
-      // Clear fields on success
-      _currentController.clear();
-      _newController.clear();
-      _confirmController.clear();
-      setState(() {
-        _newPassword = '';
-        _confirmTouched = false;
-      });
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Password updated successfully'),
           backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
         ),
       );
-      
-      // Optional: Navigate back after success
-      Navigator.pop(context); 
-    } else {
-      // Show Error from Firebase (e.g. Wrong Current Password)
+
+      // Clear all fields
+      _currentController.clear();
+      _newController.clear();
+      _confirmController.clear();
+      setState(() {
+        _newPassword = '';
+        _passwordsMatch = true;
+        _confirmTouched = false;
+      });
+
+      // Return to previous screen after 1 second
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted) Navigator.pop(context);
+      });
+    } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authProvider.error ?? 'Failed to update password'),
+          content: Text('Error: ${e.toString().replaceAll('Exception: ', '')}'),
           backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
         ),
       );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -98,7 +105,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     final canEdit = _canEditNewPasswordFields;
     final canSubmit = _canSubmitUpdate;
-    final auth = context.watch<AuthProvider>(); // Watch for loading state
 
     final mismatchError = _confirmTouched && !_passwordsMatch
         ? const Text(
@@ -216,13 +222,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 20),
 
               Opacity(
-                opacity: canSubmit && !auth.isLoading ? 1 : 0.45,
+                opacity: (canSubmit && !_isLoading) ? 1 : 0.45,
                 child: IgnorePointer(
-                  ignoring: !canSubmit || auth.isLoading,
+                  ignoring: !canSubmit || _isLoading,
                   child: CustomButton(
-                    // Show loading text if updating
-                    text: auth.isLoading ? 'Updating...' : 'Update Password', 
-                    icon: auth.isLoading ? Icons.hourglass_empty : Icons.lock_outline,
+                    text: _isLoading ? 'Updating...' : 'Update Password',
+                    icon: _isLoading
+                        ? Icons.hourglass_empty
+                        : Icons.lock_outline,
                     onPressed: _onUpdatePassword,
                   ),
                 ),
@@ -234,4 +241,3 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 }
-

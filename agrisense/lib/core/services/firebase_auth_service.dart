@@ -50,8 +50,7 @@ class FirebaseAuthService {
         idToken: googleAuth.idToken,
       );
 
-      final userCredential =
-          await _auth.signInWithCredential(credential);
+      final userCredential = await _auth.signInWithCredential(credential);
 
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
@@ -87,9 +86,7 @@ class FirebaseAuthService {
 
   Future<void> sendPasswordResetEmail(String email) async {
     try {
-      await _auth.sendPasswordResetEmail(
-        email: email.trim(),
-      );
+      await _auth.sendPasswordResetEmail(email: email.trim());
     } on FirebaseAuthException catch (e) {
       throw Exception(_handleError(e));
     }

@@ -22,6 +22,14 @@ class AuthRepository {
     return await _service.signInWithGoogle();
   }
 
+  // ✅ ADDED THIS METHOD TO CHANGE PASSWORD
+  Future<void> changePassword(String currentPassword, String newPassword) async {
+    await _service.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
+  }
+
   Future<void> forgotPassword(String email) async {
     await _service.sendPasswordResetEmail(email);
   }

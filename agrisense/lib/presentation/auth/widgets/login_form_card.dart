@@ -41,7 +41,12 @@ class _LoginFormCardState extends State<LoginFormCard> {
     if (!mounted) return;
 
     if (auth.user != null) {
-      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+      try {
+        // Wrap in try-catch so a Firestore delay/error doesn't block the login
+        await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+      } catch (e) {
+        debugPrint("Profile sync issue: $e");
+      }
 
       if (!mounted) return;
       AuthSnackBar.showSuccess(context, "Login successful!");
@@ -59,7 +64,12 @@ class _LoginFormCardState extends State<LoginFormCard> {
     if (!mounted) return;
 
     if (auth.user != null) {
-      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+      try {
+        // Wrap in try-catch so a Firestore delay/error doesn't block the login
+        await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+      } catch (e) {
+        debugPrint("Profile sync issue: $e");
+      }
 
       if (!mounted) return;
       AuthSnackBar.showSuccess(context, "Google login successful!");
@@ -143,7 +153,7 @@ class _LoginFormCardState extends State<LoginFormCard> {
 
             GoogleAuthButton(
               text: 'Sign in with Google',
-              onSuccess: _onGoogleLogin, // ✅ CLEAN
+              onSuccess: _onGoogleLogin, 
             ),
 
             const SizedBox(height: 20),

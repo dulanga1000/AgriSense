@@ -1,225 +1,244 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 import 'package:agrisense/data/models/weather_model.dart';
 
 class WeatherRepository {
-  final String apiKey = "00987b3eb10e67bc4d51f1227428b027"; // 🔐 put your key
+  // 🔐 Put your API Keys here
+  final String owmApiKey =
+      dotenv.env['OPENWEATHER_API_KEY'] ?? dotenv.env['OWM_API_KEY'] ?? '';
+  final String geminiApiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
 
-  // ✅ NEW: Real API call
-  Future<Map<String, dynamic>> _getLocationData(String location) async {
-    final queryCandidates = _buildQueryCandidates(location);
+  // --- 🧠 Smart Cache System ---
+  String? _cachedLocation;
+  WeatherModel? _currentWeatherCache;
+  List<ForecastModel>? _forecastCache;
+  Map<String, dynamic>? _aiInsightCache;
+  Future<void>? _fetchTask;
 
-    for (final query in queryCandidates) {
-      final url = Uri.parse(
-        "https://api.openweathermap.org/data/2.5/weather?q=$query&units=metric&appid=$apiKey",
+  // Ensures we only make ONE API call, even if the UI asks for all 7 items at once
+  Future<void> _ensureDataLoaded(String location) async {
+    final cleanLocation = location.split(',').first.trim();
+
+    if (_cachedLocation == cleanLocation && _aiInsightCache != null) return;
+
+    if (_fetchTask != null && _cachedLocation == cleanLocation) {
+      await _fetchTask;
+      return;
+    }
+
+    _cachedLocation = cleanLocation;
+    _fetchTask = _fetchAllData(cleanLocation);
+    await _fetchTask;
+    _fetchTask = null;
+  }
+
+  Future<void> _fetchAllData(String location) async {
+    try {
+      // 1. Fetch Current Weather (Real API)
+      final currentUrl = Uri.parse(
+        "https://api.openweathermap.org/data/2.5/weather?q=$location,LK&units=metric&appid=$owmApiKey",
       );
+      final currentRes = await http.get(currentUrl);
+      if (currentRes.statusCode != 200) {
+        throw Exception("Failed to load current weather");
+      }
 
-      final response = await http.get(url);
+      final currentJson = json.decode(currentRes.body);
+      _currentWeatherCache = WeatherModel.fromJson(currentJson);
 
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
+      // 2. Fetch 5-Day Forecast (Real API)
+      final forecastUrl = Uri.parse(
+        "https://api.openweathermap.org/data/2.5/forecast?q=$location,LK&units=metric&appid=$owmApiKey",
+      );
+      final forecastRes = await http.get(forecastUrl);
+      if (forecastRes.statusCode != 200) {
+        throw Exception("Failed to load forecast");
+      }
 
-        return {
-          'city': jsonData['name'],
-          'temperature': jsonData['main']['temp'],
-          'humidity': jsonData['main']['humidity'],
-          'condition': jsonData['weather'][0]['main'],
-          'windSpeed': (jsonData['wind']['speed'] ?? 0) * 3.6,
-          'visibility': (jsonData['visibility'] ?? 10000) / 1000,
+      final forecastJson = json.decode(forecastRes.body);
+      _forecastCache = _parse5DayForecast(forecastJson['list']);
 
-          // 👇 calculated values (IMPORTANT - keeps your features working)
-          'rainChance': _calculateRainChance(jsonData),
-          'rainPrediction':
-              "Today - ${(_calculateRainChance(jsonData) * 100).toInt()}% chance of rain",
+      // 3. Generate Smart Insights using Gemini AI
+      _aiInsightCache = await _generateGeminiInsights(
+        location,
+        _currentWeatherCache!,
+        _forecastCache!,
+      );
+    } catch (e) {
+      throw Exception("Failed to sync weather data: $e");
+    }
+  }
 
-          // 👇 fake forecast (keep your UI working)
-          'temps': ['28°', '30°', '26°', '27°', '29°'],
-          'rains': ['45%', '30%', '70%', '50%', '20%'],
-          'conditions': ['cloud', 'cloud', 'rain', 'cloud', 'sunny'],
-        };
+  List<ForecastModel> _parse5DayForecast(List<dynamic> list) {
+    final Map<String, ForecastModel> dailyForecasts = {};
+
+    for (var item in list) {
+      final dateText = item['dt_txt'] as String;
+      final date = DateTime.parse(dateText);
+      final dayName = DateFormat('E').format(date); // Mon, Tue, etc.
+
+      // Grab the 12:00 PM reading for a standard daily view
+      if (dateText.contains("12:00:00") && dailyForecasts.length < 5) {
+        dailyForecasts[dayName] = ForecastModel(
+          day: dayName,
+          temp: "${item['main']['temp'].round()}°",
+          rain: "${(item['pop'] * 100).round()}%",
+          condition: item['weather'][0]['main'].toString(),
+        );
+      }
+    }
+    return dailyForecasts.values.toList();
+  }
+
+  Future<Map<String, dynamic>> _generateGeminiInsights(
+    String location,
+    WeatherModel current,
+    List<ForecastModel> forecast,
+  ) async {
+    // Fallback models for handling high demand (503 errors)
+    final models = [
+      "gemini-2.5-flash",
+      "gemini-2.0-flash",
+      "gemini-2.0-flash-lite",
+    ];
+
+    String forecastSummary = forecast
+        .map((f) => "${f.day}: ${f.temp}, ${f.condition}, Rain: ${f.rain}")
+        .join(" | ");
+
+    final prompt =
+        '''
+    You are an expert Sri Lankan Agronomist AI. Analyze the following weather data for $location, Sri Lanka.
+    Current: ${current.temperature}°C, ${current.condition}, Humidity: ${current.humidity}%.
+    5-Day Forecast: $forecastSummary.
+
+    Generate farming advice and extend the trends to 7 days based on seasonal expectations.
+    Respond ONLY with a valid JSON object using exactly this schema. Do NOT use markdown code blocks.
+    {
+      "rainPrediction": {
+        "title": "Rain Prediction",
+        "todayPrediction": "String (e.g., 'Today - 80% chance of rain')",
+        "rainChance": 0.8,
+        "description": "Short agricultural advice based on rain chance"
+      },
+      "trends": [
+        {"day": "Mon", "temperature": 28, "rainfall": 40, "humidity": 75} 
+      ],
+      "alerts": [
+        {"title": "Alert Title", "message": "Alert message", "type": "warning"} 
+      ],
+      "activities": {
+        "best_activities": ["activity 1", "activity 2"],
+        "avoid_activities": ["activity 1", "activity 2"]
+      },
+      "irrigation": {
+        "title": "High/Moderate/Minimal Irrigation Needed",
+        "subtitle": "Short reason",
+        "based_on": "Detailed reason",
+        "tips": ["tip 1", "tip 2"]
+      }
+    }
+    ''';
+
+    Exception? lastException;
+
+    for (final modelName in models) {
+      for (var attempt = 0; attempt < 3; attempt++) {
+        try {
+          final model = GenerativeModel(model: modelName, apiKey: geminiApiKey);
+
+          final response = await model.generateContent([Content.text(prompt)]);
+
+          final responseText = response.text;
+          if (responseText == null || responseText.trim().isEmpty) {
+            throw Exception('Empty response from Gemini API');
+          }
+
+          // ✅ JSON Cleaner: Safely removes markdown blocks if Gemini accidentally adds them
+          String cleanText = responseText.trim();
+          if (cleanText.startsWith('```json')) {
+            cleanText = cleanText.substring(7);
+          } else if (cleanText.startsWith('```')) {
+            cleanText = cleanText.substring(3);
+          }
+          if (cleanText.endsWith('```')) {
+            cleanText = cleanText.substring(0, cleanText.length - 3);
+          }
+
+          return json.decode(cleanText.trim());
+        } catch (e) {
+          lastException = Exception(e.toString());
+
+          // Check if error is retryable (503 Service Unavailable, rate limit 429, etc.)
+          final isRetryable =
+              e.toString().contains('503') ||
+              e.toString().contains('429') ||
+              e.toString().contains('unavailable') ||
+              e.toString().contains('UNAVAILABLE');
+
+          if (isRetryable && attempt < 2) {
+            // Exponential backoff: 800ms, 1600ms, 2400ms
+            await Future.delayed(Duration(milliseconds: 800 * (attempt + 1)));
+            continue;
+          }
+
+          if (!isRetryable) {
+            // Non-retryable error, skip to next model immediately
+            break;
+          }
+        }
       }
     }
 
-    throw Exception("Failed to load weather");
+    // All models exhausted, throw the last exception
+    throw Exception(
+      "Failed to generate Gemini insights after trying all models: ${lastException?.toString()}",
+    );
   }
 
-  List<String> _buildQueryCandidates(String location) {
-    final normalized = location.trim();
-    final city = normalized.split(',').first.trim();
+  // =======================================================================
+  // PUBLIC METHODS (These keep your UI working perfectly)
+  // =======================================================================
 
-    final candidates = <String>[
-      Uri.encodeComponent('$city,LK'),
-      Uri.encodeComponent(normalized),
-      Uri.encodeComponent(city),
-    ];
-
-    return candidates.toSet().toList();
-  }
-
-  // ✅ NEW: simple rain logic
-  double _calculateRainChance(Map<String, dynamic> json) {
-    final condition = json['weather'][0]['main'].toString().toLowerCase();
-
-    if (condition.contains("rain")) return 0.8;
-    if (condition.contains("cloud")) return 0.4;
-    return 0.1;
-  }
-
-  // ✅ UPDATED (ONLY small change)
   Future<WeatherModel> getCurrentWeather(String location) async {
-    final data = await _getLocationData(location);
-
-    return WeatherModel(
-      city: (data['city'] ?? location).toString(),
-      temperature: (data['temperature']).toDouble(),
-      humidity: data['humidity'],
-      condition: data['condition'],
-      windSpeed: (data['windSpeed']).toDouble(),
-      visibility: (data['visibility']).toDouble(),
-    );
-  }
-
-  // ❌ DO NOT CHANGE BELOW (your existing logic remains SAME)
-
-  Future<RainPredictionModel> getRainPrediction(String location) async {
-    final data = await _getLocationData(location);
-
-    return RainPredictionModel(
-      title: "Rain Prediction",
-      todayPrediction: data['rainPrediction'],
-      rainChance: data['rainChance'],
-      description: (data['rainChance']) > 0.5
-          ? "High rain probability - plan indoor activities"
-          : "Low rain probability - good day for outdoor farming activities",
-    );
+    await _ensureDataLoaded(location);
+    return _currentWeatherCache!;
   }
 
   Future<List<ForecastModel>> getForecast(String location) async {
-    final data = await _getLocationData(location);
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+    await _ensureDataLoaded(location);
+    return _forecastCache!;
+  }
 
-    return List.generate(5, (i) {
-      return ForecastModel(
-        day: days[i],
-        temp: data['temps'][i],
-        rain: data['rains'][i],
-        condition: data['conditions'][i],
-      );
-    });
+  Future<RainPredictionModel> getRainPrediction(String location) async {
+    await _ensureDataLoaded(location);
+    return RainPredictionModel.fromJson(_aiInsightCache!['rainPrediction']);
   }
 
   Future<List<WeatherTrendModel>> getWeatherTrends(String location) async {
-    final data = await _getLocationData(location);
-
-    final baseTemp = data['temperature'].toInt();
-    final baseHumidity = data['humidity'];
-    final baseRainfall = ((data['rainChance']) * 100).toInt();
-
-    return [
-      WeatherTrendModel(
-        day: "Mon",
-        temperature: baseTemp,
-        rainfall: baseRainfall,
-        humidity: baseHumidity,
-      ),
-      WeatherTrendModel(
-        day: "Tue",
-        temperature: baseTemp + 2,
-        rainfall: baseRainfall - 10,
-        humidity: baseHumidity - 5,
-      ),
-      WeatherTrendModel(
-        day: "Wed",
-        temperature: baseTemp - 3,
-        rainfall: baseRainfall + 15,
-        humidity: baseHumidity + 8,
-      ),
-      WeatherTrendModel(
-        day: "Thu",
-        temperature: baseTemp - 1,
-        rainfall: baseRainfall + 5,
-        humidity: baseHumidity + 3,
-      ),
-      WeatherTrendModel(
-        day: "Fri",
-        temperature: baseTemp + 1,
-        rainfall: baseRainfall - 15,
-        humidity: baseHumidity - 3,
-      ),
-    ];
+    await _ensureDataLoaded(location);
+    final List<dynamic> trendsList = _aiInsightCache!['trends'] ?? [];
+    return trendsList.map((json) => WeatherTrendModel.fromJson(json)).toList();
   }
 
   Future<List<WeatherAlertModel>> getWeatherAlerts(String location) async {
-    final data = await _getLocationData(location);
-
-    final rainChance = data['rainChance'];
-    final humidity = data['humidity'];
-
-    final alerts = <WeatherAlertModel>[];
-
-    if (rainChance > 0.6) {
-      alerts.add(
-        WeatherAlertModel(
-          title: "Heavy Rain Alert",
-          message:
-              "High chance of rain (${(rainChance * 100).toInt()}%) - Postpone outdoor farming activities.",
-          type: "warning",
-        ),
-      );
-    }
-
-    if (humidity > 70) {
-      alerts.add(
-        WeatherAlertModel(
-          title: "High Humidity Notice",
-          message:
-              "Humidity at $humidity% - Monitor crops for fungal diseases.",
-          type: "humidity",
-        ),
-      );
-    }
-
-    return alerts;
+    await _ensureDataLoaded(location);
+    final List<dynamic> alertsList = _aiInsightCache!['alerts'] ?? [];
+    return alertsList.map((json) => WeatherAlertModel.fromJson(json)).toList();
   }
 
   Future<RecommendedActivitiesModel> getRecommendedActivities(
     String location,
   ) async {
-    final data = await _getLocationData(location);
-
-    final rainChance = data['rainChance'];
-
-    return RecommendedActivitiesModel(
-      bestActivities: rainChance < 0.3
-          ? ["Planting & transplanting seedlings", "Field preparation"]
-          : ["Indoor crop monitoring", "Equipment maintenance"],
-      avoidActivities: rainChance > 0.4
-          ? ["Delay harvesting", "Avoid fertilizer application"]
-          : ["Heavy watering"],
-    );
+    await _ensureDataLoaded(location);
+    return RecommendedActivitiesModel.fromJson(_aiInsightCache!['activities']);
   }
 
   Future<IrrigationAdviceModel> getIrrigationAdvice(String location) async {
-    final data = await _getLocationData(location);
-
-    final rainChance = data['rainChance'];
-    final humidity = data['humidity'];
-
-    final irrigationLevel = rainChance > 0.6
-        ? "Minimal"
-        : rainChance > 0.3
-        ? "Moderate"
-        : "High";
-
-    return IrrigationAdviceModel(
-      title: "$irrigationLevel Irrigation Needed",
-      subtitle:
-          "Based on ${(rainChance * 100).toInt()}% rain & $humidity% humidity",
-      basedOn:
-          "${(rainChance * 100).toInt()}% rain chance and $humidity% humidity",
-      tips: rainChance > 0.5
-          ? ["Reduce irrigation", "Skip irrigation for 2-3 days"]
-          : ["Morning irrigation recommended", "Check irrigation system"],
-    );
+    await _ensureDataLoaded(location);
+    return IrrigationAdviceModel.fromJson(_aiInsightCache!['irrigation']);
   }
 }

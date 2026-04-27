@@ -8,7 +8,8 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final crops = context.watch<CropAdvisoryState>().crops;
+    final state = context.watch<CropAdvisoryState>();
+    final crops = state.crops;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -21,12 +22,12 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Recommended Crops for Yala Season",
+            "Recommended Crops",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 4),
-          const Text(
-            "Based on your location and current climate",
+          Text(
+            "${state.selectedSeason.name} - ${state.selectedDistrict.district}",
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 16),

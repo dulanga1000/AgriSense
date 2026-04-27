@@ -2,12 +2,10 @@ import 'package:agrisense/core/constants/tips_constants.dart';
 import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:agrisense/core/services/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Ensure this is imported
 import '../../common/widgets/custom_button.dart';
 import '../../common/widgets/password_strength_checker.dart';
 import '../../common/widgets/password_textfield.dart';
 import '../../common/widgets/tips_card.dart';
-import '../../auth/state/auth_provider.dart'; // Ensure this is imported
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -107,7 +105,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     final canEdit = _canEditNewPasswordFields;
     final canSubmit = _canSubmitUpdate;
-    final auth = context.watch<AuthProvider>(); // Watch for loading state
 
     final mismatchError = _confirmTouched && !_passwordsMatch
         ? const Text(
@@ -244,4 +241,3 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 }
-

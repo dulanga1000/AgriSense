@@ -34,7 +34,11 @@ class ProfileState extends ChangeNotifier {
       final resolvedName = _resolveName(authUser.displayName, authUser.email);
       final resolvedEmail = authUser.email ?? user.email;
 
-      user = user.copyWith(name: resolvedName, email: resolvedEmail);
+      user = user.copyWith(
+        id: authUser.uid,
+        name: resolvedName,
+        email: resolvedEmail,
+      );
       await _repository.saveUser(user);
     }
 
@@ -45,7 +49,11 @@ class ProfileState extends ChangeNotifier {
     final resolvedName = _resolveName(authUser.displayName, authUser.email);
     final resolvedEmail = authUser.email ?? user.email;
 
-    user = user.copyWith(name: resolvedName, email: resolvedEmail);
+    user = user.copyWith(
+      id: authUser.uid,
+      name: resolvedName,
+      email: resolvedEmail,
+    );
 
     await _repository.saveUser(user);
     notifyListeners();
@@ -71,16 +79,20 @@ class ProfileState extends ChangeNotifier {
     String? bio,
     String? role,
   }) async {
-    user = user.copyWith(
-      name: name ?? user.name,
-      phone: phone ?? user.phone,
-      email: email ?? user.email,
-      bio: bio ?? user.bio,
-      role: role ?? user.role,
-    );
+    try {
+      user = user.copyWith(
+        name: name ?? user.name,
+        phone: phone ?? user.phone,
+        email: email ?? user.email,
+        bio: bio ?? user.bio,
+        role: role ?? user.role,
+      );
 
-    await _repository.saveUser(user);
-    notifyListeners();
+      await _repository.saveUser(user);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to update profile: $e');
+    }
   }
 
   Future<void> updateProfileImage(String path) async {
@@ -88,6 +100,13 @@ class ProfileState extends ChangeNotifier {
 
     await _repository.saveUser(user);
     notifyListeners();
+  }
+
+  // 🔍 Debug: Check UID and Firestore sync
+  Future<void> debugFirebaseSync() async {
+    print('\n🔍 ════════ DEBUGGING FIRESTORE SYNC ════════');
+    await _repository.debugCheckUID();
+    print('🔍 ══════════════════════════════════════════\n');
   }
 
   Future<void> resetToGuest() async {

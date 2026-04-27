@@ -1,4 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:agrisense/data/models/user_model.dart';
 
 class ProfileRepository {
@@ -9,11 +11,62 @@ class ProfileRepository {
   static const _imageKey = 'image';
   static const _roleKey = 'role';
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // 🔍 Debug helper - verify UID matches
+  Future<void> debugCheckUID() async {
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      print('📋 ════════════════════════════════════════');
+      print('📋 Firebase Auth UID: ${currentUser.uid}');
+      print('📋 Firebase Auth Email: ${currentUser.email}');
+      print('📋 ════════════════════════════════════════');
+
+      try {
+        final doc = await _firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        if (doc.exists) {
+          print('✅ Document found in Firestore: ${doc.id}');
+          print('📄 Data: ${doc.data()}');
+        } else {
+          print('❌ NO document found at path: users/${currentUser.uid}');
+        }
+      } catch (e) {
+        print('❌ Error reading Firestore: $e');
+      }
+    } else {
+      print('❌ No user authenticated');
+    }
+  }
+
   Future<UserModel> loadUser() async {
     final prefs = await SharedPreferences.getInstance();
+    final currentUser = _auth.currentUser;
 
+    // ✅ NEW: Try fetching fresh data from Firebase first
+    if (currentUser != null) {
+      try {
+        final doc = await _firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        if (doc.exists && doc.data() != null) {
+          final firestoreUser = UserModel.fromMap(doc.data()!);
+          // Update local cache with fresh cloud data
+          await _saveLocally(prefs, firestoreUser);
+          return firestoreUser;
+        }
+      } catch (e) {
+        // Silently fail and fallback to local cache if offline
+      }
+    }
+
+    // 🔄 EXISTING: Fallback to local storage (unchanged)
     return UserModel(
-      id: '1',
+      id: currentUser?.uid ?? '1', // Use real UID if available, else '1'
       name: prefs.getString(_nameKey) ?? "Guest",
       role: prefs.getString(_roleKey) ?? "Farmer",
       location: "Sri Lanka",
@@ -27,7 +80,45 @@ class ProfileRepository {
 
   Future<void> saveUser(UserModel user) async {
     final prefs = await SharedPreferences.getInstance();
+    final currentUser = _auth.currentUser;
 
+    // 🔄 EXISTING: Save locally for instant UI updates
+    print('💾 Saving profile locally...');
+    await _saveLocally(prefs, user);
+    print('✅ Profile saved locally');
+
+    // ✅ NEW: Sync with Firebase Firestore
+    if (currentUser != null) {
+      try {
+        print('🔄 Syncing profile to Firestore (UID: ${currentUser.uid})...');
+
+        // Ensure we are saving with the correct Firebase UID
+        final userToSave = user.copyWith(id: currentUser.uid);
+        final dataToSave = userToSave.toMap();
+
+        print('📤 Data to save: $dataToSave');
+
+        await _firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .set(dataToSave, SetOptions(merge: true))
+            .timeout(
+              const Duration(seconds: 10),
+              onTimeout: () => throw Exception('Firestore write timeout'),
+            );
+
+        print('✅ Profile synced to Firestore successfully!');
+      } catch (e) {
+        // Log the error but don't throw - allow profile updates to proceed with local data
+        print('❌ Warning: Failed to sync profile to Firestore: $e');
+      }
+    } else {
+      print('⚠️ No authenticated user - skipping Firestore sync');
+    }
+  }
+
+  // Helper method to keep your SharedPreferences logic clean
+  Future<void> _saveLocally(SharedPreferences prefs, UserModel user) async {
     await prefs.setString(_nameKey, user.name);
     await prefs.setString(_emailKey, user.email);
     await prefs.setString(_phoneKey, user.phone);

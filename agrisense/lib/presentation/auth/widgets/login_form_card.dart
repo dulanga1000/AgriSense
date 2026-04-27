@@ -41,7 +41,12 @@ class _LoginFormCardState extends State<LoginFormCard> {
     if (!mounted) return;
 
     if (auth.user != null) {
-      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+      try {
+        await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+      } catch (e) {
+        // Even if profile sync fails, allow login to proceed
+        print('Profile sync error: $e');
+      }
 
       if (!mounted) return;
       AuthSnackBar.showSuccess(context, "Login successful!");
@@ -59,7 +64,12 @@ class _LoginFormCardState extends State<LoginFormCard> {
     if (!mounted) return;
 
     if (auth.user != null) {
-      await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+      try {
+        await context.read<ProfileState>().syncFromAuthUser(auth.user!);
+      } catch (e) {
+        // Even if profile sync fails, allow login to proceed
+        print('Profile sync error: $e');
+      }
 
       if (!mounted) return;
       AuthSnackBar.showSuccess(context, "Google login successful!");

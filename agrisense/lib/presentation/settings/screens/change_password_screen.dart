@@ -1,10 +1,12 @@
 import 'package:agrisense/core/constants/tips_constants.dart';
 import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Ensure this is imported
 import '../../common/widgets/custom_button.dart';
 import '../../common/widgets/password_strength_checker.dart';
 import '../../common/widgets/password_textfield.dart';
 import '../../common/widgets/tips_card.dart';
+import '../../auth/state/auth_provider.dart'; // Ensure this is imported
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -48,21 +50,55 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
   }
 
-  void _onUpdatePassword() {
+  // ✅ UPDATED THIS METHOD TO CALL FIREBASE
+  Future<void> _onUpdatePassword() async {
     if (!_formKey.currentState!.validate()) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Password updated successfully'),
-        backgroundColor: Colors.green,
-      ),
+    final authProvider = context.read<AuthProvider>();
+
+    // Call the provider to update the password in Firebase
+    final success = await authProvider.changePassword(
+      _currentController.text,
+      _newController.text,
     );
+
+    if (!mounted) return;
+
+    if (success) {
+      // Clear fields on success
+      _currentController.clear();
+      _newController.clear();
+      _confirmController.clear();
+      setState(() {
+        _newPassword = '';
+        _confirmTouched = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password updated successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      
+      // Optional: Navigate back after success
+      Navigator.pop(context); 
+    } else {
+      // Show Error from Firebase (e.g. Wrong Current Password)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authProvider.error ?? 'Failed to update password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final canEdit = _canEditNewPasswordFields;
     final canSubmit = _canSubmitUpdate;
+    final auth = context.watch<AuthProvider>(); // Watch for loading state
 
     final mismatchError = _confirmTouched && !_passwordsMatch
         ? const Text(
@@ -180,12 +216,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 20),
 
               Opacity(
-                opacity: canSubmit ? 1 : 0.45,
+                opacity: canSubmit && !auth.isLoading ? 1 : 0.45,
                 child: IgnorePointer(
-                  ignoring: !canSubmit,
+                  ignoring: !canSubmit || auth.isLoading,
                   child: CustomButton(
-                    text: 'Update Password',
-                    icon: Icons.lock_outline,
+                    // Show loading text if updating
+                    text: auth.isLoading ? 'Updating...' : 'Update Password', 
+                    icon: auth.isLoading ? Icons.hourglass_empty : Icons.lock_outline,
                     onPressed: _onUpdatePassword,
                   ),
                 ),
@@ -197,3 +234,4 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 }
+

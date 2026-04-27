@@ -3,63 +3,46 @@ class FarmStatsModel {
   final int scans;
   final int crops;
   final int experience;
-  final Set<String> scannedCropNames;
 
   FarmStatsModel({
     required this.acres,
     required this.scans,
     required this.crops,
     required this.experience,
-    Set<String>? scannedCropNames,
-  }) : scannedCropNames = scannedCropNames ?? {};
+  });
 
-  factory FarmStatsModel.empty() {
-    return FarmStatsModel(
-      acres: 0,
-      scans: 0,
-      crops: 0,
-      experience: 0,
-      scannedCropNames: {},
-    );
-  }
-
+  // Convert from Firebase/Local Map to Object
   factory FarmStatsModel.fromMap(Map<String, dynamic> map) {
-    final cropNames = <String>{};
-    if (map['scannedCropNames'] != null) {
-      cropNames.addAll(List<String>.from(map['scannedCropNames']));
-    }
     return FarmStatsModel(
       acres: map['acres'] ?? 0,
       scans: map['scans'] ?? 0,
-      crops: map['crops'] ?? cropNames.length,
+      crops: map['crops'] ?? 0,
       experience: map['experience'] ?? 0,
-      scannedCropNames: cropNames,
     );
   }
 
+  // Convert Object to Firebase/Local Map
   Map<String, dynamic> toMap() {
     return {
       'acres': acres,
       'scans': scans,
       'crops': crops,
       'experience': experience,
-      'scannedCropNames': scannedCropNames.toList(),
     };
   }
 
+  // Helper to update just one field easily
   FarmStatsModel copyWith({
     int? acres,
     int? scans,
     int? crops,
     int? experience,
-    Set<String>? scannedCropNames,
   }) {
     return FarmStatsModel(
       acres: acres ?? this.acres,
       scans: scans ?? this.scans,
       crops: crops ?? this.crops,
       experience: experience ?? this.experience,
-      scannedCropNames: scannedCropNames ?? this.scannedCropNames,
     );
   }
 }

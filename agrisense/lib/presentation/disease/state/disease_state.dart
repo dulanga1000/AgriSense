@@ -6,10 +6,6 @@ import 'package:agrisense/data/repositories/disease_repository.dart';
 class DiseaseState extends ChangeNotifier {
   final DiseaseRepository _repository;
 
-  /// Callback invoked after a successful scan with the detected plant name.
-  /// Set this from the UI layer to wire up farm stats tracking.
-  void Function(String plantName)? onScanCompleted;
-
   DiseaseState(this._repository);
 
   File? _selectedImage;
@@ -39,8 +35,9 @@ class DiseaseState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> detectDisease() async {
-    if (_selectedImage == null || _isAnalyzing) return;
+  // ✅ NEW: Now returns a bool (true = success, false = failed)
+  Future<bool> detectDisease() async {
+    if (_selectedImage == null || _isAnalyzing) return false;
 
     _isAnalyzing = true;
     _result = null;
@@ -49,10 +46,7 @@ class DiseaseState extends ChangeNotifier {
 
     try {
       _result = await _repository.analyzeImage(_selectedImage!);
-      // Notify farm stats tracking after successful scan
-      if (_result != null) {
-        onScanCompleted?.call(_result!.plantName);
-      }
+      return true; // ✅ Success! Return true
     } catch (e, st) {
       _errorMessage =
           'Failed to analyze image. Ensure model and labels are loaded.';
@@ -64,6 +58,7 @@ class DiseaseState extends ChangeNotifier {
           context: ErrorDescription('while analyzing plant image'),
         ),
       );
+      return false; // Failed
     } finally {
       _isAnalyzing = false;
       notifyListeners();

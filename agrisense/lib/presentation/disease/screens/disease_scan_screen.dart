@@ -5,6 +5,9 @@ import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:agrisense/presentation/common/widgets/tips_card.dart';
 
 import 'package:agrisense/presentation/disease/state/disease_state.dart';
+// ✅ Added the ProfileState import so we can update the user's scan count
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
+
 import 'package:agrisense/presentation/disease/widgets/upload_plant_image_card.dart';
 import 'package:agrisense/presentation/disease/widgets/image_preview_card.dart';
 import 'package:agrisense/presentation/disease/widgets/analyzing_card.dart';
@@ -13,7 +16,6 @@ import 'package:agrisense/presentation/disease/widgets/symptoms_card.dart';
 import 'package:agrisense/presentation/disease/widgets/treatment_card.dart';
 import 'package:agrisense/presentation/disease/widgets/prevention_card.dart';
 import 'package:agrisense/presentation/disease/widgets/scan_another_button.dart';
-import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 class DiseaseScanScreen extends StatelessWidget {
   const DiseaseScanScreen({super.key});
@@ -23,10 +25,6 @@ class DiseaseScanScreen extends StatelessWidget {
     // This Consumer listens to the real AI model's state
     return Consumer<DiseaseState>(
       builder: (context, state, child) {
-        // Wire up farm stats tracking callback
-        state.onScanCompleted ??= (plantName) {
-          context.read<ProfileState>().incrementScanCount(plantName);
-        };
         return Scaffold(
           appBar: const GradientAppBar(
             title: "Disease Detection",
@@ -80,8 +78,16 @@ class DiseaseScanScreen extends StatelessWidget {
                     image: state.selectedImage!,
                     isAnalyzing: state.isAnalyzing,
                     onChangeImage: state.onChangeImage,
-                    onDetectDisease: state
-                        .detectDisease, // This now triggers the actual TFLite scan!
+                    // ✅ MODIFIED: We now listen for a successful scan to update the stats
+                    onDetectDisease: () async {
+                      // 1. Run the AI detection
+                      bool success = await state.detectDisease();
+                      
+                      // 2. If it was successful, increment the Farm Stats!
+                      if (success && context.mounted) {
+                        context.read<ProfileState>().incrementScan();
+                      }
+                    },
                   ),
                   const SizedBox(height: 16),
                 ],

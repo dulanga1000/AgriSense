@@ -132,6 +132,8 @@ Developed for SE303.3 – Mobile Application Development
 ## .env
 
 -GEMINI_API_KEY=AIzaSyCI7o2ZkxbZxyPUoDyDM9x_NxX27pAUKn0
+-key 2 - AIzaSyAAdmwGPfr7rsRUmDQ3y_8D3Mz0-tazuo0
+- key 2 - AIzaSyDFcwqILHoAIIVy0phgiB9dHHyKaiJXHiU
 -OPENWEATHER_API_KEY=00987b3eb10e67bc4d51f1227428b027
 -OWM_API_KEY=00987b3eb10e67bc4d51f1227428b027
 

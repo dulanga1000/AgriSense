@@ -127,7 +127,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final profileState = context.read<ProfileState>();
       final originalImagePath = profileState.user.imagePath;
 
-      print('📝 Updating profile data...');
       await profileState.updateProfile(
         name: _name,
         email: _email,
@@ -135,12 +134,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         bio: _bio,
         role: _role,
       );
-      print('✅ Profile data updated');
 
       if (_imagePath != null && _imagePath != originalImagePath) {
-        print('🖼️ Updating profile image...');
         await profileState.updateProfileImage(_imagePath!);
-        print('✅ Profile image updated');
       }
 
       if (!mounted) return;
@@ -151,7 +147,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
     } catch (e) {
       if (!mounted) return;
-      print('❌ Error saving profile: $e');
       final errorMsg = e.toString().replaceAll('Exception: ', '');
       _showErrorSnackBar('Error: $errorMsg');
     } finally {

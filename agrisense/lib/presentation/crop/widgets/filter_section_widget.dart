@@ -127,7 +127,6 @@ class SeasonDropdownContent extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               state.updateSeason(season);
-              state.toggleSeason();
             },
             child: Container(
               width: double.infinity,
@@ -267,7 +266,6 @@ class _LocationDropdownContentState extends State<LocationDropdownContent> {
                     GestureDetector(
                       onTap: () {
                         widget.state.updateDistrict(district);
-                        widget.state.toggleLocation();
                       },
                       child: Container(
                         color: isSelected

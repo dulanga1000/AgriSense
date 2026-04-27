@@ -11,9 +11,11 @@ class ExpertTipModel {
 
   factory ExpertTipModel.fromJson(Map<String, dynamic> json) {
     return ExpertTipModel(
-      title: json['title'],
-      description: json['description'],
-      type: json['type'],
+      title: json['title']?.toString() ?? 'Advisory Tip',
+      description:
+          json['description']?.toString() ??
+          'No detailed recommendation available.',
+      type: json['type']?.toString() ?? 'soil',
     );
   }
 }

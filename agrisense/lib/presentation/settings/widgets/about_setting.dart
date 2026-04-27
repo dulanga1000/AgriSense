@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/settings/state/setting_state.dart';
 
 class AboutSetting extends StatefulWidget {
-  final SettingState settingState; // Add the state parameter
+  final SettingState settingState;
 
   const AboutSetting({super.key, required this.settingState});
 
@@ -60,7 +60,6 @@ class _AboutSettingState extends State<AboutSetting> {
           _buildInfoRow(label: "Build", value: "2024.02.07"),
           const SizedBox(height: 24),
           
-          // Conditionally render the button based on the autoUpdate state
           if (widget.settingState.autoUpdate)
             Center(
               child: InkWell(

@@ -19,12 +19,7 @@ class ProfileState extends ChangeNotifier {
     memberSince: "Jan 2024",
   );
 
-  FarmStatsModel farmStats = FarmStatsModel(
-    acres: 15,
-    scans: 42,
-    crops: 8,
-    experience: 10,
-  );
+  FarmStatsModel farmStats = FarmStatsModel.empty();
 
   Future<void> loadUser() async {
     user = await _repository.loadUser();
@@ -47,6 +42,9 @@ class ProfileState extends ChangeNotifier {
       }
     }
 
+    // Load farm stats (from Firestore for auth users, empty for guest)
+    farmStats = await _repository.loadFarmStats();
+
     notifyListeners();
   }
 
@@ -68,6 +66,10 @@ class ProfileState extends ChangeNotifier {
     if (nameIsDefault || emailIsDefault) {
       await _repository.saveUser(user);
     }
+
+    // Load farm stats from Firestore for authenticated user
+    farmStats = await _repository.loadFarmStats();
+
     notifyListeners();
   }
 
@@ -130,7 +132,45 @@ class ProfileState extends ChangeNotifier {
       memberSince: 'Jan 2024',
     );
 
+    // Reset farm stats to zero in memory (NOT saved to Firebase)
+    farmStats = FarmStatsModel.empty();
+
     await _repository.clearUser();
     notifyListeners();
+  }
+
+  // ─── Farm Stats Methods ───────────────────────────────────────────
+
+  /// Called after a successful disease scan.
+  /// Increments scan count, adds plant name to unique crops set.
+  /// Saves to Firestore only for authenticated users.
+  Future<void> incrementScanCount(String plantName) async {
+    final updatedCrops = Set<String>.from(farmStats.scannedCropNames);
+
+    // Only add valid, non-error plant names
+    final trimmed = plantName.trim();
+    if (trimmed.isNotEmpty &&
+        trimmed != 'Unknown' &&
+        trimmed != 'Unsupported') {
+      updatedCrops.add(trimmed);
+    }
+
+    farmStats = farmStats.copyWith(
+      scans: farmStats.scans + 1,
+      crops: updatedCrops.length,
+      scannedCropNames: updatedCrops,
+    );
+
+    notifyListeners();
+
+    // Save to Firestore (only for auth users — repo handles the check)
+    await _repository.saveFarmStats(farmStats);
+  }
+
+  /// Allows user to update their farm acres count.
+  Future<void> updateAcres(int acres) async {
+    farmStats = farmStats.copyWith(acres: acres);
+    notifyListeners();
+    await _repository.saveFarmStats(farmStats);
   }
 }

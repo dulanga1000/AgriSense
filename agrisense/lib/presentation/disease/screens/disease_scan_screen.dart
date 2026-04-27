@@ -13,6 +13,7 @@ import 'package:agrisense/presentation/disease/widgets/symptoms_card.dart';
 import 'package:agrisense/presentation/disease/widgets/treatment_card.dart';
 import 'package:agrisense/presentation/disease/widgets/prevention_card.dart';
 import 'package:agrisense/presentation/disease/widgets/scan_another_button.dart';
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
 
 class DiseaseScanScreen extends StatelessWidget {
   const DiseaseScanScreen({super.key});
@@ -22,6 +23,10 @@ class DiseaseScanScreen extends StatelessWidget {
     // This Consumer listens to the real AI model's state
     return Consumer<DiseaseState>(
       builder: (context, state, child) {
+        // Wire up farm stats tracking callback
+        state.onScanCompleted ??= (plantName) {
+          context.read<ProfileState>().incrementScanCount(plantName);
+        };
         return Scaffold(
           appBar: const GradientAppBar(
             title: "Disease Detection",

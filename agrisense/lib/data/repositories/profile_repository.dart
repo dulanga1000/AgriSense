@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:agrisense/data/models/user_model.dart';
+import 'package:agrisense/data/models/farm_stats_model.dart';
 
 class ProfileRepository {
   static const _nameKey = 'name';
@@ -115,5 +116,55 @@ class ProfileRepository {
     await prefs.remove(_bioKey);
     await prefs.remove(_imageKey);
     await prefs.remove(_roleKey);
+  }
+
+  // ─── Farm Stats Persistence ───────────────────────────────────────
+
+  /// Load farm stats from Firestore for authenticated users.
+  /// Returns empty stats for guest users.
+  Future<FarmStatsModel> loadFarmStats() async {
+    final currentUser = _auth.currentUser;
+
+    if (currentUser != null) {
+      try {
+        final doc = await _firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('stats')
+            .doc('farm_stats')
+            .get();
+        if (doc.exists && doc.data() != null) {
+          return FarmStatsModel.fromMap(doc.data()!);
+        }
+      } catch (e) {
+        // Silently fail — return empty stats
+      }
+    }
+
+    return FarmStatsModel.empty();
+  }
+
+  /// Save farm stats to Firestore ONLY for authenticated users.
+  /// Guest users skip Firestore write — data stays in memory only.
+  Future<void> saveFarmStats(FarmStatsModel stats) async {
+    final currentUser = _auth.currentUser;
+
+    // Only persist to Firestore for authenticated users
+    if (currentUser != null) {
+      try {
+        await _firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('stats')
+            .doc('farm_stats')
+            .set(stats.toMap(), SetOptions(merge: true))
+            .timeout(
+              const Duration(seconds: 10),
+              onTimeout: () => throw Exception('Firestore write timeout'),
+            );
+      } catch (e) {
+        // Silent error — stats still update in memory
+      }
+    }
   }
 }

@@ -104,9 +104,7 @@ class ProfileState extends ChangeNotifier {
 
   // 🔍 Debug: Check UID and Firestore sync
   Future<void> debugFirebaseSync() async {
-    print('\n🔍 ════════ DEBUGGING FIRESTORE SYNC ════════');
     await _repository.debugCheckUID();
-    print('🔍 ══════════════════════════════════════════\n');
   }
 
   Future<void> resetToGuest() async {

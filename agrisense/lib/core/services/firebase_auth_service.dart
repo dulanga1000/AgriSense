@@ -92,31 +92,6 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> changePassword({
-    required String currentPassword,
-    required String newPassword,
-  }) async {
-    try {
-      final user = _auth.currentUser;
-      if (user == null) {
-        throw Exception('No user logged in');
-      }
-
-      // Reauthenticate user to verify current password
-      final credential = EmailAuthProvider.credential(
-        email: user.email!,
-        password: currentPassword.trim(),
-      );
-
-      await user.reauthenticateWithCredential(credential);
-
-      // Update to new password
-      await user.updatePassword(newPassword.trim());
-    } on FirebaseAuthException catch (e) {
-      throw Exception(_handleError(e));
-    }
-  }
-
   Future<void> logout() async {
     await _googleSignIn.signOut();
     await _auth.signOut();

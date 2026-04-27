@@ -18,27 +18,17 @@ class ProfileRepository {
   Future<void> debugCheckUID() async {
     final currentUser = _auth.currentUser;
     if (currentUser != null) {
-      print('📋 ════════════════════════════════════════');
-      print('📋 Firebase Auth UID: ${currentUser.uid}');
-      print('📋 Firebase Auth Email: ${currentUser.email}');
-      print('📋 ════════════════════════════════════════');
-
       try {
         final doc = await _firestore
             .collection('users')
             .doc(currentUser.uid)
             .get();
         if (doc.exists) {
-          print('✅ Document found in Firestore: ${doc.id}');
-          print('📄 Data: ${doc.data()}');
-        } else {
-          print('❌ NO document found at path: users/${currentUser.uid}');
+          // Debug check passed - document exists
         }
       } catch (e) {
-        print('❌ Error reading Firestore: $e');
+        // Silent error handling
       }
-    } else {
-      print('❌ No user authenticated');
     }
   }
 
@@ -82,21 +72,15 @@ class ProfileRepository {
     final prefs = await SharedPreferences.getInstance();
     final currentUser = _auth.currentUser;
 
-    // 🔄 EXISTING: Save locally for instant UI updates
-    print('💾 Saving profile locally...');
+    // Save locally for instant UI updates
     await _saveLocally(prefs, user);
-    print('✅ Profile saved locally');
 
-    // ✅ NEW: Sync with Firebase Firestore
+    // Sync with Firebase Firestore
     if (currentUser != null) {
       try {
-        print('🔄 Syncing profile to Firestore (UID: ${currentUser.uid})...');
-
         // Ensure we are saving with the correct Firebase UID
         final userToSave = user.copyWith(id: currentUser.uid);
         final dataToSave = userToSave.toMap();
-
-        print('📤 Data to save: $dataToSave');
 
         await _firestore
             .collection('users')
@@ -106,18 +90,12 @@ class ProfileRepository {
               const Duration(seconds: 10),
               onTimeout: () => throw Exception('Firestore write timeout'),
             );
-
-        print('✅ Profile synced to Firestore successfully!');
       } catch (e) {
-        // Log the error but don't throw - allow profile updates to proceed with local data
-        print('❌ Warning: Failed to sync profile to Firestore: $e');
+        // Silent error - allow profile updates to proceed with local data
       }
-    } else {
-      print('⚠️ No authenticated user - skipping Firestore sync');
     }
   }
 
-  // Helper method to keep your SharedPreferences logic clean
   Future<void> _saveLocally(SharedPreferences prefs, UserModel user) async {
     await prefs.setString(_nameKey, user.name);
     await prefs.setString(_emailKey, user.email);

@@ -31,31 +31,43 @@ class ProfileState extends ChangeNotifier {
 
     final authUser = FirebaseAuth.instance.currentUser;
     if (authUser != null) {
-      final resolvedName = _resolveName(authUser.displayName, authUser.email);
-      final resolvedEmail = authUser.email ?? user.email;
+      // Only fill in name/email if Firestore data is empty or default
+      final bool nameIsDefault = user.name.isEmpty || user.name == 'Guest';
+      final bool emailIsDefault = user.email.isEmpty || user.email == 'guest@email.com';
 
       user = user.copyWith(
         id: authUser.uid,
-        name: resolvedName,
-        email: resolvedEmail,
+        name: nameIsDefault ? _resolveName(authUser.displayName, authUser.email) : null,
+        email: emailIsDefault ? authUser.email : null,
       );
-      await _repository.saveUser(user);
+
+      // Only save back if we actually filled in defaults
+      if (nameIsDefault || emailIsDefault) {
+        await _repository.saveUser(user);
+      }
     }
 
     notifyListeners();
   }
 
   Future<void> syncFromAuthUser(User authUser) async {
-    final resolvedName = _resolveName(authUser.displayName, authUser.email);
-    final resolvedEmail = authUser.email ?? user.email;
+    // Load existing data from Firestore first to avoid overwriting
+    user = await _repository.loadUser();
+
+    // Only fill in name/email if Firestore data is empty or default
+    final bool nameIsDefault = user.name.isEmpty || user.name == 'Guest';
+    final bool emailIsDefault = user.email.isEmpty || user.email == 'guest@email.com';
 
     user = user.copyWith(
       id: authUser.uid,
-      name: resolvedName,
-      email: resolvedEmail,
+      name: nameIsDefault ? _resolveName(authUser.displayName, authUser.email) : null,
+      email: emailIsDefault ? authUser.email : null,
     );
 
-    await _repository.saveUser(user);
+    // Only save back if we actually filled in defaults
+    if (nameIsDefault || emailIsDefault) {
+      await _repository.saveUser(user);
+    }
     notifyListeners();
   }
 

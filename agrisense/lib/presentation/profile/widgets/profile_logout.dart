@@ -6,6 +6,7 @@ import 'package:agrisense/presentation/profile/state/profile_state.dart';
 import 'package:agrisense/presentation/disease/state/disease_state.dart';
 import 'package:agrisense/presentation/home/state/farming_tip_state.dart';
 import 'package:agrisense/presentation/settings/state/location_state.dart';
+import 'package:agrisense/presentation/settings/state/setting_state.dart';
 import 'package:agrisense/presentation/weather/state/weather_state.dart';
 import 'package:agrisense/presentation/notification/state/notification_state.dart';
 import 'package:agrisense/presentation/common/widgets/custom_button.dart';
@@ -29,6 +30,7 @@ class _ProfileLogoutState extends State<ProfileLogout> {
     final location = context.read<LocationState>();
     final weather = context.read<WeatherState>();
     final notifications = context.read<NotificationState>();
+    final settings = context.read<SettingState>();
 
     try {
       await auth.logout();
@@ -38,6 +40,7 @@ class _ProfileLogoutState extends State<ProfileLogout> {
       location.resetForLogout();
       weather.resetForLogout();
       notifications.resetForLogout();
+      await settings.resetForLogout();
 
       if (!mounted) return;
       Navigator.pushNamedAndRemoveUntil(

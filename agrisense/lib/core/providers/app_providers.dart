@@ -22,7 +22,7 @@ class AppProviders {
 
     ChangeNotifierProvider(create: (_) => sl<ProfileState>()..loadUser()),
 
-    ChangeNotifierProvider(create: (_) => sl<SettingState>()),
+    ChangeNotifierProvider(create: (_) => sl<SettingState>()..loadSettings()),
 
     ChangeNotifierProvider(
       create: (_) => sl<WeatherState>()..loadWeatherData(),

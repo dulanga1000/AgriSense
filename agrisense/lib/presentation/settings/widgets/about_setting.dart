@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:agrisense/presentation/settings/state/setting_state.dart';
 
 class AboutSetting extends StatefulWidget {
-  const AboutSetting({super.key});
+  final SettingState settingState;
+
+  const AboutSetting({super.key, required this.settingState});
 
   @override
   State<AboutSetting> createState() => _AboutSettingState();
@@ -56,46 +59,48 @@ class _AboutSettingState extends State<AboutSetting> {
           const SizedBox(height: 16),
           _buildInfoRow(label: "Build", value: "2024.02.07"),
           const SizedBox(height: 24),
-          Center(
-            child: InkWell(
-              onTap: _isCheckingForUpdates ? null : _checkForUpdates,
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-                child: _isCheckingForUpdates
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Color(0xFF00AA4F),
-                        ),
-                      )
-                    : const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.file_download_outlined,
-                            size: 20,
+          
+          if (widget.settingState.autoUpdate)
+            Center(
+              child: InkWell(
+                onTap: _isCheckingForUpdates ? null : _checkForUpdates,
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
+                  child: _isCheckingForUpdates
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
                             color: Color(0xFF00AA4F),
                           ),
-                          SizedBox(width: 8),
-                          Text(
-                            "Check for Updates",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
+                        )
+                      : const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.file_download_outlined,
+                              size: 20,
                               color: Color(0xFF00AA4F),
                             ),
-                          ),
-                        ],
-                      ),
+                            SizedBox(width: 8),
+                            Text(
+                              "Check for Updates",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF00AA4F),
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

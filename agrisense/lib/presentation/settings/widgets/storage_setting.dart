@@ -1,11 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:agrisense/presentation/settings/state/setting_state.dart';
 
-class StorageSetting extends StatelessWidget {
+class StorageSetting extends StatefulWidget {
   final SettingState settingState;
 
   const StorageSetting({super.key, required this.settingState});
-  
+
+  @override
+  State<StorageSetting> createState() => _StorageSettingState();
+}
+
+class _StorageSettingState extends State<StorageSetting> {
+  String _cacheSize = "45 MB";
+  bool _isClearing = false;
+
+  Future<void> _clearCache() async {
+    if (_cacheSize == "0 MB") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Cache is already empty!'),
+          backgroundColor: Colors.grey,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isClearing = true);
+
+    // Simulate the time taken to clear files/database cache
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+
+    setState(() {
+      _cacheSize = "0 MB";
+      _isClearing = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Cache cleared successfully!'),
+        backgroundColor: Color(0xFF00AA4F),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +79,27 @@ class StorageSetting extends StatelessWidget {
             icon: Icons.dns_outlined,
             title: "Auto Update",
             subtitle: "Update data automatically",
-            value: settingState.autoUpdate,
-            onChanged: settingState.toggleAutoUpdate,
+            value: widget.settingState.autoUpdate,
+            onChanged: widget.settingState.toggleAutoUpdate,
           ),
           const SizedBox(height: 16),
           _buildActionTile(
-            icon: Icons.dns_outlined,
+            icon: Icons.delete_outline, // Updated icon to better match action
             title: "Clear Cache",
-            trailingText: "45 MB",
-            onTap: () => debugPrint("Clear Cache Tapped"),
+            trailingWidget: _isClearing
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Color(0xFF00AA4F),
+                    ),
+                  )
+                : Text(
+                    _cacheSize,
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
+            onTap: _isClearing ? () {} : _clearCache,
           ),
         ],
       ),
@@ -100,7 +152,7 @@ class StorageSetting extends StatelessWidget {
   Widget _buildActionTile({
     required IconData icon,
     required String title,
-    required String trailingText,
+    required Widget trailingWidget,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -122,10 +174,7 @@ class StorageSetting extends StatelessWidget {
                 ),
               ),
             ),
-            Text(
-              trailingText,
-              style: const TextStyle(fontSize: 13, color: Colors.grey),
-            ),
+            trailingWidget,
           ],
         ),
       ),

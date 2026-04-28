@@ -38,22 +38,6 @@ class GeneralSetting extends StatelessWidget {
             onChanged: settingState.toggleNotifications,
           ),
           const SizedBox(height: 16),
-          _buildSwitchTile(
-            icon: Icons.dark_mode_outlined,
-            title: "Dark Mode",
-            subtitle: "Switch to dark theme",
-            value: settingState.darkMode,
-            onChanged: settingState.toggleDarkMode,
-          ),
-          const SizedBox(height: 16),
-          _buildSwitchTile(
-            icon: Icons.volume_up_outlined,
-            title: "Sound",
-            subtitle: "Enable sound effects",
-            value: settingState.sound,
-            onChanged: settingState.toggleSound,
-          ),
-          const SizedBox(height: 16),
           InkWell(
             onTap: () {},
             child: const Row(

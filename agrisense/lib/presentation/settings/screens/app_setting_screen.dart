@@ -34,7 +34,7 @@ class AppSettingScreen extends StatelessWidget {
                 StorageSetting(settingState: state),
 
                 const PrivacySetting(),
-                const AboutSetting(),
+                AboutSetting(settingState: state), 
 
                 const SizedBox(height: 40),
               ],

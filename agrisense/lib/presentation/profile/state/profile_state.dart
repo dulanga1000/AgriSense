@@ -19,55 +19,77 @@ class ProfileState extends ChangeNotifier {
     memberSince: "Jan 2024",
   );
 
+  // Started at 0 instead of hardcoded numbers
   FarmStatsModel farmStats = FarmStatsModel(
-    acres: 15,
-    scans: 42,
-    crops: 8,
-    experience: 10,
+    acres: 0,
+    scans: 0,
+    crops: 0,
+    experience: 0,
   );
 
   Future<void> loadUser() async {
     user = await _repository.loadUser();
+    farmStats = await _repository.loadFarmStats(); // ✅ Load the real stats!
 
     final authUser = FirebaseAuth.instance.currentUser;
     if (authUser != null) {
-      // Only fill in name/email if Firestore data is empty or default
-      final bool nameIsDefault = user.name.isEmpty || user.name == 'Guest';
-      final bool emailIsDefault = user.email.isEmpty || user.email == 'guest@email.com';
+      // ✅ ONLY update name/email if they're still defaults (first login)
+      // Otherwise, preserve the user's edited profile data from Firestore
+      final isNameDefault = user.name.isEmpty || user.name == 'Guest';
+      final isEmailDefault =
+          user.email.isEmpty || user.email == 'guest@email.com';
+
+      // Only resolve name from Auth if it's default
+      final finalName = isNameDefault
+          ? _resolveName(authUser.displayName, authUser.email)
+          : user.name;
+
+      // Only use Auth email if default
+      final finalEmail = isEmailDefault
+          ? (authUser.email ?? user.email)
+          : user.email;
 
       user = user.copyWith(
         id: authUser.uid,
-        name: nameIsDefault ? _resolveName(authUser.displayName, authUser.email) : null,
-        email: emailIsDefault ? authUser.email : null,
+        name: finalName,
+        email: finalEmail,
       );
-
-      // Only save back if we actually filled in defaults
-      if (nameIsDefault || emailIsDefault) {
-        await _repository.saveUser(user);
-      }
+      await _repository.saveUser(user);
     }
 
     notifyListeners();
   }
 
+  // ✅ NEW: Call this every time a scan completes!
+  Future<void> incrementScan() async {
+    farmStats = farmStats.copyWith(scans: farmStats.scans + 1);
+    await _repository.saveFarmStats(
+      farmStats,
+    ); // Saves locally and pushes to Firebase
+    notifyListeners();
+  }
+
   Future<void> syncFromAuthUser(User authUser) async {
-    // Load existing data from Firestore first to avoid overwriting
+    // ✅ Load existing Firestore data first to preserve edits
     user = await _repository.loadUser();
+    farmStats = await _repository.loadFarmStats();
 
-    // Only fill in name/email if Firestore data is empty or default
-    final bool nameIsDefault = user.name.isEmpty || user.name == 'Guest';
-    final bool emailIsDefault = user.email.isEmpty || user.email == 'guest@email.com';
+    // ✅ ONLY update name/email if they're still defaults
+    final isNameDefault = user.name.isEmpty || user.name == 'Guest';
+    final isEmailDefault =
+        user.email.isEmpty || user.email == 'guest@email.com';
 
-    user = user.copyWith(
-      id: authUser.uid,
-      name: nameIsDefault ? _resolveName(authUser.displayName, authUser.email) : null,
-      email: emailIsDefault ? authUser.email : null,
-    );
+    final finalName = isNameDefault
+        ? _resolveName(authUser.displayName, authUser.email)
+        : user.name;
 
-    // Only save back if we actually filled in defaults
-    if (nameIsDefault || emailIsDefault) {
-      await _repository.saveUser(user);
-    }
+    final finalEmail = isEmailDefault
+        ? (authUser.email ?? user.email)
+        : user.email;
+
+    user = user.copyWith(id: authUser.uid, name: finalName, email: finalEmail);
+
+    await _repository.saveUser(user);
     notifyListeners();
   }
 
@@ -91,32 +113,22 @@ class ProfileState extends ChangeNotifier {
     String? bio,
     String? role,
   }) async {
-    try {
-      user = user.copyWith(
-        name: name ?? user.name,
-        phone: phone ?? user.phone,
-        email: email ?? user.email,
-        bio: bio ?? user.bio,
-        role: role ?? user.role,
-      );
-
-      await _repository.saveUser(user);
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to update profile: $e');
-    }
-  }
-
-  Future<void> updateProfileImage(String path) async {
-    user = user.copyWith(imagePath: path);
+    user = user.copyWith(
+      name: name ?? user.name,
+      phone: phone ?? user.phone,
+      email: email ?? user.email,
+      bio: bio ?? user.bio,
+      role: role ?? user.role,
+    );
 
     await _repository.saveUser(user);
     notifyListeners();
   }
 
-  // 🔍 Debug: Check UID and Firestore sync
-  Future<void> debugFirebaseSync() async {
-    await _repository.debugCheckUID();
+  Future<void> updateProfileImage(String path) async {
+    user = user.copyWith(imagePath: path);
+    await _repository.saveUser(user);
+    notifyListeners();
   }
 
   Future<void> resetToGuest() async {
@@ -130,7 +142,10 @@ class ProfileState extends ChangeNotifier {
       memberSince: 'Jan 2024',
     );
 
-    await _repository.clearUser();
+    // ✅ Reset stats visually
+    farmStats = FarmStatsModel(acres: 0, scans: 0, crops: 0, experience: 0);
+
+    await _repository.clearUser(); // Wipes local data
     notifyListeners();
   }
 }

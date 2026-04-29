@@ -1,121 +1,94 @@
 import 'package:agrisense/data/models/notification_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NotificationRepository {
-  static List<NotificationModel>? _store;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  static final Map<String, bool> _unreadById = <String, bool>{};
+  NotificationModel _fromDoc(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data();
 
-  static bool _initialSeedDone = false;
+    final time = _parseDateTime(data['time']) ?? DateTime.now();
 
-  List<NotificationModel> _hardcodedNotifications() => [
-    NotificationModel(
-      id: "1",
-      title: "Weather Alert: Heavy Rain Expected",
-      description:
-          "Heavy rain is expected in your area tomorrow. Please take necessary precautions to protect your crops.",
-      time: DateTime.now().subtract(const Duration(minutes: 30)),
-      type: "Weather",
-      isUnread: true,
-    ),
-    NotificationModel(
-      id: "2",
-      title: "New Fertilizer Recommendation Available",
-      description:
-          "Based on your recent soil analysis, a new fertilizer recommendation is available for your crops.",
-      time: DateTime.now().subtract(const Duration(hours: 2)),
-      type: "Recommendation",
-      isUnread: true,
-    ),
-    NotificationModel(
-      id: "3",
-      title: "Disease Detected in Nearby Area",
-      description:
-          "A disease outbreak has been detected in a nearby area. Monitor your crops closely.",
-      time: DateTime.now().subtract(const Duration(days: 1)),
-      type: "Alert",
-      isUnread: true,
-    ),
-    NotificationModel(
-      id: "4",
-      title: "Soil Moisture Low",
-      description:
-          "Soil moisture levels are critically low. Consider irrigation soon.",
-      time: DateTime.now().subtract(const Duration(days: 1)),
-      type: "Alert",
-      isUnread: true,
-    ),
-    NotificationModel(
-      id: "5",
-      title: "Harvest Time Approaching",
-      description:
-          "Based on your crop schedule, harvest time is approaching in 3 days.",
-      time: DateTime.now().subtract(const Duration(days: 2)),
-      type: "Recommendation",
-      isUnread: false,
-    ),
-  ];
+    return NotificationModel(
+      id: (data['id'] as String?) ?? doc.id,
+      title: (data['title'] as String?) ?? '',
+      description: (data['description'] as String?) ?? '',
+      time: time,
+      type: (data['type'] as String?) ?? 'notification',
+      isUnread: (data['isUnread'] as bool?) ?? false,
+    );
+  }
 
-  void _seedStore({bool forceRefresh = false}) {
-    final raw = _hardcodedNotifications();
-
-    if (!_initialSeedDone) {
-      for (final n in raw) {
-        _unreadById[n.id] = n.isUnread;
-      }
-      _initialSeedDone = true;
-    }
-
-    if (_store == null || forceRefresh) {
-      _store = raw.map((n) {
-        final isUnread = _unreadById[n.id] ?? n.isUnread;
-        return n.copyWith(isUnread: isUnread);
-      }).toList();
-    }
+  DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is Timestamp) return value.toDate();
+    if (value is String) return DateTime.tryParse(value);
+    if (value is int) return DateTime.fromMillisecondsSinceEpoch(value);
+    return null;
   }
 
   Future<List<NotificationModel>> fetchNotifications({
     bool forceRefresh = false,
   }) async {
-    await Future.delayed(const Duration(seconds: 1));
-    _seedStore(forceRefresh: forceRefresh);
-    return _store!.map((n) => n.copyWith()).toList();
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return <NotificationModel>[];
+
+    // `forceRefresh` kept for interface compatibility: Firestore reads will
+    // always re-query when this method is called.
+    final collection = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('notifications');
+
+    final snap = await collection.orderBy('time', descending: true).get();
+    return snap.docs.map((d) => _fromDoc(d)).toList();
   }
 
   Future<bool> markAsRead(String notificationId) async {
-    _seedStore();
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return false;
 
-    final index = _store!.indexWhere((n) => n.id == notificationId);
-    if (index == -1) return false;
+    final docRef = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('notifications')
+        .doc(notificationId);
 
-    if (_store![index].isUnread) {
-      _store![index] = _store![index].copyWith(isUnread: false);
-      _unreadById[notificationId] = false;
-    }
+    final doc = await docRef.get();
+    if (!doc.exists) return false;
 
-    await Future.delayed(const Duration(milliseconds: 200));
+    await docRef.update({'isUnread': false});
     return true;
   }
 
   Future<int> markAllAsRead() async {
-    _seedStore();
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return 0;
 
+    final collection = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('notifications');
+
+    final unreadSnap =
+        await collection.where('isUnread', isEqualTo: true).get();
+    if (unreadSnap.docs.isEmpty) return 0;
+
+    final batch = _firestore.batch();
     var updatedCount = 0;
-    for (var i = 0; i < _store!.length; i++) {
-      final n = _store![i];
-      if (n.isUnread) {
-        _store![i] = n.copyWith(isUnread: false);
-        _unreadById[n.id] = false;
-        updatedCount++;
-      }
+
+    for (final doc in unreadSnap.docs) {
+      batch.update(doc.reference, {'isUnread': false});
+      updatedCount++;
     }
 
-    await Future.delayed(const Duration(milliseconds: 200));
+    await batch.commit();
     return updatedCount;
   }
 
   void reset() {
-    _store = null;
-    _unreadById.clear();
-    _initialSeedDone = false;
+    // No-op: notifications are loaded from Firestore.
   }
 }

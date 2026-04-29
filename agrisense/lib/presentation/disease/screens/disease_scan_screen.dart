@@ -5,6 +5,9 @@ import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
 import 'package:agrisense/presentation/common/widgets/tips_card.dart';
 
 import 'package:agrisense/presentation/disease/state/disease_state.dart';
+// ✅ Added the ProfileState import so we can update the user's scan count
+import 'package:agrisense/presentation/profile/state/profile_state.dart';
+
 import 'package:agrisense/presentation/disease/widgets/upload_plant_image_card.dart';
 import 'package:agrisense/presentation/disease/widgets/image_preview_card.dart';
 import 'package:agrisense/presentation/disease/widgets/analyzing_card.dart';
@@ -75,8 +78,16 @@ class DiseaseScanScreen extends StatelessWidget {
                     image: state.selectedImage!,
                     isAnalyzing: state.isAnalyzing,
                     onChangeImage: state.onChangeImage,
-                    onDetectDisease: state
-                        .detectDisease, // This now triggers the actual TFLite scan!
+                    // ✅ MODIFIED: We now listen for a successful scan to update the stats
+                    onDetectDisease: () async {
+                      // 1. Run the AI detection
+                      bool success = await state.detectDisease();
+                      
+                      // 2. If it was successful, increment the Farm Stats!
+                      if (success && context.mounted) {
+                        context.read<ProfileState>().incrementScan();
+                      }
+                    },
                   ),
                   const SizedBox(height: 16),
                 ],

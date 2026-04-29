@@ -35,8 +35,9 @@ class DiseaseState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> detectDisease() async {
-    if (_selectedImage == null || _isAnalyzing) return;
+  // ✅ NEW: Now returns a bool (true = success, false = failed)
+  Future<bool> detectDisease() async {
+    if (_selectedImage == null || _isAnalyzing) return false;
 
     _isAnalyzing = true;
     _result = null;
@@ -45,6 +46,7 @@ class DiseaseState extends ChangeNotifier {
 
     try {
       _result = await _repository.analyzeImage(_selectedImage!);
+      return true; // ✅ Success! Return true
     } catch (e, st) {
       _errorMessage =
           'Failed to analyze image. Ensure model and labels are loaded.';
@@ -56,6 +58,7 @@ class DiseaseState extends ChangeNotifier {
           context: ErrorDescription('while analyzing plant image'),
         ),
       );
+      return false; // Failed
     } finally {
       _isAnalyzing = false;
       notifyListeners();

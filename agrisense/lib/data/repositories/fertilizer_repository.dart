@@ -15,6 +15,7 @@ class FertilizerRepository {
 
   FertilizerRepository() {
     _initializeAPI();
+    _clearStaleCache(); // Clear old cached results with incorrect costs
   }
 
   void _initializeAPI() {
@@ -27,6 +28,22 @@ class FertilizerRepository {
       _isInitialized = true;
     } catch (e) {
       throw Exception("Failed to initialize Gemini API: $e");
+    }
+  }
+
+  /// Clears all previously cached fertilizer recommendations
+  /// so fresh results are fetched with the corrected prompt.
+  Future<void> _clearStaleCache() async {
+    try {
+      _prefs ??= await SharedPreferences.getInstance();
+      final keys = _prefs?.getKeys() ?? {};
+      for (final key in keys) {
+        if (key.startsWith(_cachePrefix)) {
+          await _prefs?.remove(key);
+        }
+      }
+    } catch (_) {
+      // Silently fail - cache clearing is best-effort
     }
   }
 
@@ -86,13 +103,25 @@ class FertilizerRepository {
 
   /// Builds optimized prompt for fertilizer recommendations
   String _buildFertilizerPrompt(String cropType, double landSize) {
-    return """Provide fertilizer recommendation for $cropType on $landSize acres.
-Return ONLY this JSON format (no markdown):
+    return """You are a Sri Lankan agricultural expert. Provide a fertilizer recommendation for $cropType cultivation on $landSize acres of land in Sri Lanka.
+
+IMPORTANT CONTEXT for cost estimation (current Sri Lankan market prices):
+- Urea (46-0-0): approximately LKR 3,500–5,000 per 50kg bag
+- TSP / Triple Super Phosphate (0-46-0): approximately LKR 9,000–12,500 per 50kg bag
+- MOP / Muriate of Potash (0-0-60): approximately LKR 8,000–11,000 per 50kg bag
+- NPK mixed fertilizers (e.g. 10-26-26): approximately LKR 9,000–14,000 per 50kg bag
+- DAP (18-46-0): approximately LKR 12,000–16,000 per 50kg bag
+- Organic compost: approximately LKR 1,500–3,000 per 50kg bag
+
+Calculate the estimated_cost as the TOTAL cost in LKR for ALL the fertilizer needed to cover the entire $landSize acres.
+The cost must reflect realistic Sri Lankan retail prices. For example, 1 acre of rice typically costs LKR 15,000–35,000 in fertilizer.
+
+Return ONLY this JSON format (no markdown, no explanation):
 {
   "fertilizer_name": "specific fertilizer name",
   "npk_ratio": "N-P-K ratio like 10-26-26",
-  "total_quantity": total_kg_needed,
-  "estimated_cost": cost_per_kg,
+  "total_quantity": total_kg_needed_as_number,
+  "estimated_cost": total_cost_in_LKR_as_number,
   "usage_steps": ["step1", "step2", "step3"],
   "application_timing": "when to apply"
 }""";

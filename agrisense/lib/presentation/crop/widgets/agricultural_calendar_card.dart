@@ -34,7 +34,8 @@ class AgriculturalCalendarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final entries = context.watch<CropAdvisoryState>().calendarEntries;
+    final state = context.watch<CropAdvisoryState>();
+    final entries = state.calendarEntries;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -60,12 +61,27 @@ class AgriculturalCalendarCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          ...entries.map(
-            (entry) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _calendarItem(entry),
+          if (state.isLoading)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Center(
+                child: SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    color: Color(0xFF16A34A),
+                  ),
+                ),
+              ),
+            )
+          else
+            ...entries.map(
+              (entry) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _calendarItem(entry),
+              ),
             ),
-          ),
         ],
       ),
     );

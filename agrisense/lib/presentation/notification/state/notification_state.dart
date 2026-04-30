@@ -20,6 +20,7 @@ class NotificationState extends ChangeNotifier {
   bool _diseaseAlertsEnabled = true;
   bool _weatherUpdatesEnabled = true;
   bool _farmingTipsEnabled = true;
+  bool _authAlertsEnabled = true;
 
   List<NotificationModel> get notifications => _getFilteredNotifications();
   bool get isLoading => _isLoading;
@@ -31,11 +32,13 @@ class NotificationState extends ChangeNotifier {
     bool? diseaseAlertsEnabled,
     bool? weatherUpdatesEnabled,
     bool? farmingTipsEnabled,
+    bool? authAlertsEnabled,
   }) {
     _notificationsEnabled = notificationsEnabled ?? _notificationsEnabled;
     _diseaseAlertsEnabled = diseaseAlertsEnabled ?? _diseaseAlertsEnabled;
     _weatherUpdatesEnabled = weatherUpdatesEnabled ?? _weatherUpdatesEnabled;
     _farmingTipsEnabled = farmingTipsEnabled ?? _farmingTipsEnabled;
+    _authAlertsEnabled = authAlertsEnabled ?? _authAlertsEnabled;
     notifyListeners();
   }
 
@@ -54,6 +57,12 @@ class NotificationState extends ChangeNotifier {
         case 'recommendation':
         case 'farming tip':
           return _farmingTipsEnabled;
+        case 'login':
+        case 'logout':
+        case 'registration':
+        case 'password_reset':
+        case 'password_changed':
+          return _authAlertsEnabled;
         default:
           return true;
       }

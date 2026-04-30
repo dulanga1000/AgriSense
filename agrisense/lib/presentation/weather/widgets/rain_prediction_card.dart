@@ -25,11 +25,14 @@ class RainPredictionCard extends StatelessWidget {
             children: [
               const Icon(Icons.cloud_queue, color: Colors.blue),
               const SizedBox(width: 8),
-              Text(
-                rainData.title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+              Expanded(
+                child: Text(
+                  rainData.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

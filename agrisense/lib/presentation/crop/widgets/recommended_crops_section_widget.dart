@@ -31,9 +31,53 @@ class RecommendedCropsSectionWidget extends StatelessWidget {
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 16),
-          ...crops.map((crop) => CropItemCardWidget(crop: crop)),
+          if (state.isLoading)
+            _buildLoadingIndicator()
+          else if (state.error != null)
+            _buildErrorMessage(state.error!)
+          else
+            ...crops.map((crop) => CropItemCardWidget(crop: crop)),
         ],
       ),
     );
   }
+
+  Widget _buildLoadingIndicator() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: Color(0xFF16A34A),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              "Loading recommendations...",
+              style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorMessage(String error) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Center(
+        child: Text(
+          error,
+          style: const TextStyle(fontSize: 13, color: Colors.redAccent),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
 }
+

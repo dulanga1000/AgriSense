@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:agrisense/presentation/auth/state/auth_provider.dart';
 import 'package:agrisense/presentation/auth/widgets/step_indicator.dart';
 import 'package:agrisense/presentation/common/widgets/auth_card.dart';
 import 'package:agrisense/presentation/common/widgets/auth_snackbar.dart';
@@ -23,6 +25,11 @@ class ForgotPasswordEmailStep extends StatelessWidget {
 
     try {
       await AuthApiService.sendOtp(emailController.text);
+
+      if (!context.mounted) return;
+
+      // ✅ Trigger forgot password notification (local + Firestore)
+      await context.read<AuthProvider>().forgotPassword(emailController.text);
 
       if (!context.mounted) return;
       AuthSnackBar.showSuccess(context, 'OTP sent to your email!');

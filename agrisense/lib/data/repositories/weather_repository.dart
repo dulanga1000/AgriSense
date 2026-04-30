@@ -61,12 +61,23 @@ class WeatherRepository {
       final forecastJson = json.decode(forecastRes.body);
       _forecastCache = _parse5DayForecast(forecastJson['list']);
 
-      // 3. Generate Smart Insights using Gemini AI
-      _aiInsightCache = await _generateGeminiInsights(
-        location,
-        _currentWeatherCache!,
-        _forecastCache!,
-      );
+      // 3. Generate Smart Insights using Gemini AI (with graceful fallback)
+      try {
+        _aiInsightCache = await _generateGeminiInsights(
+          location,
+          _currentWeatherCache!,
+          _forecastCache!,
+        );
+      } catch (geminiError) {
+        // If Gemini fails (quota, network, etc.), use basic fallback insights
+        // so the weather screen still works without AI-powered advice
+        print('⚠️ Gemini AI unavailable, using fallback insights: $geminiError');
+        _aiInsightCache = _buildFallbackInsights(
+          location,
+          _currentWeatherCache!,
+          _forecastCache!,
+        );
+      }
     } catch (e) {
       throw Exception("Failed to sync weather data: $e");
     }
@@ -173,11 +184,16 @@ class WeatherRepository {
           lastException = Exception(e.toString());
 
           // Check if error is retryable (503 Service Unavailable, rate limit 429, etc.)
+          final errorStr = e.toString();
           final isRetryable =
-              e.toString().contains('503') ||
-              e.toString().contains('429') ||
-              e.toString().contains('unavailable') ||
-              e.toString().contains('UNAVAILABLE');
+              errorStr.contains('503') ||
+              errorStr.contains('429') ||
+              errorStr.contains('unavailable') ||
+              errorStr.contains('UNAVAILABLE') ||
+              errorStr.contains('quota') ||
+              errorStr.contains('RESOURCE_EXHAUSTED') ||
+              errorStr.contains('rate') ||
+              errorStr.contains('overloaded');
 
           if (isRetryable && attempt < 2) {
             // Exponential backoff: 800ms, 1600ms, 2400ms
@@ -240,5 +256,85 @@ class WeatherRepository {
   Future<IrrigationAdviceModel> getIrrigationAdvice(String location) async {
     await _ensureDataLoaded(location);
     return IrrigationAdviceModel.fromJson(_aiInsightCache!['irrigation']);
+  }
+
+  // =======================================================================
+  // FALLBACK INSIGHTS (when Gemini API is unavailable)
+  // =======================================================================
+
+  Map<String, dynamic> _buildFallbackInsights(
+    String location,
+    WeatherModel current,
+    List<ForecastModel> forecast,
+  ) {
+    final temp = current.temperature;
+    final humidity = current.humidity.toDouble();
+    final isRainy = current.condition.toLowerCase().contains('rain');
+    final rainChance = isRainy ? 0.8 : 0.2;
+
+    // Build trends from actual forecast data
+    final trends = forecast.map((f) {
+      final tempVal = double.tryParse(f.temp.replaceAll('°', '')) ?? temp;
+      final rainVal = double.tryParse(f.rain.replaceAll('%', '')) ?? 20;
+      return {
+        'day': f.day,
+        'temperature': tempVal.round(),
+        'rainfall': rainVal.round(),
+        'humidity': humidity.round(),
+      };
+    }).toList();
+
+    return {
+      'rainPrediction': {
+        'title': 'Rain Prediction',
+        'todayPrediction': isRainy
+            ? 'Today - ${(rainChance * 100).round()}% chance of rain'
+            : 'Today - Low chance of rain',
+        'rainChance': rainChance,
+        'description': isRainy
+            ? 'Rain expected. Consider delaying outdoor farming activities.'
+            : 'Dry conditions expected. Good day for field work.',
+      },
+      'trends': trends,
+      'alerts': isRainy
+          ? [
+              {
+                'title': 'Rain Advisory',
+                'message':
+                    'Rainy conditions detected in $location. Protect crops and delay spraying.',
+                'type': 'warning',
+              }
+            ]
+          : <Map<String, dynamic>>[],
+      'activities': {
+        'best_activities': isRainy
+            ? ['Indoor nursery work', 'Equipment maintenance', 'Crop planning']
+            : ['Field plowing', 'Fertilizer application', 'Harvesting'],
+        'avoid_activities': isRainy
+            ? ['Pesticide spraying', 'Open-field planting']
+            : ['Heavy irrigation', 'Soil compaction work'],
+      },
+      'irrigation': {
+        'title': isRainy
+            ? 'Minimal Irrigation Needed'
+            : (humidity > 70
+                ? 'Moderate Irrigation Needed'
+                : 'High Irrigation Needed'),
+        'subtitle': isRainy
+            ? 'Natural rainfall expected'
+            : 'Based on current weather conditions',
+        'based_on':
+            'Current temperature: ${temp.round()}°C, Humidity: ${humidity.round()}%, Condition: ${current.condition}',
+        'tips': isRainy
+            ? [
+                'Reduce irrigation to prevent waterlogging',
+                'Ensure drainage systems are clear',
+              ]
+            : [
+                'Water crops during early morning or late evening',
+                'Monitor soil moisture levels regularly',
+              ],
+      },
+    };
   }
 }

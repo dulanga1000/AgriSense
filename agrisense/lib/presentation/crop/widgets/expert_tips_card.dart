@@ -21,7 +21,8 @@ class ExpertTipsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tips = context.watch<CropAdvisoryState>().expertTips;
+    final state = context.watch<CropAdvisoryState>();
+    final tips = state.expertTips;
 
     return Center(
       child: Container(
@@ -45,13 +46,29 @@ class ExpertTipsCard extends StatelessWidget {
               children: [
                 Image.asset("assets/images/bulb.png", width: 22, height: 22),
                 const SizedBox(width: 8),
-                const Text(
-                  "Expert Tips for Yala Season",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  "Expert Tips for ${state.selectedSeason.name}",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             const SizedBox(height: 16),
+            if (state.isLoading)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Center(
+                  child: SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      color: Color(0xFF16A34A),
+                    ),
+                  ),
+                ),
+              )
+            else
             ...tips.map(
               (tip) => Padding(
                 padding: const EdgeInsets.only(bottom: 10),

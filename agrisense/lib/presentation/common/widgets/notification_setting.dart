@@ -92,6 +92,15 @@ class NotificationSetting extends StatelessWidget {
                         ? settingState.toggleFarmingTips
                         : null,
                   ),
+                  const SizedBox(height: 16),
+                  _buildSwitchTile(
+                    title: "Auth Notifications",
+                    subtitle: "Login, logout & password alerts",
+                    value: settingState.authAlerts,
+                    onChanged: isNotificationsEnabled
+                        ? settingState.toggleAuthAlerts
+                        : null,
+                  ),
                 ],
               ),
             ),

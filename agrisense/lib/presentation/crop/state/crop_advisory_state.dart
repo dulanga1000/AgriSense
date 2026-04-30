@@ -36,8 +36,7 @@ class CropAdvisoryState extends ChangeNotifier {
     if (selectedSeason == season) return; // Ignore if it's the same season
     selectedSeason = season;
     isSeasonOpen = false; // Close the dropdown
-    notifyListeners();
-    loadAdvisoryData(); // ✅ Automatically fetch new AI data for the new season
+    _clearAndReload(); // ✅ Clear old data & fetch new AI data immediately
   }
 
   void updateDistrict(DistrictModel district) {
@@ -46,8 +45,7 @@ class CropAdvisoryState extends ChangeNotifier {
     }
     selectedDistrict = district;
     isLocationOpen = false; // Close the dropdown
-    notifyListeners();
-    loadAdvisoryData(); // ✅ Automatically fetch new AI data for the new location
+    _clearAndReload(); // ✅ Clear old data & fetch new AI data immediately
   }
 
   List<CropModel> crops = [];
@@ -59,6 +57,17 @@ class CropAdvisoryState extends ChangeNotifier {
   String? error;
   int _loadRequestId = 0;
 
+  /// Clears existing data and triggers a fresh load so the UI
+  /// immediately reflects the new selection with a loading state.
+  void _clearAndReload() {
+    crops = [];
+    calendarEntries = [];
+    marketPrices = [];
+    expertTips = [];
+    notifyListeners();
+    loadAdvisoryData();
+  }
+
   Future<void> loadAdvisoryData() async {
     final requestId = ++_loadRequestId;
     final locationName = selectedDistrict.district;
@@ -69,12 +78,7 @@ class CropAdvisoryState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final results = await Future.wait([
-        _repository.getRecommendedCrops(locationName, seasonName),
-        _repository.getCalendarEntries(locationName, seasonName),
-        _repository.getMarketPrices(locationName, seasonName),
-        _repository.getExpertTips(locationName, seasonName),
-      ]);
+      final data = await _repository.getAdvisoryData(locationName, seasonName);
 
       // Ignore stale results if user changed season/location while this request was running.
       if (requestId != _loadRequestId ||
@@ -83,10 +87,18 @@ class CropAdvisoryState extends ChangeNotifier {
         return;
       }
 
-      crops = results[0] as List<CropModel>;
-      calendarEntries = results[1] as List<CalendarEntryModel>;
-      marketPrices = results[2] as List<MarketPriceModel>;
-      expertTips = results[3] as List<ExpertTipModel>;
+      crops = (data['crops'] as List<dynamic>)
+          .map((json) => CropModel.fromJson(json))
+          .toList();
+      calendarEntries = (data['calendar'] as List<dynamic>)
+          .map((json) => CalendarEntryModel.fromJson(json))
+          .toList();
+      marketPrices = (data['prices'] as List<dynamic>)
+          .map((json) => MarketPriceModel.fromJson(json))
+          .toList();
+      expertTips = (data['tips'] as List<dynamic>)
+          .map((json) => ExpertTipModel.fromJson(json))
+          .toList();
     } catch (e) {
       if (requestId != _loadRequestId) {
         return;

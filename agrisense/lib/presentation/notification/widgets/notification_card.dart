@@ -123,6 +123,7 @@ class _TypeConfig {
   factory _TypeConfig.fromType(String type) {
     switch (type.toLowerCase()) {
       case 'alert':
+      case 'disease':
         return const _TypeConfig(
           icon: Icons.warning_amber_rounded,
           iconColor: Color(0xFFE53935),
@@ -137,15 +138,52 @@ class _TypeConfig {
           borderColor: Color(0xFFBBDEFB),
         );
       case 'recommendation':
+      case 'farming tip':
         return const _TypeConfig(
           icon: Icons.lightbulb_outline,
           iconColor: Color(0xFFF9A825),
           bgColor: Color(0xFFFFFDE7),
           borderColor: Color(0xFFFFF9C4),
         );
+      // Auth notification types
+      case 'login':
+        return const _TypeConfig(
+          icon: Icons.login_rounded,
+          iconColor: Color(0xFF2E7D32),
+          bgColor: Color(0xFFE8F5E9),
+          borderColor: Color(0xFFC8E6C9),
+        );
+      case 'logout':
+        return const _TypeConfig(
+          icon: Icons.logout_rounded,
+          iconColor: Color(0xFFE65100),
+          bgColor: Color(0xFFFFF3E0),
+          borderColor: Color(0xFFFFE0B2),
+        );
+      case 'registration':
+        return const _TypeConfig(
+          icon: Icons.person_add_alt_1_rounded,
+          iconColor: Color(0xFF00796B),
+          bgColor: Color(0xFFE0F2F1),
+          borderColor: Color(0xFFB2DFDB),
+        );
+      case 'password_reset':
+        return const _TypeConfig(
+          icon: Icons.lock_reset_rounded,
+          iconColor: Color(0xFF1565C0),
+          bgColor: Color(0xFFE3F2FD),
+          borderColor: Color(0xFFBBDEFB),
+        );
+      case 'password_changed':
+        return const _TypeConfig(
+          icon: Icons.lock_outline_rounded,
+          iconColor: Color(0xFF7B1FA2),
+          bgColor: Color(0xFFF3E5F5),
+          borderColor: Color(0xFFCE93D8),
+        );
       default:
         return const _TypeConfig(
-          icon: Icons.thermostat_outlined,
+          icon: Icons.notifications_outlined,
           iconColor: Color(0xFF00897B),
           bgColor: Color(0xFFE8F5E9),
           borderColor: Color(0xFFC8E6C9),

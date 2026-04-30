@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CostCard extends StatelessWidget {
   final double estimatedCost;
 
   const CostCard({super.key, required this.estimatedCost});
+
+  String _formatCost(double cost) {
+    final formatter = NumberFormat('#,##0.00', 'en_US');
+    return 'LKR ${formatter.format(cost)}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,7 @@ class CostCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "LKR ${estimatedCost.toStringAsFixed(2)}",
+                  _formatCost(estimatedCost),
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.green,
@@ -39,3 +45,4 @@ class CostCard extends StatelessWidget {
     );
   }
 }
+

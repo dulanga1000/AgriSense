@@ -11,6 +11,7 @@ class SettingState extends ChangeNotifier {
   bool diseaseAlerts = true;
   bool weatherUpdates = true;
   bool farmingTips = true;
+  bool authAlerts = true;
 
   bool autoUpdate = true;
 
@@ -21,6 +22,7 @@ class SettingState extends ChangeNotifier {
   static const _diseaseAlertsKey = 'setting_diseaseAlerts';
   static const _weatherUpdatesKey = 'setting_weatherUpdates';
   static const _farmingTipsKey = 'setting_farmingTips';
+  static const _authAlertsKey = 'setting_authAlerts';
   static const _autoUpdateKey = 'setting_autoUpdate';
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -55,6 +57,7 @@ class SettingState extends ChangeNotifier {
           diseaseAlerts = data[_diseaseAlertsKey] ?? true;
           weatherUpdates = data[_weatherUpdatesKey] ?? true;
           farmingTips = data[_farmingTipsKey] ?? true;
+          authAlerts = data[_authAlertsKey] ?? true;
           autoUpdate = data[_autoUpdateKey] ?? true;
 
           // Update local cache
@@ -74,6 +77,7 @@ class SettingState extends ChangeNotifier {
     diseaseAlerts = prefs.getBool(_diseaseAlertsKey) ?? true;
     weatherUpdates = prefs.getBool(_weatherUpdatesKey) ?? true;
     farmingTips = prefs.getBool(_farmingTipsKey) ?? true;
+    authAlerts = prefs.getBool(_authAlertsKey) ?? true;
     autoUpdate = prefs.getBool(_autoUpdateKey) ?? true;
 
     notifyListeners();
@@ -119,6 +123,13 @@ class SettingState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleAuthAlerts(bool val) {
+    authAlerts = val;
+    _notifyNotificationSettingsChanged();
+    _saveSettings();
+    notifyListeners();
+  }
+
   void toggleAutoUpdate(bool val) {
     autoUpdate = val;
     _saveSettings();
@@ -157,6 +168,7 @@ class SettingState extends ChangeNotifier {
     await prefs.setBool(_diseaseAlertsKey, diseaseAlerts);
     await prefs.setBool(_weatherUpdatesKey, weatherUpdates);
     await prefs.setBool(_farmingTipsKey, farmingTips);
+    await prefs.setBool(_authAlertsKey, authAlerts);
     await prefs.setBool(_autoUpdateKey, autoUpdate);
   }
 
@@ -168,6 +180,7 @@ class SettingState extends ChangeNotifier {
       _diseaseAlertsKey: diseaseAlerts,
       _weatherUpdatesKey: weatherUpdates,
       _farmingTipsKey: farmingTips,
+      _authAlertsKey: authAlerts,
       _autoUpdateKey: autoUpdate,
     };
   }
@@ -180,6 +193,7 @@ class SettingState extends ChangeNotifier {
     diseaseAlerts = true;
     weatherUpdates = true;
     farmingTips = true;
+    authAlerts = true;
     autoUpdate = true;
 
     final prefs = await SharedPreferences.getInstance();
@@ -189,6 +203,7 @@ class SettingState extends ChangeNotifier {
     await prefs.remove(_diseaseAlertsKey);
     await prefs.remove(_weatherUpdatesKey);
     await prefs.remove(_farmingTipsKey);
+    await prefs.remove(_authAlertsKey);
     await prefs.remove(_autoUpdateKey);
 
     notifyListeners();

@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:agrisense/data/models/calendar_entry_model.dart';
-import 'package:agrisense/data/models/crop_model.dart';
-import 'package:agrisense/data/models/expert_tip_model.dart';
-import 'package:agrisense/data/models/market_price_model.dart';
+import 'package:agrisense/data/constants/crop_fallback_data.dart';
 
 class CropAdvisoryRepository {
   final String geminiApiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
@@ -51,6 +48,9 @@ class CropAdvisoryRepository {
       await _fetchTask;
       return;
     }
+
+    // Invalidate old cache immediately so stale data is never returned
+    _aiCache = null;
 
     final fetchId = ++_latestFetchId;
     _fetchingKey = requestKey;
@@ -177,7 +177,11 @@ class CropAdvisoryRepository {
         msg.contains('429') ||
         msg.contains('unavailable') ||
         msg.contains('high demand') ||
-        msg.contains('deadline exceeded');
+        msg.contains('deadline exceeded') ||
+        msg.contains('quota') ||
+        msg.contains('resource_exhausted') ||
+        msg.contains('rate') ||
+        msg.contains('overloaded');
   }
 
   String _extractJsonObject(String text) {
@@ -192,527 +196,29 @@ class CropAdvisoryRepository {
   }
 
   Map<String, dynamic> _buildFallbackAdvisory(String location, String season) {
-    final seasonLower = season.toLowerCase();
-    final locationLower = location.toLowerCase();
-
-    final isYala = seasonLower.contains('yala');
-    final isMaha = seasonLower.contains('maha');
-
-    // Categorize zones
-    final isDryZone =
-        locationLower.contains('anuradhapura') ||
-        locationLower.contains('polonnaruwa') ||
-        locationLower.contains('hambantota') ||
-        locationLower.contains('monaragala') ||
-        locationLower.contains('ampara');
-
-    final isWetZone =
-        locationLower.contains('colombo') ||
-        locationLower.contains('galle') ||
-        locationLower.contains('kalutara') ||
-        locationLower.contains('matara') ||
-        locationLower.contains('rathnapura');
-
-    final isUpCountry =
-        locationLower.contains('nuwara') ||
-        locationLower.contains('kandy') ||
-        locationLower.contains('matale') ||
-        locationLower.contains('kegalle');
-
-    List<Map<String, dynamic>> crops = [];
-
-    if (isDryZone) {
-      crops = [
-        {
-          'crop_name': isYala ? 'Rice (Yala Paddy)' : 'Rice (Maha Paddy)',
-          'duration': isYala ? '3-4 months' : '4 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'rice',
-          'suited': 'Irrigated paddy fields in $location',
-        },
-        {
-          'crop_name': 'Maize',
-          'duration': '3 months',
-          'water': 'Low',
-          'profit': 'Medium',
-          'tag': 'Good Time',
-          'icon_name': 'maize',
-          'suited': 'Well-drained upland areas',
-        },
-        {
-          'crop_name': 'Cowpea (Lunu Dhal)',
-          'duration': '2-3 months',
-          'water': 'Low',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'leaf',
-          'suited': 'Dry zone drought-tolerant cultivation',
-        },
-        {
-          'crop_name': 'Groundnut',
-          'duration': '3-4 months',
-          'water': 'Low',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'leaf',
-          'suited': 'Sandy and laterite soils',
-        },
-        {
-          'crop_name': 'Green Gram (Mung)',
-          'duration': '2-3 months',
-          'water': 'Medium',
-          'profit': 'Medium',
-          'tag': 'Good Time',
-          'icon_name': 'vegetable',
-          'suited': 'Upland cultivation zones',
-        },
-        {
-          'crop_name': 'Chili (Dried)',
-          'duration': '3-4 months',
-          'water': 'Medium',
-          'profit': 'Very High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'High-value crop in dry areas',
-        },
-        {
-          'crop_name': 'Sesame',
-          'duration': '3 months',
-          'water': 'Low',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'leaf',
-          'suited': 'Light and well-drained soils',
-        },
-        {
-          'crop_name': 'Watermelon',
-          'duration': '2-3 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Good Time',
-          'icon_name': 'vegetable',
-          'suited': 'Sandy loam soils with irrigation',
-        },
-      ];
-    } else if (isWetZone) {
-      crops = [
-        {
-          'crop_name': 'Rice (Maha Paddy)',
-          'duration': '4 months',
-          'water': 'High',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'rice',
-          'suited': 'Well-watered paddy fields',
-        },
-        {
-          'crop_name': 'Brinjal (Eggplant)',
-          'duration': '3-4 months',
-          'water': 'High',
-          'profit': 'Very High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'Intensive market garden zones',
-        },
-        {
-          'crop_name': 'Tomato',
-          'duration': '3 months',
-          'water': 'High',
-          'profit': 'Very High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'Commercial vegetable farming',
-        },
-        {
-          'crop_name': 'Cucumber (Wattakka)',
-          'duration': '2-3 months',
-          'water': 'High',
-          'profit': 'High',
-          'tag': 'Good Time',
-          'icon_name': 'vegetable',
-          'suited': 'Trellised cultivation',
-        },
-        {
-          'crop_name': 'Cabbage & Cauliflower',
-          'duration': '3-4 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Good Time',
-          'icon_name': 'vegetable',
-          'suited': 'Cool season cultivation',
-        },
-        {
-          'crop_name': 'Onion (Local)',
-          'duration': '4-5 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'Market-oriented farming',
-        },
-        {
-          'crop_name': 'Okra (Ladyfinger)',
-          'duration': '2-3 months',
-          'water': 'High',
-          'profit': 'High',
-          'tag': 'Good Time',
-          'icon_name': 'vegetable',
-          'suited': 'Year-round production',
-        },
-        {
-          'crop_name': 'Beans (Green)',
-          'duration': '2-3 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'High-value export potential',
-        },
-      ];
-    } else if (isUpCountry) {
-      crops = [
-        {
-          'crop_name': 'Tea',
-          'duration': 'Perennial',
-          'water': 'High',
-          'profit': 'Very High',
-          'tag': 'Prime Time',
-          'icon_name': 'leaf',
-          'suited': 'Traditional upland cultivation',
-        },
-        {
-          'crop_name': 'Potato',
-          'duration': '3 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'Cool highland soils above 1000m',
-        },
-        {
-          'crop_name': 'Cabbage',
-          'duration': '3-4 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'High altitude cool climate',
-        },
-        {
-          'crop_name': 'Carrot',
-          'duration': '3 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Good Time',
-          'icon_name': 'vegetable',
-          'suited': 'Well-drained upland soils',
-        },
-        {
-          'crop_name': 'Beetroot',
-          'duration': '2-3 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Good Time',
-          'icon_name': 'vegetable',
-          'suited': 'Cool season upland areas',
-        },
-        {
-          'crop_name': 'Spices (Cardamom, Pepper)',
-          'duration': 'Perennial',
-          'water': 'High',
-          'profit': 'Very High',
-          'tag': 'Prime Time',
-          'icon_name': 'leaf',
-          'suited': 'Shade and moisture-rich slopes',
-        },
-        {
-          'crop_name': 'Maize (Off-season)',
-          'duration': '3 months',
-          'water': 'Medium',
-          'profit': 'Medium',
-          'tag': 'Good Time',
-          'icon_name': 'maize',
-          'suited': 'Open highland areas',
-        },
-        {
-          'crop_name': 'Cinnamon',
-          'duration': 'Perennial',
-          'water': 'High',
-          'profit': 'Very High',
-          'tag': 'Prime Time',
-          'icon_name': 'leaf',
-          'suited': 'Mid-elevation (500-1000m) plots',
-        },
-      ];
-    } else {
-      // General fallback for other zones
-      crops = [
-        {
-          'crop_name': isYala ? 'Rice (Yala)' : 'Rice (Maha)',
-          'duration': isYala ? '3-4 months' : '4 months',
-          'water': 'High',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'rice',
-          'suited': 'General paddy cultivation',
-        },
-        {
-          'crop_name': 'Maize',
-          'duration': '3 months',
-          'water': 'Medium',
-          'profit': 'Medium',
-          'tag': 'Good Time',
-          'icon_name': 'maize',
-          'suited': 'Upland fields',
-        },
-        {
-          'crop_name': 'Vegetables (Mixed)',
-          'duration': '2-3 months',
-          'water': 'High',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'Garden cultivation',
-        },
-        {
-          'crop_name': 'Green Gram',
-          'duration': '2-3 months',
-          'water': 'Medium',
-          'profit': 'Medium',
-          'tag': 'Good Time',
-          'icon_name': 'leaf',
-          'suited': 'Quick-maturing crop',
-        },
-        {
-          'crop_name': 'Chili',
-          'duration': '3-4 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'High-value crop',
-        },
-        {
-          'crop_name': 'Sesame',
-          'duration': '3 months',
-          'water': 'Low',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'leaf',
-          'suited': 'Dry season crop',
-        },
-        {
-          'crop_name': 'Coconut',
-          'duration': 'Perennial',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'leaf',
-          'suited': 'Year-round cultivation',
-        },
-        {
-          'crop_name': 'Papaya',
-          'duration': '8-10 months',
-          'water': 'Medium',
-          'profit': 'High',
-          'tag': 'Prime Time',
-          'icon_name': 'vegetable',
-          'suited': 'Long-season fruit crop',
-        },
-      ];
-    }
-
-    final calendar = <Map<String, dynamic>>[
-      if (isYala)
-        {
-          'month': 'Mar-Apr',
-          'crops': 'Prepare fields, start Yala paddy and maize',
-          'label': 'Planting',
-          'icon_name': 'tractor',
-        }
-      else
-        {
-          'month': 'Sep-Oct',
-          'crops': 'Land prep, plant Maha paddy and vegetables',
-          'label': 'Planting',
-          'icon_name': 'tractor',
-        },
-      if (isYala)
-        {
-          'month': 'May-Jun',
-          'crops': 'Weeding, fertilizer, pest monitoring',
-          'label': 'Field Care',
-          'icon_name': 'leaf',
-        }
-      else
-        {
-          'month': 'Nov-Dec',
-          'crops': 'Maintenance, nutrient top-dressing',
-          'label': 'Field Care',
-          'icon_name': 'leaf',
-        },
-      if (isYala)
-        {
-          'month': 'Jul-Aug',
-          'crops': 'Harvest paddy and short-duration crops',
-          'label': 'Harvesting',
-          'icon_name': 'basket',
-        }
-      else
-        {
-          'month': 'Jan-Feb',
-          'crops': 'Main harvest season - collect paddy and vegetables',
-          'label': 'Harvesting',
-          'icon_name': 'basket',
-        },
-    ];
-
-    final prices = <Map<String, dynamic>>[
-      if (isDryZone) ...[
-        {
-          'crop': 'Rice',
-          'price': isYala ? 'Rs. 220-270/kg' : 'Rs. 200-250/kg',
-          'demand': isYala ? '↑ High Demand' : '→ Medium Demand',
-          'demand_type': isYala ? 'high' : 'medium',
-        },
-        {
-          'crop': 'Cowpea',
-          'price': 'Rs. 260-340/kg',
-          'demand': '↑ High Demand',
-          'demand_type': 'high',
-        },
-        {
-          'crop': 'Groundnut',
-          'price': 'Rs. 240-330/kg',
-          'demand': '↑ High Demand',
-          'demand_type': 'high',
-        },
-      ] else if (isUpCountry) ...[
-        {
-          'crop': 'Potato',
-          'price': 'Rs. 210-300/kg',
-          'demand': '↑ High Demand',
-          'demand_type': 'high',
-        },
-        {
-          'crop': 'Carrot',
-          'price': 'Rs. 180-260/kg',
-          'demand': '→ Medium Demand',
-          'demand_type': 'medium',
-        },
-        {
-          'crop': 'Cabbage',
-          'price': 'Rs. 140-220/kg',
-          'demand': '→ Medium Demand',
-          'demand_type': 'medium',
-        },
-      ] else ...[
-        {
-          'crop': 'Rice',
-          'price': isMaha ? 'Rs. 190-240/kg' : 'Rs. 210-260/kg',
-          'demand': isMaha ? '→ Medium Demand' : '↑ High Demand',
-          'demand_type': isMaha ? 'medium' : 'high',
-        },
-        {
-          'crop': 'Tomato',
-          'price': 'Rs. 190-320/kg',
-          'demand': '↑ High Demand',
-          'demand_type': 'high',
-        },
-        {
-          'crop': 'Beans',
-          'price': 'Rs. 220-360/kg',
-          'demand': '↑ High Demand',
-          'demand_type': 'high',
-        },
-      ],
-    ];
-
-    final tips = <Map<String, dynamic>>[
-      {
-        'title': isDryZone
-            ? 'Water Saving for $location'
-            : 'Moisture Management for $location',
-        'description': isDryZone
-            ? 'Use drip or interval irrigation and mulch during ${isYala ? 'Yala' : 'Maha'} to reduce evaporation.'
-            : 'Check field moisture before irrigation and avoid overwatering in low-lying fields.',
-        'type': 'water',
-      },
-      {
-        'title': isYala
-            ? 'Yala Nutrient Split Plan'
-            : 'Maha Nutrient Base Plan',
-        'description': isYala
-            ? 'Split nitrogen into 2-3 doses for short-duration crops and apply potassium before flowering.'
-            : 'Apply basal compost and phosphorus before planting, then top-dress nitrogen after establishment.',
-        'type': 'soil',
-      },
-      {
-        'title': isUpCountry
-            ? 'Cool-Climate Disease Watch'
-            : 'Pest Monitoring Routine',
-        'description': isUpCountry
-            ? 'Monitor for late blight and leaf spot in cool mornings, especially in potato and cabbage blocks.'
-            : 'Scout fields twice weekly and act early on leaf damage, borers, and sucking pests.',
-        'type': 'pest',
-      },
-      {
-        'title': 'Market Timing for $season',
-        'description': isYala
-            ? 'Target early harvest windows to capture higher prices before peak market supply.'
-            : 'Stagger planting dates to avoid market gluts during main harvest months.',
-        'type': 'soil',
-      },
-    ];
+    final isYala = season.toLowerCase().contains('yala');
+    final zone = CropFallbackData.getZone(location);
 
     return {
-      'crops': crops,
-      'calendar': calendar,
-      'prices': prices,
-      'tips': tips,
+      'crops': CropFallbackData.getCrops(zone, isYala, location),
+      'calendar': CropFallbackData.getCalendar(zone, isYala),
+      'prices': CropFallbackData.getPrices(zone, isYala),
+      'tips': CropFallbackData.getTips(zone, isYala, location, season),
     };
   }
 
   // =======================================================================
-  // PUBLIC METHODS
+  // PUBLIC METHOD
   // =======================================================================
 
-  Future<List<CropModel>> getRecommendedCrops(
+  /// Returns the full advisory data map for a given location and season.
+  /// Makes a single fetch call (or returns cached data) and provides
+  /// all sections (crops, calendar, prices, tips) at once.
+  Future<Map<String, dynamic>> getAdvisoryData(
     String location,
     String season,
   ) async {
     await _ensureDataLoaded(location, season);
-    final List<dynamic> data = _aiCache!['crops'] ?? [];
-    return data.map((json) => CropModel.fromJson(json)).toList();
-  }
-
-  Future<List<CalendarEntryModel>> getCalendarEntries(
-    String location,
-    String season,
-  ) async {
-    await _ensureDataLoaded(location, season);
-    final List<dynamic> data = _aiCache!['calendar'] ?? [];
-    // Note: Ensure your CalendarEntryModel has a fromJson method!
-    return data.map((json) => CalendarEntryModel.fromJson(json)).toList();
-  }
-
-  Future<List<MarketPriceModel>> getMarketPrices(
-    String location,
-    String season,
-  ) async {
-    await _ensureDataLoaded(location, season);
-    final List<dynamic> data = _aiCache!['prices'] ?? [];
-    return data.map((json) => MarketPriceModel.fromJson(json)).toList();
-  }
-
-  Future<List<ExpertTipModel>> getExpertTips(
-    String location,
-    String season,
-  ) async {
-    await _ensureDataLoaded(location, season);
-    final List<dynamic> data = _aiCache!['tips'] ?? [];
-    return data.map((json) => ExpertTipModel.fromJson(json)).toList();
+    return _aiCache ?? _buildFallbackAdvisory(location, season);
   }
 }

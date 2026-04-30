@@ -1,7 +1,8 @@
 import 'package:agrisense/core/constants/tips_constants.dart';
 import 'package:agrisense/presentation/common/widgets/gradient_app_bar.dart';
-import 'package:agrisense/core/services/firebase_auth_service.dart';
+import 'package:agrisense/presentation/auth/state/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../common/widgets/custom_button.dart';
 import '../../common/widgets/password_strength_checker.dart';
 import '../../common/widgets/password_textfield.dart';
@@ -16,7 +17,6 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _authService = FirebaseAuthService();
 
   final _currentController = TextEditingController();
   final _newController = TextEditingController();
@@ -25,7 +25,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   String _newPassword = '';
   bool _passwordsMatch = true;
   bool _confirmTouched = false;
-  bool _isLoading = false;
 
   bool get _canEditNewPasswordFields =>
       _currentController.text.trim().isNotEmpty;
@@ -54,16 +53,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   void _onUpdatePassword() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
+    final auth = context.read<AuthProvider>();
 
-    try {
-      await _authService.changePassword(
-        currentPassword: _currentController.text,
-        newPassword: _newController.text,
-      );
+    // Use AuthProvider.changePassword which triggers both
+    // local notification + Firestore notification save
+    final success = await auth.changePassword(
+      _currentController.text,
+      _newController.text,
+    );
 
-      if (!mounted) return;
+    if (!mounted) return;
 
+    if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Password updated successfully'),
@@ -86,25 +87,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) Navigator.pop(context);
       });
-    } catch (e) {
-      if (!mounted) return;
-
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString().replaceAll('Exception: ', '')}'),
+          content: Text(
+            'Error: ${auth.error ?? "Failed to change password"}',
+          ),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
         ),
       );
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
     final canEdit = _canEditNewPasswordFields;
     final canSubmit = _canSubmitUpdate;
+    final isLoading = auth.isLoading;
 
     final mismatchError = _confirmTouched && !_passwordsMatch
         ? const Text(
@@ -222,12 +223,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 20),
 
               Opacity(
-                opacity: (canSubmit && !_isLoading) ? 1 : 0.45,
+                opacity: (canSubmit && !isLoading) ? 1 : 0.45,
                 child: IgnorePointer(
-                  ignoring: !canSubmit || _isLoading,
+                  ignoring: !canSubmit || isLoading,
                   child: CustomButton(
-                    text: _isLoading ? 'Updating...' : 'Update Password',
-                    icon: _isLoading
+                    text: isLoading ? 'Updating...' : 'Update Password',
+                    icon: isLoading
                         ? Icons.hourglass_empty
                         : Icons.lock_outline,
                     onPressed: _onUpdatePassword,

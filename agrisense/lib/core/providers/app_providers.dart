@@ -37,6 +37,7 @@ class AppProviders {
           diseaseAlertsEnabled: settingState.diseaseAlerts,
           weatherUpdatesEnabled: settingState.weatherUpdates,
           farmingTipsEnabled: settingState.farmingTips,
+          authAlertsEnabled: settingState.authAlerts,
         );
         return state;
       },

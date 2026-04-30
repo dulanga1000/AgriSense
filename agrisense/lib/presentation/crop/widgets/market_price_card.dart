@@ -21,7 +21,8 @@ class MarketPriceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final prices = context.watch<CropAdvisoryState>().marketPrices;
+    final state = context.watch<CropAdvisoryState>();
+    final prices = state.marketPrices;
 
     return Center(
       child: Container(
@@ -65,12 +66,27 @@ class MarketPriceCard extends StatelessWidget {
               style: TextStyle(color: Colors.white70, fontSize: 13),
             ),
             const SizedBox(height: 20),
-            ...prices.map(
-              (item) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: _priceItem(item),
+            if (state.isLoading)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Center(
+                  child: SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              )
+            else
+              ...prices.map(
+                (item) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _priceItem(item),
+                ),
               ),
-            ),
             const SizedBox(height: 6),
             Container(
               padding: const EdgeInsets.all(12),

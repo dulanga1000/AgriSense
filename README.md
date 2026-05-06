@@ -1,9 +1,3 @@
-Here is an updated and comprehensive `README.md` that covers the overall system, including both your Flutter mobile application and the Node.js Express OTP backend. I've structured it to be clean, professional, and easy for any developer to follow.
-
-I also made sure to remove your actual API keys and Firebase secrets from the documentation for security reasons—you should always use placeholders in your public README files.
-
-***
-
 # AgriSense - Smart Agriculture System
 
 AgriSense is a comprehensive smart agriculture solution designed to assist farmers in making informed agricultural decisions. The system integrates a **Flutter-based mobile application** for the user interface and AI processing, supported by a **Node.js/Express backend** handling secure OTP-based authentication. 
